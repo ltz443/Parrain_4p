@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 
 // ─── CONFIGURATION & LOGIQUE CALCULATEUR (TON CODE) ───────────────────────
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
-const BREVO_LINK = 'https://45517a4f.sibforms.com/serve/MUIFAIWHHPs2aA0dLWK0WLFoI9DzFyIYzfEutzRc6vmIGTHfhOmt_x2Up2V8d9HyWuk-c23F4oV1QssydJGpDoeTETbj-o9H--j8ERFglfooimRO7aA5l0YoEUxVvPe8D1cVDy80rx_A6V6ZbAuwFxHRdais63yxsDteR96OWNuv0k_KBnN4Lv4JPkwhJ7i0v04FmB9iveYp_uUoAg==';
 
 const TAUX_OPTIONS = [
   { label: 'Auto-entrepreneur - Prestation de services (21.2%)', value: 21.2 },
@@ -165,18 +164,6 @@ function PageParrainage() {
             <p style={{ color: offre.couleur, fontSize: 14, fontWeight: 700 }}>{offre.prime}</p>
           </div>
         ))}
-      </div>
-
-      {/* --- BLOC NEWSLETTER INTÉGRÉ --- */}
-      <div style={{ marginTop: 40, padding: '24px', background: '#111318', border: '2px dashed #4FFFA0', borderRadius: 24, textAlign: 'center' }}>
-        <div style={{ fontSize: 32, marginBottom: 10 }}>📩</div>
-        <h3 style={{ color: '#E8EDF5', fontSize: 18, fontWeight: 900, marginBottom: 8 }}>REJOINS LE CLUB PRO</h3>
-        <p style={{ color: '#8A95AA', fontSize: 13, marginBottom: 20, lineHeight: 1.5 }}>
-          Ne manque plus aucune offre boostée et reçois mes conseils par e-mail.
-        </p>
-        <button onClick={() => window.open(BREVO_LINK, '_blank')} style={{ width: '100%', background: '#4FFFA0', color: '#0A0C10', border: 'none', padding: '16px', borderRadius: 14, fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 15px rgba(79, 255, 160, 0.3)' }}>
-          S'INSCRIRE GRATUITEMENT
-        </button>
       </div>
     </div>
   );

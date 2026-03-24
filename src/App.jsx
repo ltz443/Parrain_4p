@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createRoot } from 'react-dom/client';
 
 // ─── DONNÉES PARRAINAGE ────────────────────────────────────────────────────────
 const OFFRES = [
@@ -59,7 +60,7 @@ const OFFRES = [
       'Recois 20€ de Bitcoin apres 24h — retirable integralement',
     ],
     type: 'lien',
-    lien: '[https://coinbase.com/join/954EBFS?src=ios-link](https://coinbase.com/join/954EBFS?src=ios-link)',
+    lien: 'https://coinbase.com/join/954EBFS?src=ios-link',
   },
   {
     id: 'veracash',
@@ -78,7 +79,7 @@ const OFFRES = [
       'Frais de gestion reduits a vie',
     ],
     type: 'lien',
-    lien: '[https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO](https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO)',
+    lien: 'https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO',
   },
   {
     id: 'robinhood',
@@ -97,7 +98,7 @@ const OFFRES = [
       'Delai : immediat',
     ],
     type: 'lien',
-    lien: '[https://join.robinhood.com/eu_crypto/leot-ad308a260/](https://join.robinhood.com/eu_crypto/leot-ad308a260/)',
+    lien: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
   },
   {
     id: 'winamax',
@@ -142,7 +143,7 @@ const OFFRES = [
 const CATEGORIES = ['Tout', 'Banque', 'Cashback', 'Crypto', 'Or & Epargne', 'Crypto Exchange', 'Paris Sportifs'];
 
 // ─── PROFITMASTER DATA ────────────────────────────────────────────────────────
-const STRIPE_LINK = '[https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00](https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00)';
+const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 const TAUX_OPTIONS = [
   { label: 'Auto-entrepreneur - Prestation de services (21.2%)', value: 21.2 },
   { label: 'Auto-entrepreneur - Vente de marchandises (12.8%)', value: 12.8 },
@@ -276,7 +277,7 @@ function PageParrainage() {
           {o.type === 'contact' && (
             <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', border: '1px dashed #4FFFA0', textAlign: 'center' }}>
               <div style={{ fontSize: 12, color: '#8A95AA', marginBottom: 8, lineHeight: 1.5 }}>{o.note}</div>
-              <a href={'[https://instagram.com/](https://instagram.com/)' + o.contact.replace('@', '')} target="_blank" rel="noreferrer" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #833AB4, #FD1D1D, #F56040)', borderRadius: 10, color: '#fff', fontSize: 15, fontWeight: 800, padding: '12px 24px', textDecoration: 'none' }}>
+              <a href={'https://instagram.com/' + o.contact.replace('@', '')} target="_blank" rel="noreferrer" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #833AB4, #FD1D1D, #F56040)', borderRadius: 10, color: '#fff', fontSize: 15, fontWeight: 800, padding: '12px 24px', textDecoration: 'none' }}>
                 Me contacter sur Instagram {o.contact}
               </a>
             </div>
@@ -305,6 +306,41 @@ function PageParrainage() {
           </button>
         ))}
       </div>
+
+      {/* ─── NEWSLETTER AJOUTÉE ICI ─── */}
+      <div style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '20px', marginTop: 24, textAlign: 'center' }}>
+        <h3 style={{ fontSize: 16, fontWeight: 900, color: '#4FFFA0', marginBottom: 8 }}>Newsletter Exclue 📥</h3>
+        <p style={{ fontSize: 12, color: '#8A95AA', marginBottom: 16 }}>Reçois les nouveaux bons plans avant tout le monde.</p>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input type="email" placeholder="Ton email..." style={{ flex: 1, background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#FFF', padding: '10px 12px', outline: 'none' }} />
+          <button style={{ background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontWeight: 800, padding: '0 16px', cursor: 'pointer' }}>OK</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PAGE AVIS AJOUTÉE ICI ──────────────────────────────────────────────────
+function PageAvis() {
+  const avis = [
+    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
+    { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" },
+    { nom: "Tom", date: "Il y a 1 mois", texte: "Déjà 120€ de gains cumulés grâce aux offres crypto. Top !", note: "⭐⭐⭐⭐⭐" }
+  ];
+
+  return (
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
+      <h2 style={{ fontSize: 20, fontWeight: 900, color: '#4FFFA0', marginBottom: 20, textAlign: 'center' }}>Avis de la Communauté</h2>
+      {avis.map((a, i) => (
+        <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontWeight: 800, color: '#E8EDF5' }}>{a.nom}</span>
+            <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
+          </div>
+          <div style={{ color: '#FFD700', fontSize: 12, marginBottom: 8 }}>{a.note}</div>
+          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>"{a.texte}"</p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -470,13 +506,21 @@ export default function App() {
         <p style={{ color: '#4A5568', fontSize: 12, marginTop: 2 }}>Parrainages + Calculateur de Rentabilite</p>
       </div>
 
-      {onglet === 'parrainage' ? <PageParrainage /> : <PageProfitMaster />}
+      {/* Rendu conditionnel des onglets */}
+      {onglet === 'parrainage' && <PageParrainage />}
+      {onglet === 'avis' && <PageAvis />}
+      {onglet === 'calculateur' && <PageProfitMaster />}
 
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', zIndex: 100 }}>
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <span style={{ fontSize: 20 }}>🎁</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Parrainages</span>
           {onglet === 'parrainage' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
+        </button>
+        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+          <span style={{ fontSize: 20 }}>⭐</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Avis</span>
+          {onglet === 'avis' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
         <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <span style={{ fontSize: 20 }}>📊</span>
@@ -487,7 +531,7 @@ export default function App() {
     </div>
   );
 }
-import { createRoot } from 'react-dom/client';
+
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(<App />);

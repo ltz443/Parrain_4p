@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parrain 4P</title>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
-        body { margin: 0; background: #0A0B0F; color: #E8EDF5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        .header { padding: 25px; text-align: center; background: #111318; border-bottom: 1px solid #1A1E2A; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
-        .card { background: #111318; border: 1px solid #1A1E2A; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; }
-        .category { font-size: 10px; color: #4FFFA0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        .name { font-size: 16px; font-weight: 800; margin: 6px 0; }
-        .bonus { font-size: 18px; font-weight: 900; color: #4FFFA0; }
-        .btn { display: block; margin-top: 12px; text-align: center; background: #1E2230; color: #fff; padding: 10px; border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: bold; border: 1px solid #2D3347; }
-        .loading { text-align: center; margin-top: 50px; color: #8A95AA; }
+        body { margin: 0; background: #0A0B0F; color: white; font-family: sans-serif; text-align: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .card { background: #111318; border: 1px solid #1A1E2A; padding: 15px; border-radius: 12px; }
+        .bonus { color: #4FFFA0; font-weight: bold; font-size: 1.2em; }
+        h1 { color: #4FFFA0; padding: 20px; border-bottom: 1px solid #1A1E2A; }
     </style>
 </head>
 <body>
@@ -26,49 +22,32 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Connexion directe à ton Supabase
+        // Connexion à ton Supabase
         const supabaseUrl = 'https://wjduwqjcfbbhtkzzdkga.supabase.co';
         const supabaseKey = 'sb_publishable_IBBHjx4pchtNmbTAXNTQ7Q_oOi7Piso';
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const client = supabase.createClient(supabaseUrl, supabaseKey);
 
         function App() {
             const [offres, setOffres] = useState([]);
-            const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                async function fetchOffres() {
-                    const { data, error } = await _supabase.from('offres').select('*');
+                client.from('offres').select('*').then(({ data }) => {
                     if (data) setOffres(data);
-                    setLoading(false);
-                }
-                fetchOffres();
+                });
             }, []);
 
             return (
                 <div>
-                    <div className="header">
-                        <h1 style={{fontSize: '24px', fontWeight: '900', color: '#4FFFA0', margin: 0}}>PARRAIN 4P</h1>
-                        <p style={{fontSize: '12px', color: '#4A5568', margin: '5px 0 0 0'}}>Tes bonus en un clic</p>
+                    <h1>PARRAIN 4P</h1>
+                    <div className="grid">
+                        {offres.length === 0 ? <p>Chargement...</p> : offres.map(o => (
+                            <div key={o.id} className="card">
+                                <div style={{fontSize: '10px', opacity: 0.6}}>{o.categorie}</div>
+                                <div>{o.nom}</div>
+                                <div className="bonus">{o.bonus}</div>
+                            </div>
+                        ))}
                     </div>
-                    
-                    {loading ? (
-                        <div className="loading">Chargement des offres...</div>
-                    ) : (
-                        <div className="grid">
-                            {offres.map(o => (
-                                <div key={o.id} className="card">
-                                    <div className="category">{o.categorie}</div>
-                                    <div className="name">{o.nom}</div>
-                                    <div className="bonus">{o.bonus}</div>
-                                    <a href={o.lien && o.lien.startsWith('@') ? `https://instagram.com/${o.lien.replace('@','')}` : o.lien} 
-                                       target="_blank" 
-                                       className="btn">
-                                        Voir l'offre →
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
             );
         }

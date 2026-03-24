@@ -46,7 +46,7 @@ const OFFRES = [
     bonus: '20€',
     bonusFilleul: '20€ en Bitcoin',
     bonusParrain: '20€',
-    description: 'Plateforme de reference pour acheter et store des cryptomonnaies.',
+    description: 'Plateforme de reference pour acheter et stocker des cryptomonnaies.',
     conditions: ['S inscrire via le lien', 'Valider le KYC', 'Deposer 20€', 'Acheter 20€ de BTC'],
     type: 'lien',
     lien: 'https://coinbase.com/join/954EBFS?src=ios-link',
@@ -117,55 +117,109 @@ const AVIS = [
   { nom: "Julien", date: "Hier", texte: "J'ai testé Coinbase, bonus reçu en 24h. Nickel.", note: "⭐⭐⭐⭐⭐" }
 ];
 
-// ─── LOGIQUE CALCULATEUR ──────────────────────────────────────────────────────
+// ─── CONFIG & LOGIQUE PROFITMASTER (TON CODE EXACT) ───────────────────────────
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
+
+const TAUX_OPTIONS = [
+  { label: 'Auto-entrepreneur - Prestation de services (21.2%)', value: 21.2 },
+  { label: 'Auto-entrepreneur - Vente de marchandises (12.8%)', value: 12.8 },
+  { label: 'Auto-entrepreneur - Liberal CIPAV (21.2%)', value: 21.2 },
+  { label: 'EIRL / EI au reel (estimation 45%)', value: 45 },
+  { label: 'Personnalise', value: null },
+];
+
 const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n || 0);
+const pct = (n) => `${(n || 0).toFixed(1)}%`;
 
 function calcul(f) {
-  const p = parseFloat(f.prixVente) || 0;
-  const m = parseFloat(f.matieres) || 0;
-  const t = parseFloat(f.transport) || 0;
-  const o = parseFloat(f.outillage) || 0;
-  const a = parseFloat(f.autresFrais) || 0;
-  const h = parseFloat(f.heures) || 0;
-  const th = parseFloat(f.tauxHoraire) || 0;
-  const tx = parseFloat(f.tauxCotisations) || 0;
-  const coutMain = h * th;
-  const cotis = (p * tx) / 100;
-  const total = m + t + o + a + coutMain + cotis;
-  const net = p - total;
-  const marge = p > 0 ? (net / p) * 100 : 0;
-  return { net, marge, total, cotis, coutMain };
+  const prixVente = parseFloat(f.prixVente) || 0;
+  const matieres = parseFloat(f.matieres) || 0;
+  const transport = parseFloat(f.transport) || 0;
+  const outillage = parseFloat(f.outillage) || 0;
+  const autresFrais = parseFloat(f.autresFrais) || 0;
+  const heures = parseFloat(f.heures) || 0;
+  const tauxHoraire = parseFloat(f.tauxHoraire) || 0;
+  const taux = parseFloat(f.tauxCotisations) || 0;
+  const coutMain = heures * tauxHoraire;
+  const cotisations = (prixVente * taux) / 100;
+  const totalCharges = matieres + transport + outillage + autresFrais + coutMain + cotisations;
+  const beneficeNet = prixVente - totalCharges;
+  const marge = prixVente > 0 ? (beneficeNet / prixVente) * 100 : 0;
+  let sante = 'Deficitaire';
+  if (marge >= 20) sante = 'Rentable';
+  else if (marge >= 0) sante = 'Risque';
+  return { prixVente, matieres, transport, outillage, autresFrais, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
 }
 
-// ─── COMPOSANTS UI ────────────────────────────────────────────────────────────
-function InputField({ label, value, onChange, prefix }) {
+// ─── COMPOSANTS PROFITMASTER (TON CODE EXACT) ─────────────────────────────────
+
+function SimulationMensuelle({ beneficeNet }) {
+  const paliers = [5, 10, 20, 30, 50];
   return (
-    <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#8A95AA', marginBottom: 5 }}>{label}</label>
+    <div style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '22px 20px', marginTop: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+        <span style={{ fontSize: 18 }}>🚀</span>
+        <h3 style={{ fontSize: 15, fontWeight: 800, color: '#4FFFA0' }}>SIMULATION MENSUELLE</h3>
+      </div>
+      {paliers.map((nb) => {
+        const total = beneficeNet * nb;
+        return (
+          <div key={nb} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', background: '#0A0B0F', borderRadius: 10, marginBottom: 8 }}>
+            <span style={{ color: '#8A95AA' }}>{nb} clients / mois</span>
+            <span style={{ fontWeight: 800, color: total >= 2000 ? '#4FFFA0' : '#E8EDF5' }}>{fmt(total)}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function InputField({ label, id, value, onChange, prefix, hint }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#8A95AA', marginBottom: 6, textTransform: 'uppercase' }}>{label}</label>
       <div style={{ position: 'relative' }}>
-        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0' }}>{prefix || '€'}</span>
-        <input type="number" value={value} onChange={(e) => onChange(e.target.value)} style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', padding: '10px 12px 10px 30px', outline: 'none' }} />
+        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0', fontWeight: 700 }}>{prefix || '€'}</span>
+        <input type="number" value={value} onChange={(e) => onChange(e.target.value)} style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', padding: '12px 14px 12px 34px', outline: 'none' }} />
       </div>
     </div>
   );
 }
 
-// ─── APP ──────────────────────────────────────────────────────────────────────
+function Section({ title, icon, children }) {
+  return (
+    <div style={{ background: '#111318', borderRadius: 16, padding: '22px 20px', marginBottom: 16, border: '1px solid #1A1E2A' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+        <span style={{ fontSize: 18 }}>{icon}</span>
+        <h3 style={{ fontSize: 15, fontWeight: 800, color: '#4FFFA0' }}>{title}</h3>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ─── APP PRINCIPALE ────────────────────────────────────────────────────────────
+
 export default function App() {
   const [onglet, setOnglet] = useState('parrainage');
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
-  
-  const [fields, setFields] = useState({ prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2' });
+
+  // State Calculateur
+  const [fields, setFields] = useState({
+    prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2', tauxOption: '21.2', tauxPersonnalise: ''
+  });
   const res = calcul(fields);
+  const setField = (k) => (v) => setFields(prev => ({ ...prev, [k]: v }));
 
   return (
     <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif', paddingBottom: 80 }}>
-      <div style={{ padding: '20px', textAlign: 'center', background: '#111318', borderBottom: '1px solid #1A1E2A' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0' }}>Parrain 4P</h1>
+      {/* HEADER */}
+      <div style={{ background: '#111318', borderBottom: '1px solid #1A1E2A', padding: '20px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0' }}>Parrain 4P</h1>
       </div>
 
+      {/* ONGLET PARRAINAGE */}
       {onglet === 'parrainage' && (
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
           {!selected ? (
@@ -194,14 +248,9 @@ export default function App() {
                   <h2 style={{ fontSize: 22, fontWeight: 900 }}>{selected.nom}</h2>
                 </div>
                 <p style={{ color: '#8A95AA', marginBottom: 20, lineHeight: 1.5 }}>{selected.description}</p>
-                
-                <div style={{ marginBottom: 20 }}>
-                  {selected.conditions.map((c, i) => <div key={i} style={{ fontSize: 13, color: '#8A95AA', marginBottom: 6 }}>• {c}</div>)}
-                </div>
-
                 <div style={{ background: '#0A0B0F', padding: '20px', borderRadius: 12, border: '1px dashed #4FFFA0', textAlign: 'center' }}>
                   {selected.type === 'contact' ? (
-                    <button onClick={() => window.open('https://instagram.com/' + selected.contact.replace('@',''), '_blank')} style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #833AB4, #FD1D1D)', border: 'none', color: '#FFF', borderRadius: 12, fontWeight: 800 }}>Contact Instagram {selected.contact}</button>
+                    <button onClick={() => window.open('https://instagram.com/parrain_4p', '_blank')} style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #833AB4, #FD1D1D)', border: 'none', color: '#FFF', borderRadius: 12, fontWeight: 800 }}>Contact Instagram @parrain_4p</button>
                   ) : selected.type === 'code' ? (
                     <div style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0' }}>{selected.code}</div>
                   ) : (
@@ -214,6 +263,7 @@ export default function App() {
         </div>
       )}
 
+      {/* ONGLET AVIS */}
       {onglet === 'avis' && (
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
           {AVIS.map((a, i) => (
@@ -222,30 +272,46 @@ export default function App() {
                 <span style={{ fontWeight: 800 }}>{a.nom}</span>
                 <span style={{ fontSize: 11, color: '#4A5568' }}>{a.date}</span>
               </div>
-              <div style={{ color: '#FFD700', fontSize: 10, marginBottom: 8 }}>{a.note}</div>
-              <p style={{ fontSize: 14, color: '#8A95AA' }}>"{a.texte}"</p>
+              <div style={{ color: '#FFD700', fontSize: 10 }}>{a.note}</div>
+              <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
             </div>
           ))}
         </div>
       )}
 
+      {/* ONGLET CALCULATEUR (TON CODE EXACT) */}
       {onglet === 'calculateur' && (
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-          <div style={{ background: '#111318', padding: '18px', borderRadius: 14, border: '1px solid #1A1E2A', marginBottom: 12 }}>
-             <InputField label="PRIX DE VENTE" value={fields.prixVente} onChange={(v) => setFields({...fields, prixVente: v})} />
-             <InputField label="MATIÈRES PREMIÈRES" value={fields.matieres} onChange={(v) => setFields({...fields, matieres: v})} />
-             <InputField label="TRANSPORT" value={fields.transport} onChange={(v) => setFields({...fields, transport: v})} />
-          </div>
-          {parseFloat(fields.prixVente) > 0 && (
-            <div style={{ background: '#111318', padding: '20px', borderRadius: 16, border: '2px solid #4FFFA0', textAlign: 'center' }}>
-              <div style={{ fontSize: 11, color: '#8A95AA' }}>BÉNÉFICE NET ESTIMÉ</div>
-              <div style={{ fontSize: 32, fontWeight: 900, color: '#4FFFA0' }}>{fmt(res.net)}</div>
-              <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', marginTop: 15, padding: '14px', background: '#4FFFA0', border: 'none', borderRadius: 10, fontWeight: 800 }}>Télécharger Bilan PDF (2€)</button>
+          <Section title="REVENUS" icon="💰">
+            <InputField label="Prix de vente estime" value={fields.prixVente} onChange={setField('prixVente')} />
+          </Section>
+          <Section title="COUTS DIRECTS" icon="📦">
+            <InputField label="Matieres premieres" value={fields.matieres} onChange={setField('matieres')} />
+            <InputField label="Transport / Essence" value={fields.transport} onChange={setField('transport')} />
+            <InputField label="Outillage" value={fields.outillage} onChange={setField('outillage')} />
+            <InputField label="Autres frais" value={fields.autresFrais} onChange={setField('autresFrais')} />
+          </Section>
+          <Section title="TEMPS PASSE" icon="🕐">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
+              <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
             </div>
+          </Section>
+          
+          {res.prixVente > 0 && (
+            <>
+              <div style={{ background: '#111318', padding: '20px', borderRadius: 16, border: '2px solid #4FFFA0', textAlign: 'center' }}>
+                <div style={{ fontSize: 11, color: '#8A95AA' }}>BENEFICE NET</div>
+                <div style={{ fontSize: 32, fontWeight: 900, color: '#4FFFA0' }}>{fmt(res.beneficeNet)}</div>
+                <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', marginTop: 15, padding: '16px', background: '#4FFFA0', borderRadius: 12, border: 'none', fontWeight: 800 }}>Telecharger Bilan PDF - 2,00 €</button>
+              </div>
+              <SimulationMensuelle beneficeNet={res.beneficeNet} />
+            </>
           )}
         </div>
       )}
 
+      {/* NAV FIXE */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', display: 'flex', borderTop: '1px solid #1A1E2A', zIndex: 100 }}>
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>OFFRES</button>
         <button onClick={() => setOnglet('avis')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>AVIS</button>

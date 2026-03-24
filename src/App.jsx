@@ -10,7 +10,7 @@ function PageAvis() {
   ];
 
   return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 100 }}>
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
       <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 20, textAlign: 'center', letterSpacing: '1px' }}>AVIS UTILISATEURS</h2>
       {avis.map((a, i) => (
         <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
@@ -46,8 +46,8 @@ function PageParrainage() {
   const filtered = filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre);
 
   return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 100 }}>
-      <header style={{ textAlign: 'center', marginBottom: 30 }}>
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
+      <header style={{ textAlign: 'center', marginBottom: 30, paddingTop: 20 }}>
         <p style={{ color: '#4FFFA0', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' }}>Hub Financier</p>
         <h1 style={{ color: '#E8EDF5', fontSize: 28, fontWeight: 900, margin: '5px 0' }}>Parrain 4P</h1>
         <p style={{ color: '#8A95AA', fontSize: 13 }}>Parrainages + Calculateur de Rentabilité</p>
@@ -76,14 +76,13 @@ function PageParrainage() {
 // ─── COMPOSANT CALCULATEUR ──────────────────────────────────────────────────
 function PageProfitMaster() {
   const [montant, setMontant] = useState('');
-  const [frais, setFrais] = useState('');
   const [prixVente, setPrixVente] = useState('');
-  const profit = prixVente && montant ? (prixVente - montant - (frais || 0)).toFixed(2) : 0;
+  const profit = prixVente && montant ? (prixVente - montant).toFixed(2) : 0;
   const roi = montant > 0 ? ((profit / montant) * 100).toFixed(1) : 0;
 
   return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 100 }}>
-      <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 24, textAlign: 'center' }}>CALCULATEUR PRO</h2>
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 24, textAlign: 'center', paddingTop: 20 }}>CALCULATEUR PRO</h2>
       <div style={{ background: '#111318', borderRadius: 24, padding: '24px', border: '1px solid #1A1E2A' }}>
         <div style={{ marginBottom: 20 }}>
           <label style={{ display: 'block', color: '#8A95AA', fontSize: 12, fontWeight: 700, marginBottom: 8, textTransform: 'uppercase' }}>Achat (€)</label>
@@ -113,35 +112,54 @@ function App() {
   const [onglet, setOnglet] = useState('parrainage');
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0C10', color: '#E8EDF5', fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      width: '100vw',
+      background: '#0A0C10', 
+      color: '#E8EDF5', 
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      margin: 0,
+      padding: 0,
+      overflowX: 'hidden'
+    }}>
       
       {/* AFFICHAGE DE LA PAGE SELON L'ONGLET */}
       {onglet === 'parrainage' ? <PageParrainage /> : 
        onglet === 'calculateur' ? <PageProfitMaster /> : 
        <PageAvis />}
 
-      {/* BARRE DE NAVIGATION FIXE */}
-      <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 400, background: 'rgba(17, 19, 24, 0.9)', backdropFilter: 'blur(10px)', borderRadius: 24, display: 'flex', padding: '8px', border: '1px solid #1A1E2A', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', zIndex: 1000 }}>
+      {/* BARRE DE NAVIGATION FIXE ADAPTÉE IPHONE */}
+      <div style={{ 
+        position: 'fixed', 
+        bottom: 'max(20px, env(safe-area-inset-bottom))', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        width: '90%', 
+        maxWidth: 400, 
+        background: 'rgba(17, 19, 24, 0.95)', 
+        backdropFilter: 'blur(15px)', 
+        WebkitBackdropFilter: 'blur(15px)',
+        borderRadius: 24, 
+        display: 'flex', 
+        padding: '8px', 
+        border: '1px solid rgba(255,255,255,0.1)', 
+        boxShadow: '0 10px 40px rgba(0,0,0,0.6)', 
+        zIndex: 1000 
+      }}>
         
-        {/* BOUTON PARRAINAGES */}
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <span style={{ fontSize: 20 }}>🎁</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase' }}>Offres</span>
-          {onglet === 'parrainage' && <div style={{ width: 16, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
 
-        {/* BOUTON AVIS (NOUVEAU) */}
         <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <span style={{ fontSize: 20 }}>⭐</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase' }}>Avis</span>
-          {onglet === 'avis' && <div style={{ width: 16, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
 
-        {/* BOUTON CALCULATEUR */}
         <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <span style={{ fontSize: 20 }}>📊</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase' }}>Calcul</span>
-          {onglet === 'calculateur' && <div style={{ width: 16, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
       </div>
     </div>

@@ -1,240 +1,186 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// ─── CONFIGURATION & LOGIQUE CALCULATEUR ───────────────────────────────────
-const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
-
-const TAUX_OPTIONS = [
-  { label: 'Auto-entrepreneur - Prestation de services (21.2%)', value: 21.2 },
-  { label: 'Auto-entrepreneur - Vente de marchandises (12.8%)', value: 12.8 },
-  { label: 'Auto-entrepreneur - Liberal CIPAV (21.2%)', value: 21.2 },
-  { label: 'EIRL / EI au reel (estimation 45%)', value: 45 },
-  { label: 'Personnalise', value: null },
+// ─── DONNÉES COMPLÈTES (BASÉES SUR TES CAPTURES) ──────────────────────────
+const OFFRES = [
+  {
+    id: 'hellobank',
+    nom: 'Hello Bank',
+    categorie: 'BANQUE',
+    emoji: '🏦',
+    couleur: '#00A8E8',
+    description: 'Ouvre un compte Hello One et recois 40€ sans depot, puis 40€ de plus des le 10e achat carte.',
+    tuGagnes: '80€',
+    filleulRecoit: '40€ + 40€',
+    delai: '72 heures',
+    conditions: [
+      '1ere ouverture d un compte de depot Hello One',
+      '40€ offerts sans depot minimum',
+      '40€ supplementaires au 10e achat carte bancaire'
+    ],
+    type: 'instagram',
+    contact: '@parrain_4p',
+    instruction: 'Pour recevoir ton invitation, envoie ton prenom + adresse email sur Instagram'
+  },
+  {
+    id: 'joko',
+    nom: 'Joko',
+    categorie: 'CASHBACK',
+    emoji: '💸',
+    couleur: '#FF6B35',
+    description: 'Joko transforme tes achats quotidiens en micro-economies automatiques en connectant ton compte bancaire.',
+    tuGagnes: '3€ + 10% du cashback filleul',
+    filleulRecoit: '1€ a l inscription',
+    delai: 'instantané',
+    conditions: [
+      'Telecharger l app Joko',
+      'Connecter son compte bancaire',
+      '1€ offert a l inscription avec le code'
+    ],
+    type: 'code',
+    code: 'skevdw'
+  }
 ];
 
+// ─── LOGIQUE CALCULATEUR ──────────────────────────────────────────────────
+const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n || 0);
-const pct = (n) => `${(n || 0).toFixed(1)}%`;
 
 function calcul(f) {
   const prixVente = parseFloat(f.prixVente) || 0;
   const matieres = parseFloat(f.matieres) || 0;
   const transport = parseFloat(f.transport) || 0;
-  const outillage = parseFloat(f.outillage) || 0;
-  const autresFrais = parseFloat(f.autresFrais) || 0;
-  const heures = parseFloat(f.heures) || 0;
-  const tauxHoraire = parseFloat(f.tauxHoraire) || 0;
+  const autres = parseFloat(f.autresFrais) || 0;
   const taux = parseFloat(f.tauxCotisations) || 0;
-  const coutMain = heures * tauxHoraire;
   const cotisations = (prixVente * taux) / 100;
-  const totalCharges = matieres + transport + outillage + autresFrais + coutMain + cotisations;
-  const beneficeNet = prixVente - totalCharges;
+  const beneficeNet = prixVente - (matieres + transport + autres + cotisations);
   const marge = prixVente > 0 ? (beneficeNet / prixVente) * 100 : 0;
-  let sante = 'Deficitaire';
-  if (marge >= 20) sante = 'Rentable';
-  else if (marge >= 0) sante = 'Risque';
-  return { prixVente, matieres, transport, outillage, autresFrais, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
+  return { beneficeNet, marge, prixVente };
 }
 
-// ─── COMPOSANTS UI CALCULATEUR ─────────────────────────────────────────────
-function InputField({ label, value, onChange, placeholder, prefix, hint }) {
+// ─── COMPOSANTS UI ────────────────────────────────────────────────────────
+
+// La fameuse page qui s'ouvre (Modale)
+function OffreDetails({ offre, onClose }) {
+  if (!offre) return null;
+
   return (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#8A95AA', marginBottom: 6, textTransform: 'uppercase' }}>{label}</label>
-      <div style={{ position: 'relative' }}>
-        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0', fontSize: 14, fontWeight: 700 }}>{prefix || '€'}</span>
-        <input type="number" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder || '0'} inputMode="decimal"
-          style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', fontSize: 16, padding: '12px 14px 12px 34px', outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }} />
+    <div style={{ position: 'fixed', inset: 0, background: '#0A0B0F', zIndex: 2000, overflowY: 'auto', padding: '20px' }}>
+      {/* Header Modale */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
+        <button onClick={onClose} style={{ background: '#1E2230', border: 'none', color: '#FFF', width: 40, height: 40, borderRadius: '50%', fontSize: 20 }}>✕</button>
+        <span style={{ fontWeight: 800, fontSize: 18 }}>AppHub</span>
+        <div style={{ width: 40 }}></div>
       </div>
-      {hint && <p style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>{hint}</p>}
-    </div>
-  );
-}
 
-function SanteIndicateur({ sante }) {
-  const configs = {
-    Rentable: { bg: 'rgba(79,255,160,0.12)', color: '#4FFFA0', border: '#4FFFA0', emoji: '✅' },
-    Risque: { bg: 'rgba(255,190,50,0.12)', color: '#FFBE32', border: '#FFBE32', emoji: '⚠️' },
-    Deficitaire: { bg: 'rgba(255,80,80,0.12)', color: '#FF5050', border: '#FF5050', emoji: '🔴' },
-  };
-  const config = configs[sante] || configs['Deficitaire'];
-  return (
-    <div style={{ background: config.bg, border: '1.5px solid ' + config.border, borderRadius: 12, padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span style={{ fontSize: 20 }}>{config.emoji}</span>
-      <div>
-        <div style={{ fontSize: 11, color: '#8A95AA', textTransform: 'uppercase' }}>Santé du projet</div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: config.color }}>{sante}</div>
-      </div>
-    </div>
-  );
-}
-
-function ResultCard({ label, value, highlight }) {
-  return (
-    <div style={{ background: highlight ? 'rgba(79,255,160,0.07)' : '#111318', border: '1.5px solid ' + (highlight ? '#4FFFA0' : '#1E2230'), borderRadius: 12, padding: '14px 18px' }}>
-      <div style={{ fontSize: 11, color: '#8A95AA', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
-      <div style={{ fontSize: highlight ? 22 : 18, fontWeight: 800, color: highlight ? '#4FFFA0' : '#E8EDF5', fontFamily: 'monospace' }}>{value}</div>
-    </div>
-  );
-}
-
-function SimulationMensuelle({ beneficeNet }) {
-  const paliers = [5, 10, 20, 30, 50];
-  return (
-    <div style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '22px 20px', marginTop: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
-        <span style={{ fontSize: 18 }}>🚀</span>
-        <h3 style={{ fontSize: 15, fontWeight: 800, color: '#4FFFA0' }}>SIMULATION MENSUELLE</h3>
-      </div>
-      {paliers.map((nb) => (
-        <div key={nb} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0A0B0F', borderRadius: 10, padding: '12px 16px', marginBottom: 8, border: '1px solid #1A1E2A' }}>
-          <span style={{ fontSize: 14, color: '#8A95AA' }}><strong style={{ color: '#E8EDF5' }}>{nb} clients</strong>/mois</span>
-          <span style={{ fontSize: 15, fontWeight: 800, color: (beneficeNet * nb) >= 2000 ? '#4FFFA0' : '#E8EDF5', fontFamily: 'monospace' }}>{fmt(beneficeNet * nb)}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Section({ title, icon, children }) {
-  return (
-    <div style={{ background: '#111318', borderRadius: 16, padding: '20px', marginBottom: 16, border: '1px solid #1A1E2A' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
-        <span style={{ fontSize: 18 }}>{icon}</span>
-        <h3 style={{ fontSize: 14, fontWeight: 800, color: '#4FFFA0' }}>{title}</h3>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-// ─── PAGES CONTENU ─────────────────────────────────────────────────────────
-const OFFRES = [
-  { id: 1, nom: 'Hello Bank', prime: '80€', categorie: 'Banque', emoji: '🏦', couleur: '#00A8E8' },
-  { id: 2, nom: 'Joko', prime: '1€ + cashback', categorie: 'Cashback', emoji: '💸', couleur: '#FF6B35' },
-  { id: 3, nom: 'Coinbase', prime: '20€', categorie: 'Crypto', emoji: '₿', couleur: '#0052FF' },
-  { id: 4, nom: 'VeraCash', prime: '10€', categorie: 'Or', emoji: '🥇', couleur: '#FFD700' },
-  { id: 5, nom: 'Robinhood', prime: '10€', categorie: 'Crypto', emoji: '🏹', couleur: '#00C805' },
-  { id: 6, nom: 'Winamax', prime: '40€', categorie: 'Paris', emoji: '⚽', couleur: '#E21421' }
-];
-
-function App() {
-  const [onglet, setOnglet] = useState('parrainage');
-  const [filtre, setFiltre] = useState('Tout');
-  const [fields, setFields] = useState({
-    prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2', tauxPersonnalise: '', tauxOption: '21.2'
-  });
-
-  const setField = (key) => (val) => setFields((prev) => ({ ...prev, [key]: val }));
-  const res = calcul(fields);
-
-  useEffect(() => {
-    const t = fields.tauxOption === 'custom' ? (parseFloat(fields.tauxPersonnalise) || 0) : parseFloat(fields.tauxOption);
-    setFields(prev => ({ ...prev, tauxCotisations: String(t) }));
-  }, [fields.tauxOption, fields.tauxPersonnalise]);
-
-  return (
-    <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif', overflowX: 'hidden' }}>
-      
-      {/* CONTENU PARRAINAGE */}
-      {onglet === 'parrainage' && (
-        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
-          <header style={{ textAlign: 'center', marginBottom: 30 }}>
-            <h1 style={{ color: '#4FFFA0', fontSize: 28, fontWeight: 900 }}>Parrain 4P</h1>
-            <p style={{ color: '#8A95AA', fontSize: 13 }}>Hub Financier & Optimisation</p>
-          </header>
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20, paddingBottom: 10 }}>
-            {['Tout', ...new Set(OFFRES.map(o => o.categorie))].map(cat => (
-              <button key={cat} onClick={() => setFiltre(cat)} style={{ padding: '8px 16px', borderRadius: 20, border: 'none', background: filtre === cat ? '#4FFFA0' : '#111318', color: filtre === cat ? '#0A0C10' : '#8A95AA', fontWeight: 700, whiteSpace: 'nowrap' }}>{cat}</button>
-            ))}
+      <div style={{ background: '#111318', borderRadius: 24, padding: '24px', border: '1px solid #1A1E2A' }}>
+        {/* Titre & Icone */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 20 }}>
+          <div style={{ width: 60, height: 60, borderRadius: 16, background: '#0A0B0F', border: `2px solid ${offre.couleur}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30 }}>
+            {offre.emoji}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            {(filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre)).map(offre => (
-              <div key={offre.id} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 20, padding: '16px' }}>
-                <div style={{ fontSize: 24, marginBottom: 10 }}>{offre.emoji}</div>
-                <h3 style={{ color: '#E8EDF5', fontSize: 15, fontWeight: 800 }}>{offre.nom}</h3>
-                <p style={{ color: offre.couleur, fontSize: 14, fontWeight: 700 }}>{offre.prime}</p>
-              </div>
-            ))}
+          <div>
+            <div style={{ fontSize: 12, color: '#4A5568', fontWeight: 700 }}>{offre.categorie}</div>
+            <div style={{ fontSize: 24, fontWeight: 900 }}>{offre.nom}</div>
           </div>
         </div>
-      )}
-      
-      {/* CONTENU AVIS */}
-      {onglet === 'avis' && (
-        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 20, textAlign: 'center' }}>AVIS UTILISATEURS</h2>
-          {[
-            { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
-            { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" }
-          ].map((a, i) => (
-            <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                <span style={{ fontWeight: 800, color: '#E8EDF5' }}>{a.nom}</span>
-                <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
-              </div>
-              <div style={{ color: '#FFD700', fontSize: 12 }}>{a.note}</div>
-              <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
+
+        <p style={{ color: '#8A95AA', lineHeight: 1.5, marginBottom: 25 }}>{offre.description}</p>
+
+        {/* Grille Bonus */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 30 }}>
+          <div style={{ background: '#0A0B0F', padding: '15px', borderRadius: 16, textAlign: 'center', border: '1px solid #1A1E2A' }}>
+            <div style={{ fontSize: 10, color: '#4A5568', marginBottom: 8 }}>TU GAGNES</div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0' }}>{offre.tuGagnes}</div>
+          </div>
+          <div style={{ background: '#0A0B0F', padding: '15px', borderRadius: 16, textAlign: 'center', border: '1px solid #1A1E2A' }}>
+            <div style={{ fontSize: 10, color: '#4A5568', marginBottom: 8 }}>FILLEUL RECOIT</div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: '#FFF' }}>{offre.filleulRecoit}</div>
+          </div>
+        </div>
+
+        {/* Conditions */}
+        <div style={{ marginBottom: 30 }}>
+          <h4 style={{ color: '#4FFFA0', fontSize: 14, fontWeight: 800, marginBottom: 15 }}>CONDITIONS</h4>
+          {offre.conditions.map((c, i) => (
+            <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, fontSize: 14, color: '#8A95AA' }}>
+              <span style={{ color: '#4FFFA0' }}>✓</span> {c}
             </div>
           ))}
-        </div>
-      )}
-
-      {/* CONTENU CALCULATEUR */}
-      {onglet === 'calculateur' && (
-        <div style={{ maxWidth: 480, margin: '0 auto', padding: '20px 16px', paddingBottom: 120 }}>
-          <div style={{ textAlign: 'center', marginBottom: 25 }}>
-            <h1 style={{ fontSize: 26, fontWeight: 900, color: '#4FFFA0' }}>ProfitMaster</h1>
-            <p style={{ color: '#4A5568', fontSize: 13 }}>Calculateur de Rentabilité Pro</p>
+          <div style={{ display: 'flex', gap: 10, marginTop: 10, fontSize: 14, color: '#8A95AA' }}>
+            <span style={{ color: '#4FFFA0' }}>✓</span> Delai : {offre.delai}
           </div>
-          <Section title="REVENUS" icon="💰">
-            <InputField label="Prix de vente estimé" value={fields.prixVente} onChange={setField('prixVente')} />
-          </Section>
-          <Section title="COÛTS DIRECTS" icon="📦">
-            <InputField label="Matières premières" value={fields.matieres} onChange={setField('matieres')} />
-            <InputField label="Transport / Essence" value={fields.transport} onChange={setField('transport')} />
-            <InputField label="Autres frais" value={fields.autresFrais} onChange={setField('autresFrais')} />
-          </Section>
-          <Section title="TEMPS PASSÉ" icon="🕐">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
-              <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
-            </div>
-          </Section>
-          <Section title="FISCALITÉ" icon="🏛️">
-            <select value={fields.tauxOption} onChange={(e) => setFields(prev => ({ ...prev, tauxOption: e.target.value }))}
-              style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', padding: '12px', marginBottom: 10, outline: 'none' }}>
-              {TAUX_OPTIONS.map(o => <option key={o.label} value={o.value === null ? 'custom' : String(o.value)}>{o.label}</option>)}
-            </select>
-            {fields.tauxOption === 'custom' && <InputField label="Taux personnalisé (%)" prefix="%" value={fields.tauxPersonnalise} onChange={setField('tauxPersonnalise')} />}
-          </Section>
-          {res.prixVente > 0 && (
+        </div>
+
+        {/* Action */}
+        <div style={{ background: '#0A0B0F', borderRadius: 20, padding: '20px', border: '1px dashed #4FFFA0', textAlign: 'center' }}>
+          {offre.type === 'instagram' ? (
             <>
-              <SanteIndicateur sante={res.sante} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 12 }}>
-                <ResultCard label="Bénéfice Net" value={fmt(res.beneficeNet)} highlight />
-                <ResultCard label="Marge Nette" value={pct(res.marge)} />
-              </div>
-              <SimulationMensuelle beneficeNet={res.beneficeNet} />
-              <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', marginTop: 20, padding: '16px', background: '#4FFFA0', color: '#0A0B0F', border: 'none', borderRadius: 14, fontWeight: 800, cursor: 'pointer' }}>
-                Télécharger mon Bilan PDF (2€)
+              <p style={{ fontSize: 12, color: '#8A95AA', marginBottom: 15 }}>{offre.instruction}</p>
+              <button 
+                onClick={() => window.open('https://instagram.com/parrain_4p')}
+                style={{ width: '100%', padding: '16px', borderRadius: 14, border: 'none', fontWeight: 800, color: '#FFF', background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)' }}
+              >
+                Me contacter sur Instagram {offre.contact}
               </button>
+            </>
+          ) : (
+            <>
+              <p style={{ fontSize: 12, color: '#8A95AA', marginBottom: 5 }}>CODE PARRAINAGE</p>
+              <div style={{ fontSize: 32, fontWeight: 900, color: '#4FFFA0', letterSpacing: 2, marginBottom: 15 }}>{offre.code}</div>
+              <button style={{ width: '100%', padding: '16px', borderRadius: 14, border: 'none', fontWeight: 800, background: '#4FFFA0', color: '#0A0B0F' }}>Copier le code</button>
             </>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── APP PRINCIPALE ───────────────────────────────────────────────────────
+export default function App() {
+  const [onglet, setOnglet] = useState('parrainage');
+  const [selectedOffre, setSelectedOffre] = useState(null);
+  const [fields, setFields] = useState({ prixVente: '', matieres: '', transport: '', autresFrais: '', tauxCotisations: '21.2' });
+
+  const res = calcul(fields);
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif' }}>
+      
+      {/* Liste des Offres */}
+      {onglet === 'parrainage' && (
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '20px' }}>
+          <h1 style={{ textAlign: 'center', color: '#4FFFA0', fontWeight: 900, marginBottom: 30 }}>Parrain 4P</h1>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {OFFRES.map(o => (
+              <div key={o.id} onClick={() => setSelectedOffre(o)} style={{ background: '#111318', padding: '20px', borderRadius: 20, border: '1px solid #1A1E2A' }}>
+                <div style={{ fontSize: 28, marginBottom: 10 }}>{o.emoji}</div>
+                <div style={{ fontWeight: 800 }}>{o.nom}</div>
+                <div style={{ color: o.couleur, fontSize: 14, fontWeight: 700 }}>{o.tuGagnes}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
-      {/* NAVIGATION BAR */}
-      <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', width: '92%', maxWidth: 400, background: 'rgba(17, 19, 24, 0.95)', backdropFilter: 'blur(10px)', borderRadius: 22, display: 'flex', padding: '6px', border: '1px solid #1A1E2A', zIndex: 1000 }}>
-        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 18 }}>🎁</span> OFFRES
-        </button>
-        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 18 }}>⭐</span> AVIS
-        </button>
-        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 18 }}>📊</span> CALCUL
-        </button>
-      </div>
+      {/* Vue Calculateur (Simplifiée ici) */}
+      {onglet === 'calculateur' && (
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '20px' }}>
+           <h2 style={{ color: '#4FFFA0', textAlign: 'center' }}>ProfitMaster</h2>
+           <input type="number" placeholder="Prix de vente" onChange={e => setFields({...fields, prixVente: e.target.value})} style={{ width: '100%', padding: '15px', margin: '10px 0', background: '#111318', border: '1px solid #1A1E2A', color: '#FFF', borderRadius: 10 }} />
+           {res.prixVente > 0 && <div style={{ background: '#4FFFA0', color: '#000', padding: '20px', borderRadius: 15, textAlign: 'center', fontWeight: 900, marginTop: 20 }}>Bénéfice : {fmt(res.beneficeNet)}</div>}
+        </div>
+      )}
+
+      {/* Fenêtre de détails (Modale) */}
+      {selectedOffre && <OffreDetails offre={selectedOffre} onClose={() => setSelectedOffre(null)} />}
+
+      {/* Barre de Navigation */}
+      <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', display: 'flex', padding: '15px', borderTop: '1px solid #1A1E2A', justifyContent: 'space-around' }}>
+        <button onClick={() => setOnglet('parrainage')} style={{ background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>🎁 PARRAINAGES</button>
+        <button onClick={() => setOnglet('calculateur')} style={{ background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>📊 CALCULATEUR</button>
+      </nav>
     </div>
   );
 }

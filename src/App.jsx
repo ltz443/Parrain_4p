@@ -1,124 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// ─── TES OFFRES (STRICTEMENT TELLES QUE TU ME LES AS ENVOYÉES) ───────────────
-const OFFRES = [
-  {
-    id: 'hellobank',
-    nom: 'Hello Bank',
-    categorie: 'Banque',
-    emoji: '🏦',
-    couleur: '#00B4FF',
-    bonus: '80€',
-    bonusFilleul: '40€ + 40€',
-    bonusParrain: '80€',
-    description: 'Ouvre un compte Hello One et recois 40€ sans depot, puis 40€ de plus des le 10e achat carte.',
-    conditions: [
-      '1ere ouverture d un compte de depot Hello One',
-      '40€ offerts sans depot minimum',
-      '40€ supplementaires au 10e achat carte bancaire',
-      'Delai : 72 heures',
-    ],
-    type: 'contact',
-    contact: '@parrain_4p',
-    note: 'Pour recevoir ton invitation, envoie ton prenom + adresse email sur Instagram',
-  },
-  {
-    id: 'joko',
-    nom: 'Joko',
-    categorie: 'Cashback',
-    emoji: '💸',
-    couleur: '#FF6B35',
-    bonus: '1€ + cashback',
-    bonusFilleul: '1€ a l inscription',
-    bonusParrain: '3€ + 10% du cashback filleul',
-    description: 'Joko transforme tes achats quotidiens en micro-economies automatiques.',
-    conditions: ['Telecharger l app Joko', 'Connecter son compte bancaire', '1€ offert avec le code'],
-    type: 'code',
-    code: 'skevdw',
-  },
-  {
-    id: 'coinbase',
-    nom: 'Coinbase',
-    categorie: 'Crypto',
-    emoji: '₿',
-    couleur: '#0052FF',
-    bonus: '20€',
-    bonusFilleul: '20€ en Bitcoin',
-    bonusParrain: '20€',
-    description: 'Plateforme de reference pour acheter et stocker des cryptomonnaies.',
-    conditions: ['S inscrire via le lien', 'Valider le KYC', 'Deposer 20€', 'Acheter 20€ de BTC'],
-    type: 'lien',
-    lien: 'https://coinbase.com/join/954EBFS?src=ios-link',
-  },
-  {
-    id: 'veracash',
-    nom: 'VeraCash',
-    categorie: 'Or & Epargne',
-    emoji: '🥇',
-    couleur: '#FFD700',
-    bonus: '10€ parrain',
-    bonusFilleul: 'Frais reduits',
-    bonusParrain: '10€',
-    description: 'Epargne et paye avec de l or et de l argent physique.',
-    conditions: ['S inscrire via le lien', 'Verifier son identite', 'Deposer 10€'],
-    type: 'lien',
-    lien: 'https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO',
-  },
-  {
-    id: 'robinhood',
-    nom: 'Robinhood',
-    categorie: 'Crypto Exchange',
-    emoji: '🏹',
-    couleur: '#00C805',
-    bonus: '10€',
-    bonusFilleul: '10€',
-    bonusParrain: '10€',
-    description: 'Exchange crypto simple sans frais caches.',
-    conditions: ['S inscrire via le lien', 'Valider identite', 'Deposer 10€'],
-    type: 'lien',
-    lien: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
-  },
-  {
-    id: 'winamax',
-    nom: 'Winamax',
-    categorie: 'Paris Sportifs',
-    emoji: '⚽',
-    couleur: '#E8002D',
-    bonus: '40€',
-    bonusFilleul: '40€',
-    bonusParrain: '40€',
-    description: 'La reference des paris sportifs en France.',
-    conditions: ['S inscrire avec le code', 'Deposer 10€'],
-    type: 'code',
-    code: 'LTZXVU',
-  },
-  {
-    id: 'betsson',
-    nom: 'Betsson',
-    categorie: 'Paris Sportifs',
-    emoji: '🎯',
-    couleur: '#FF4500',
-    bonus: '10€ Betboost',
-    bonusFilleul: '10€ Betboost',
-    bonusParrain: '10€ Betboost',
-    description: 'Plateforme de paris sportifs internationale.',
-    conditions: ['S inscrire via le lien', 'Verifier compte', 'Deposer 10€'],
-    type: 'lien',
-    lien: '#',
-  },
-];
-
-const CATEGORIES = ['Tout', 'Banque', 'Cashback', 'Crypto', 'Or & Epargne', 'Crypto Exchange', 'Paris Sportifs'];
-
-const AVIS = [
-  { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
-  { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" },
-  { nom: "Julien", date: "Hier", texte: "J'ai testé Coinbase, bonus reçu en 24h. Nickel.", note: "⭐⭐⭐⭐⭐" }
-];
-
-// ─── TON CALCULATEUR (STRICTEMENT TEL QUE TU ME L'AS ENVOYÉ) ─────────────────
+// ─── CONFIGURATION & LOGIQUE CALCULATEUR (TON CODE) ───────────────────────
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
+const BREVO_LINK = 'https://45517a4f.sibforms.com/serve/MUIFAIWHHPs2aA0dLWK0WLFoI9DzFyIYzfEutzRc6vmIGTHfhOmt_x2Up2V8d9HyWuk-c23F4oV1QssydJGpDoeTETbj-o9H--j8ERFglfooimRO7aA5l0YoEUxVvPe8D1cVDy80rx_A6V6ZbAuwFxHRdais63yxsDteR96OWNuv0k_KBnN4Lv4JPkwhJ7i0v04FmB9iveYp_uUoAg==';
 
 const TAUX_OPTIONS = [
   { label: 'Auto-entrepreneur - Prestation de services (21.2%)', value: 21.2 },
@@ -151,17 +36,35 @@ function calcul(f) {
   return { prixVente, matieres, transport, outillage, autresFrais, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
 }
 
-// ─── COMPOSANTS UI ────────────────────────────────────────────────────────────
-
-function InputField({ label, value, onChange, prefix, hint }) {
+// ─── COMPOSANTS UI CALCULATEUR (TON DESIGN) ───────────────────────────────
+function InputField({ label, id, value, onChange, placeholder, prefix, hint }) {
   return (
     <div style={{ marginBottom: 16 }}>
-      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#8A95AA', marginBottom: 6, textTransform: 'uppercase' }}>{label}</label>
+      <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#8A95AA', marginBottom: 6, textTransform: 'uppercase' }}>{label}</label>
       <div style={{ position: 'relative' }}>
-        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0', fontWeight: 700 }}>{prefix || '€'}</span>
-        <input type="number" value={value} onChange={(e) => onChange(e.target.value)} style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', fontSize: 16, padding: '12px 14px 12px 34px', outline: 'none' }} />
+        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0', fontSize: 14, fontWeight: 700 }}>{prefix || '€'}</span>
+        <input type="number" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder || '0'} inputMode="decimal"
+          style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', fontSize: 16, padding: '12px 14px 12px 34px', outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }} />
       </div>
       {hint && <p style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>{hint}</p>}
+    </div>
+  );
+}
+
+function SanteIndicateur({ sante }) {
+  const configs = {
+    Rentable: { bg: 'rgba(79,255,160,0.12)', color: '#4FFFA0', border: '#4FFFA0', emoji: '✅' },
+    Risque: { bg: 'rgba(255,190,50,0.12)', color: '#FFBE32', border: '#FFBE32', emoji: '⚠️' },
+    Deficitaire: { bg: 'rgba(255,80,80,0.12)', color: '#FF5050', border: '#FF5050', emoji: '🔴' },
+  };
+  const config = configs[sante] || configs['Deficitaire'];
+  return (
+    <div style={{ background: config.bg, border: '1.5px solid ' + config.border, borderRadius: 12, padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span style={{ fontSize: 20 }}>{config.emoji}</span>
+      <div>
+        <div style={{ fontSize: 11, color: '#8A95AA', textTransform: 'uppercase' }}>Santé du projet</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: config.color }}>{sante}</div>
+      </div>
     </div>
   );
 }
@@ -170,7 +73,7 @@ function ResultCard({ label, value, highlight }) {
   return (
     <div style={{ background: highlight ? 'rgba(79,255,160,0.07)' : '#111318', border: '1.5px solid ' + (highlight ? '#4FFFA0' : '#1E2230'), borderRadius: 12, padding: '14px 18px' }}>
       <div style={{ fontSize: 11, color: '#8A95AA', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
-      <div style={{ fontSize: highlight ? 26 : 20, fontWeight: 800, color: highlight ? '#4FFFA0' : '#E8EDF5' }}>{value}</div>
+      <div style={{ fontSize: highlight ? 22 : 18, fontWeight: 800, color: highlight ? '#4FFFA0' : '#E8EDF5', fontFamily: 'monospace' }}>{value}</div>
     </div>
   );
 }
@@ -183,135 +86,181 @@ function SimulationMensuelle({ beneficeNet }) {
         <span style={{ fontSize: 18 }}>🚀</span>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: '#4FFFA0' }}>SIMULATION MENSUELLE</h3>
       </div>
-      {paliers.map((nb) => {
-        const total = beneficeNet * nb;
-        return (
-          <div key={nb} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', background: '#0A0B0F', borderRadius: 10, marginBottom: 8, border: '1px solid #1A1E2A' }}>
-            <span style={{ color: '#8A95AA' }}><strong>{nb} clients</strong> / mois</span>
-            <span style={{ fontWeight: 800, color: total >= 2000 ? '#4FFFA0' : '#E8EDF5' }}>{fmt(total)}</span>
-          </div>
-        );
-      })}
+      {paliers.map((nb) => (
+        <div key={nb} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0A0B0F', borderRadius: 10, padding: '12px 16px', marginBottom: 8, border: '1px solid #1A1E2A' }}>
+          <span style={{ fontSize: 14, color: '#8A95AA' }}><strong style={{ color: '#E8EDF5' }}>{nb} clients</strong>/mois</span>
+          <span style={{ fontSize: 15, fontWeight: 800, color: (beneficeNet * nb) >= 2000 ? '#4FFFA0' : '#E8EDF5', fontFamily: 'monospace' }}>{fmt(beneficeNet * nb)}</span>
+        </div>
+      ))}
     </div>
   );
 }
 
-// ─── APP PRINCIPALE ────────────────────────────────────────────────────────────
+function Section({ title, icon, children }) {
+  return (
+    <div style={{ background: '#111318', borderRadius: 16, padding: '20px', marginBottom: 16, border: '1px solid #1A1E2A' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+        <span style={{ fontSize: 18 }}>{icon}</span>
+        <h3 style={{ fontSize: 14, fontWeight: 800, color: '#4FFFA0' }}>{title}</h3>
+      </div>
+      {children}
+    </div>
+  );
+}
 
-export default function App() {
-  const [onglet, setOnglet] = useState('parrainage');
+// ─── PAGE AVIS ─────────────────────────────────────────────────────────────
+function PageAvis() {
+  const avis = [
+    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
+    { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" },
+  ];
+  return (
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 20, textAlign: 'center' }}>AVIS UTILISATEURS</h2>
+      {avis.map((a, i) => (
+        <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontWeight: 800, color: '#E8EDF5' }}>{a.nom}</span>
+            <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
+          </div>
+          <div style={{ color: '#FFD700', fontSize: 12 }}>{a.note}</div>
+          <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── PAGE PARRAINAGE ───────────────────────────────────────────────────────
+const OFFRES = [
+  { id: 1, nom: 'Hello Bank', prime: '80€', categorie: 'Banque', emoji: '🏦', couleur: '#00A8E8' },
+  { id: 2, nom: 'Joko', prime: '1€ + cashback', categorie: 'Cashback', emoji: '💸', couleur: '#FF6B35' },
+  { id: 3, nom: 'Coinbase', prime: '20€', categorie: 'Crypto', emoji: '₿', couleur: '#0052FF' },
+  { id: 4, nom: 'VeraCash', prime: '10€', categorie: 'Or', emoji: '🥇', couleur: '#FFD700' },
+  { id: 5, nom: 'Robinhood', prime: '10€', categorie: 'Crypto', emoji: '🏹', couleur: '#00C805' },
+  { id: 6, nom: 'Winamax', prime: '40€', categorie: 'Paris', emoji: '⚽', couleur: '#E21421' }
+];
+
+function PageParrainage() {
   const [filtre, setFiltre] = useState('Tout');
-  const [selected, setSelected] = useState(null);
-
-  // States du Calculateur
-  const [fields, setFields] = useState({
-    prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2', tauxOption: '21.2', tauxPersonnalise: ''
-  });
-  const res = calcul(fields);
-  const setField = (k) => (v) => setFields(prev => ({ ...prev, [k]: v }));
+  const categories = ['Tout', ...new Set(OFFRES.map(o => o.categorie))];
+  const filtered = filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif', paddingBottom: 80 }}>
-      {/* HEADER */}
-      <div style={{ background: '#111318', borderBottom: '1px solid #1A1E2A', padding: '20px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0' }}>Parrain 4P</h1>
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
+      <header style={{ textAlign: 'center', marginBottom: 30 }}>
+        <h1 style={{ color: '#4FFFA0', fontSize: 28, fontWeight: 900 }}>Parrain 4P</h1>
+        <p style={{ color: '#8A95AA', fontSize: 13 }}>Hub Financier & Optimisation</p>
+      </header>
+      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20, paddingBottom: 10 }}>
+        {categories.map(cat => (
+          <button key={cat} onClick={() => setFiltre(cat)} style={{ padding: '8px 16px', borderRadius: 20, border: 'none', background: filtre === cat ? '#4FFFA0' : '#111318', color: filtre === cat ? '#0A0C10' : '#8A95AA', fontWeight: 700, whiteSpace: 'nowrap' }}>{cat}</button>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        {filtered.map(offre => (
+          <div key={offre.id} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 20, padding: '16px' }}>
+            <div style={{ fontSize: 24, marginBottom: 10 }}>{offre.emoji}</div>
+            <h3 style={{ color: '#E8EDF5', fontSize: 15, fontWeight: 800 }}>{offre.nom}</h3>
+            <p style={{ color: offre.couleur, fontSize: 14, fontWeight: 700 }}>{offre.prime}</p>
+          </div>
+        ))}
       </div>
 
-      {/* ONGLET PARRAINAGE */}
-      {onglet === 'parrainage' && (
-        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-          {!selected ? (
-            <>
-              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20 }}>
-                {CATEGORIES.map(cat => (
-                  <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: 'none', padding: '8px 15px', borderRadius: 20, color: filtre === cat ? '#000' : '#8A95AA', whiteSpace: 'nowrap', fontWeight: 700 }}>{cat}</button>
-                ))}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                {(filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre)).map(o => (
-                  <div key={o.id} onClick={() => setSelected(o)} style={{ background: '#111318', padding: '16px', borderRadius: 16, border: '1px solid #1A1E2A', cursor: 'pointer' }}>
-                    <div style={{ fontSize: 24, marginBottom: 8 }}>{o.emoji}</div>
-                    <div style={{ fontSize: 14, fontWeight: 800 }}>{o.nom}</div>
-                    <div style={{ color: o.couleur, fontSize: 13, fontWeight: 900 }}>{o.bonus}</div>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <div>
-              <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', marginBottom: 16, cursor: 'pointer' }}>← Retour</button>
-              <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A' }}>
-                <div style={{ display: 'flex', gap: 14, marginBottom: 16, alignItems: 'center' }}>
-                  <div style={{ width: 56, height: 56, borderRadius: 16, background: selected.couleur + '22', border: '2px solid ' + selected.couleur, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>{selected.emoji}</div>
-                  <h2 style={{ fontSize: 22, fontWeight: 900 }}>{selected.nom}</h2>
-                </div>
-                <p style={{ color: '#8A95AA', marginBottom: 20, lineHeight: 1.5 }}>{selected.description}</p>
-                <div style={{ marginBottom: 20 }}>
-                  {selected.conditions.map((c, i) => <div key={i} style={{ fontSize: 13, color: '#8A95AA', marginBottom: 6 }}>• {c}</div>)}
-                </div>
-                <div style={{ background: '#0A0B0F', padding: '20px', borderRadius: 12, border: '1px dashed #4FFFA0', textAlign: 'center' }}>
-                  {selected.type === 'contact' ? (
-                    <button onClick={() => window.open('https://instagram.com/' + selected.contact.replace('@',''), '_blank')} style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #833AB4, #FD1D1D)', border: 'none', color: '#FFF', borderRadius: 12, fontWeight: 800 }}>Contact Instagram {selected.contact}</button>
-                  ) : selected.type === 'code' ? (
-                    <div style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0' }}>{selected.code}</div>
-                  ) : (
-                    <button onClick={() => window.open(selected.lien, '_blank')} style={{ width: '100%', padding: '15px', background: '#4FFFA0', borderRadius: 12, fontWeight: 800, border: 'none' }}>S'inscrire</button>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      {/* --- BLOC NEWSLETTER INTÉGRÉ --- */}
+      <div style={{ marginTop: 40, padding: '24px', background: '#111318', border: '2px dashed #4FFFA0', borderRadius: 24, textAlign: 'center' }}>
+        <div style={{ fontSize: 32, marginBottom: 10 }}>📩</div>
+        <h3 style={{ color: '#E8EDF5', fontSize: 18, fontWeight: 900, marginBottom: 8 }}>REJOINS LE CLUB PRO</h3>
+        <p style={{ color: '#8A95AA', fontSize: 13, marginBottom: 20, lineHeight: 1.5 }}>
+          Ne manque plus aucune offre boostée et reçois mes conseils par e-mail.
+        </p>
+        <button onClick={() => window.open(BREVO_LINK, '_blank')} style={{ width: '100%', background: '#4FFFA0', color: '#0A0C10', border: 'none', padding: '16px', borderRadius: 14, fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 4px 15px rgba(79, 255, 160, 0.3)' }}>
+          S'INSCRIRE GRATUITEMENT
+        </button>
+      </div>
+    </div>
+  );
+}
 
-      {/* ONGLET AVIS */}
-      {onglet === 'avis' && (
-        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-          {AVIS.map((a, i) => (
-            <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                <span style={{ fontWeight: 800 }}>{a.nom}</span>
-                <span style={{ fontSize: 11, color: '#4A5568' }}>{a.date}</span>
-              </div>
-              <div style={{ color: '#FFD700', fontSize: 10 }}>{a.note}</div>
-              <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
-            </div>
-          ))}
-        </div>
-      )}
+// ─── APPLICATION PRINCIPALE (FUSION) ───────────────────────────────────────
+function App() {
+  const [onglet, setOnglet] = useState('parrainage');
+  const [fields, setFields] = useState({
+    prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2', tauxPersonnalise: '', tauxOption: '21.2'
+  });
 
-      {/* ONGLET CALCULATEUR */}
+  const setField = (key) => (val) => setFields((prev) => ({ ...prev, [key]: val }));
+  const res = calcul(fields);
+
+  useEffect(() => {
+    const t = fields.tauxOption === 'custom' ? (parseFloat(fields.tauxPersonnalise) || 0) : parseFloat(fields.tauxOption);
+    setFields(prev => ({ ...prev, tauxCotisations: String(t) }));
+  }, [fields.tauxOption, fields.tauxPersonnalise]);
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif', overflowX: 'hidden' }}>
+      
+      {onglet === 'parrainage' && <PageParrainage />}
+      
+      {onglet === 'avis' && <PageAvis />}
+
       {onglet === 'calculateur' && (
-        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-          <div style={{ background: '#111318', borderRadius: 16, padding: '22px 20px', marginBottom: 16, border: '1px solid #1A1E2A' }}>
-            <InputField label="Prix de vente estime" value={fields.prixVente} onChange={setField('prixVente')} hint="Le montant facture au client" />
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '20px 16px', paddingBottom: 120 }}>
+          <div style={{ textAlign: 'center', marginBottom: 25 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 900, color: '#4FFFA0' }}>ProfitMaster</h1>
+            <p style={{ color: '#4A5568', fontSize: 13 }}>Calculateur de Rentabilité Pro</p>
           </div>
-          <div style={{ background: '#111318', borderRadius: 16, padding: '22px 20px', marginBottom: 16, border: '1px solid #1A1E2A' }}>
-            <InputField label="Matieres premieres" value={fields.matieres} onChange={setField('matieres')} />
+
+          <Section title="REVENUS" icon="💰">
+            <InputField label="Prix de vente estimé" value={fields.prixVente} onChange={setField('prixVente')} />
+          </Section>
+
+          <Section title="COÛTS DIRECTS" icon="📦">
+            <InputField label="Matières premières" value={fields.matieres} onChange={setField('matieres')} />
             <InputField label="Transport / Essence" value={fields.transport} onChange={setField('transport')} />
-            <InputField label="Outillage" value={fields.outillage} onChange={setField('outillage')} />
             <InputField label="Autres frais" value={fields.autresFrais} onChange={setField('autresFrais')} />
-          </div>
-          
+          </Section>
+
+          <Section title="TEMPS PASSÉ" icon="🕐">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
+              <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
+            </div>
+          </Section>
+
+          <Section title="FISCALITÉ" icon="🏛️">
+            <select value={fields.tauxOption} onChange={(e) => setFields(prev => ({ ...prev, tauxOption: e.target.value }))}
+              style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', padding: '12px', marginBottom: 10, outline: 'none' }}>
+              {TAUX_OPTIONS.map(o => <option key={o.label} value={o.value === null ? 'custom' : String(o.value)}>{o.label}</option>)}
+            </select>
+            {fields.tauxOption === 'custom' && <InputField label="Taux personnalisé (%)" prefix="%" value={fields.tauxPersonnalise} onChange={setField('tauxPersonnalise')} />}
+          </Section>
+
           {res.prixVente > 0 && (
             <>
+              <SanteIndicateur sante={res.sante} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 12 }}>
-                <ResultCard label="Benefice Net" value={fmt(res.beneficeNet)} highlight />
+                <ResultCard label="Bénéfice Net" value={fmt(res.beneficeNet)} highlight />
                 <ResultCard label="Marge Nette" value={pct(res.marge)} />
               </div>
-              <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', marginTop: 16, padding: '16px', background: '#4FFFA0', borderRadius: 14, border: 'none', fontWeight: 800, color: '#0A0B0F' }}>Telecharger Bilan PDF - 2,00 €</button>
               <SimulationMensuelle beneficeNet={res.beneficeNet} />
             </>
           )}
         </div>
       )}
 
-      {/* NAV FIXE */}
-      <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', display: 'flex', borderTop: '1px solid #1A1E2A', zIndex: 100 }}>
-        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>OFFRES</button>
-        <button onClick={() => setOnglet('avis')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>AVIS</button>
-        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>CALCUL</button>
-      </nav>
+      {/* NAVIGATION BAR */}
+      <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', width: '92%', maxWidth: 400, background: 'rgba(17, 19, 24, 0.95)', backdropFilter: 'blur(10px)', borderRadius: 22, display: 'flex', padding: '6px', border: '1px solid #1A1E2A', zIndex: 1000 }}>
+        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 18 }}>🎁</span> OFFRES
+        </button>
+        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 18 }}>⭐</span> AVIS
+        </button>
+        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 18 }}>📊</span> CALCUL
+        </button>
+      </div>
     </div>
   );
 }

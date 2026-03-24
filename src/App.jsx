@@ -142,6 +142,18 @@ function calcul(f) {
 }
 
 // ─── COMPOSANTS UI ────────────────────────────────────────────────────────────
+function InputField({ label, value, onChange, prefix }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#8A95AA', marginBottom: 5 }}>{label}</label>
+      <div style={{ position: 'relative' }}>
+        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0' }}>{prefix || '€'}</span>
+        <input type="number" value={value} onChange={(e) => onChange(e.target.value)} style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', padding: '10px 12px 10px 30px', outline: 'none' }} />
+      </div>
+    </div>
+  );
+}
+
 function Section({ title, icon, children }) {
   return (
     <div style={{ background: '#111318', borderRadius: 14, padding: '18px 16px', marginBottom: 12, border: '1px solid #1A1E2A' }}>
@@ -154,7 +166,7 @@ function Section({ title, icon, children }) {
   );
 }
 
-// ─── PAGE PARRAINAGE ──────────────────────────────────────────────────────────
+// ─── PAGES ────────────────────────────────────────────────────────────────────
 function PageParrainage() {
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
@@ -205,12 +217,46 @@ function PageParrainage() {
   );
 }
 
-// ─── APP ──────────────────────────────────────────────────────────────────────
+function PageProfitMaster() {
+  const [fields, setFields] = useState({ prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2' });
+  const [showPaywall, setShowPaywall] = useState(false);
+  const res = calcul(fields);
+  const setField = (k) => (v) => setFields(prev => ({ ...prev, [k]: v }));
+
+  return (
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
+      <Section title="REVENUS" icon="💰"><InputField label="Prix de vente" value={fields.prixVente} onChange={setField('prixVente')} /></Section>
+      <Section title="COUTS" icon="📦">
+        <InputField label="Matières" value={fields.matieres} onChange={setField('matieres')} />
+        <InputField label="Transport" value={fields.transport} onChange={setField('transport')} />
+        <InputField label="Autres" value={fields.autresFrais} onChange={setField('autresFrais')} />
+      </Section>
+      {res.prixVente > 0 && (
+        <div style={{ background: '#111318', padding: '20px', borderRadius: 16, border: '2px solid #4FFFA0', textAlign: 'center' }}>
+          <div style={{ fontSize: 12, color: '#8A95AA' }}>BÉNÉFICE NET</div>
+          <div style={{ fontSize: 32, fontWeight: 900, color: '#4FFFA0' }}>{fmt(res.beneficeNet)}</div>
+          <button onClick={() => setShowPaywall(true)} style={{ width: '100%', marginTop: 15, padding: '12px', background: '#4FFFA0', border: 'none', borderRadius: 10, fontWeight: 800 }}>Télécharger PDF - 2,00 €</button>
+        </div>
+      )}
+      {showPaywall && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div style={{ background: '#111318', padding: '30px', borderRadius: 20, textAlign: 'center', border: '1px solid #4FFFA0' }}>
+            <h2>Accès au Bilan</h2>
+            <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', padding: '15px', background: '#4FFFA0', borderRadius: 12, marginTop: 20, fontWeight: 800 }}>Payer via Stripe</button>
+            <button onClick={() => setShowPaywall(false)} style={{ marginTop: 15, background: 'none', border: 'none', color: '#4A5568' }}>Fermer</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── APP PRINCIPALE ────────────────────────────────────────────────────────────
 export default function App() {
   const [onglet, setOnglet] = useState('parrainage');
   return (
     <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', paddingBottom: 80 }}>
-      <div style={{ padding: '20px', textAlign: 'center', background: '#111318' }}>
+      <div style={{ padding: '20px', textAlign: 'center', background: '#111318', borderBottom: '1px solid #1A1E2A' }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0' }}>Parrain 4P</h1>
       </div>
 
@@ -231,7 +277,7 @@ export default function App() {
         </div>
       )}
 
-      {onglet === 'calculateur' && <div style={{ textAlign: 'center', padding: '50px' }}>Chargement du calculateur...</div>}
+      {onglet === 'calculateur' && <PageProfitMaster />}
 
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', display: 'flex', borderTop: '1px solid #1A1E2A', zIndex: 100 }}>
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>OFFRES</button>

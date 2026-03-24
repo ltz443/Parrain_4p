@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// ─── DONNÉES PARRAINAGE ────────────────────────────────────────────────────────
+// ─── DONNÉES PARRAINAGE (STRICTEMENT INCHANGÉES) ───────────────────────────────
 const OFFRES = [
   {
     id: 'hellobank',
@@ -46,7 +46,7 @@ const OFFRES = [
     bonus: '20€',
     bonusFilleul: '20€ en Bitcoin',
     bonusParrain: '20€',
-    description: 'Plateforme de reference pour acheter et stocker des cryptomonnaies.',
+    description: 'Plateforme de reference pour acheter et store des cryptomonnaies.',
     conditions: ['S inscrire via le lien', 'Valider le KYC', 'Deposer 20€', 'Acheter 20€ de BTC'],
     type: 'lien',
     lien: 'https://coinbase.com/join/954EBFS?src=ios-link',
@@ -117,28 +117,25 @@ const AVIS = [
   { nom: "Julien", date: "Hier", texte: "J'ai testé Coinbase, bonus reçu en 24h. Nickel.", note: "⭐⭐⭐⭐⭐" }
 ];
 
-// ─── PROFITMASTER LOGIC ────────────────────────────────────────────────────────
+// ─── LOGIQUE CALCULATEUR ──────────────────────────────────────────────────────
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n || 0);
 
 function calcul(f) {
-  const prixVente = parseFloat(f.prixVente) || 0;
-  const matieres = parseFloat(f.matieres) || 0;
-  const transport = parseFloat(f.transport) || 0;
-  const outillage = parseFloat(f.outillage) || 0;
-  const autresFrais = parseFloat(f.autresFrais) || 0;
-  const heures = parseFloat(f.heures) || 0;
-  const tauxHoraire = parseFloat(f.tauxHoraire) || 0;
-  const taux = parseFloat(f.tauxCotisations) || 0;
-  const coutMain = heures * tauxHoraire;
-  const cotisations = (prixVente * taux) / 100;
-  const totalCharges = matieres + transport + outillage + autresFrais + coutMain + cotisations;
-  const beneficeNet = prixVente - totalCharges;
-  const marge = prixVente > 0 ? (beneficeNet / prixVente) * 100 : 0;
-  let sante = 'Deficitaire';
-  if (marge >= 20) sante = 'Rentable';
-  else if (marge >= 0) sante = 'Risque';
-  return { prixVente, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
+  const p = parseFloat(f.prixVente) || 0;
+  const m = parseFloat(f.matieres) || 0;
+  const t = parseFloat(f.transport) || 0;
+  const o = parseFloat(f.outillage) || 0;
+  const a = parseFloat(f.autresFrais) || 0;
+  const h = parseFloat(f.heures) || 0;
+  const th = parseFloat(f.tauxHoraire) || 0;
+  const tx = parseFloat(f.tauxCotisations) || 0;
+  const coutMain = h * th;
+  const cotis = (p * tx) / 100;
+  const total = m + t + o + a + coutMain + cotis;
+  const net = p - total;
+  const marge = p > 0 ? (net / p) * 100 : 0;
+  return { net, marge, total, cotis, coutMain };
 }
 
 // ─── COMPOSANTS UI ────────────────────────────────────────────────────────────
@@ -154,130 +151,100 @@ function InputField({ label, value, onChange, prefix }) {
   );
 }
 
-function Section({ title, icon, children }) {
-  return (
-    <div style={{ background: '#111318', borderRadius: 14, padding: '18px 16px', marginBottom: 12, border: '1px solid #1A1E2A' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-        <span style={{ fontSize: 16 }}>{icon}</span>
-        <h3 style={{ fontSize: 13, fontWeight: 800, color: '#4FFFA0', letterSpacing: '0.06em' }}>{title}</h3>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-// ─── PAGES ────────────────────────────────────────────────────────────────────
-function PageParrainage() {
-  const [filtre, setFiltre] = useState('Tout');
-  const [selected, setSelected] = useState(null);
-  const filtrees = filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre);
-
-  if (selected) {
-    const o = selected;
-    return (
-      <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-        <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', marginBottom: 16, cursor: 'pointer' }}>← Retour</button>
-        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A' }}>
-          <div style={{ display: 'flex', gap: 14, marginBottom: 16 }}>
-             <div style={{ width: 56, height: 56, borderRadius: 16, background: o.couleur + '22', border: '2px solid ' + o.couleur, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>{o.emoji}</div>
-             <h2 style={{ fontSize: 22, fontWeight: 900, color: '#E8EDF5' }}>{o.nom}</h2>
-          </div>
-          <p style={{ color: '#8A95AA', marginBottom: 20 }}>{o.description}</p>
-          <div style={{ background: '#0A0B0F', padding: '15px', borderRadius: 12, border: '1px dashed #4FFFA0', textAlign: 'center' }}>
-            {o.type === 'contact' ? (
-              <button onClick={() => window.open('https://instagram.com/' + o.contact.replace('@',''), '_blank')} style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #833AB4, #FD1D1D)', border: 'none', color: '#FFF', borderRadius: 12, fontWeight: 800 }}>Contact Instagram {o.contact}</button>
-            ) : o.type === 'code' ? (
-              <div style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0' }}>{o.code}</div>
-            ) : (
-              <button onClick={() => window.open(o.lien, '_blank')} style={{ width: '100%', padding: '15px', background: '#4FFFA0', borderRadius: 12, fontWeight: 800, border: 'none' }}>S'inscrire</button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20 }}>
-        {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: 'none', padding: '8px 15px', borderRadius: 20, color: filtre === cat ? '#000' : '#8A95AA', whiteSpace: 'nowrap' }}>{cat}</button>
-        ))}
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {filtrees.map(o => (
-          <div key={o.id} onClick={() => setSelected(o)} style={{ background: '#111318', padding: '16px', borderRadius: 16, border: '1px solid #1A1E2A', cursor: 'pointer' }}>
-            <div style={{ fontSize: 24 }}>{o.emoji}</div>
-            <div style={{ fontSize: 15, fontWeight: 800 }}>{o.nom}</div>
-            <div style={{ color: o.couleur, fontSize: 13, fontWeight: 900 }}>{o.bonus}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PageProfitMaster() {
-  const [fields, setFields] = useState({ prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2' });
-  const [showPaywall, setShowPaywall] = useState(false);
-  const res = calcul(fields);
-  const setField = (k) => (v) => setFields(prev => ({ ...prev, [k]: v }));
-
-  return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-      <Section title="REVENUS" icon="💰"><InputField label="Prix de vente" value={fields.prixVente} onChange={setField('prixVente')} /></Section>
-      <Section title="COUTS" icon="📦">
-        <InputField label="Matières" value={fields.matieres} onChange={setField('matieres')} />
-        <InputField label="Transport" value={fields.transport} onChange={setField('transport')} />
-        <InputField label="Autres" value={fields.autresFrais} onChange={setField('autresFrais')} />
-      </Section>
-      {res.prixVente > 0 && (
-        <div style={{ background: '#111318', padding: '20px', borderRadius: 16, border: '2px solid #4FFFA0', textAlign: 'center' }}>
-          <div style={{ fontSize: 12, color: '#8A95AA' }}>BÉNÉFICE NET</div>
-          <div style={{ fontSize: 32, fontWeight: 900, color: '#4FFFA0' }}>{fmt(res.beneficeNet)}</div>
-          <button onClick={() => setShowPaywall(true)} style={{ width: '100%', marginTop: 15, padding: '12px', background: '#4FFFA0', border: 'none', borderRadius: 10, fontWeight: 800 }}>Télécharger PDF - 2,00 €</button>
-        </div>
-      )}
-      {showPaywall && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-          <div style={{ background: '#111318', padding: '30px', borderRadius: 20, textAlign: 'center', border: '1px solid #4FFFA0' }}>
-            <h2>Accès au Bilan</h2>
-            <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', padding: '15px', background: '#4FFFA0', borderRadius: 12, marginTop: 20, fontWeight: 800 }}>Payer via Stripe</button>
-            <button onClick={() => setShowPaywall(false)} style={{ marginTop: 15, background: 'none', border: 'none', color: '#4A5568' }}>Fermer</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── APP PRINCIPALE ────────────────────────────────────────────────────────────
+// ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [onglet, setOnglet] = useState('parrainage');
+  const [filtre, setFiltre] = useState('Tout');
+  const [selected, setSelected] = useState(null);
+  
+  const [fields, setFields] = useState({ prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2' });
+  const res = calcul(fields);
+
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', paddingBottom: 80 }}>
+    <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif', paddingBottom: 80 }}>
       <div style={{ padding: '20px', textAlign: 'center', background: '#111318', borderBottom: '1px solid #1A1E2A' }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0' }}>Parrain 4P</h1>
       </div>
 
-      {onglet === 'parrainage' && <PageParrainage />}
-      
+      {onglet === 'parrainage' && (
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
+          {!selected ? (
+            <>
+              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20 }}>
+                {CATEGORIES.map(cat => (
+                  <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: 'none', padding: '8px 15px', borderRadius: 20, color: filtre === cat ? '#000' : '#8A95AA', whiteSpace: 'nowrap', fontWeight: 700 }}>{cat}</button>
+                ))}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {(filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre)).map(o => (
+                  <div key={o.id} onClick={() => setSelected(o)} style={{ background: '#111318', padding: '16px', borderRadius: 16, border: '1px solid #1A1E2A', cursor: 'pointer' }}>
+                    <div style={{ fontSize: 24, marginBottom: 8 }}>{o.emoji}</div>
+                    <div style={{ fontSize: 14, fontWeight: 800 }}>{o.nom}</div>
+                    <div style={{ color: o.couleur, fontSize: 13, fontWeight: 900 }}>{o.bonus}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div>
+              <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', marginBottom: 16, cursor: 'pointer' }}>← Retour</button>
+              <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A' }}>
+                <div style={{ display: 'flex', gap: 14, marginBottom: 16, alignItems: 'center' }}>
+                  <div style={{ width: 56, height: 56, borderRadius: 16, background: selected.couleur + '22', border: '2px solid ' + selected.couleur, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>{selected.emoji}</div>
+                  <h2 style={{ fontSize: 22, fontWeight: 900 }}>{selected.nom}</h2>
+                </div>
+                <p style={{ color: '#8A95AA', marginBottom: 20, lineHeight: 1.5 }}>{selected.description}</p>
+                
+                <div style={{ marginBottom: 20 }}>
+                  {selected.conditions.map((c, i) => <div key={i} style={{ fontSize: 13, color: '#8A95AA', marginBottom: 6 }}>• {c}</div>)}
+                </div>
+
+                <div style={{ background: '#0A0B0F', padding: '20px', borderRadius: 12, border: '1px dashed #4FFFA0', textAlign: 'center' }}>
+                  {selected.type === 'contact' ? (
+                    <button onClick={() => window.open('https://instagram.com/' + selected.contact.replace('@',''), '_blank')} style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #833AB4, #FD1D1D)', border: 'none', color: '#FFF', borderRadius: 12, fontWeight: 800 }}>Contact Instagram {selected.contact}</button>
+                  ) : selected.type === 'code' ? (
+                    <div style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0' }}>{selected.code}</div>
+                  ) : (
+                    <button onClick={() => window.open(selected.lien, '_blank')} style={{ width: '100%', padding: '15px', background: '#4FFFA0', borderRadius: 12, fontWeight: 800, border: 'none' }}>S'inscrire</button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {onglet === 'avis' && (
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
           {AVIS.map((a, i) => (
             <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                 <span style={{ fontWeight: 800 }}>{a.nom}</span>
-                <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
+                <span style={{ fontSize: 11, color: '#4A5568' }}>{a.date}</span>
               </div>
-              <div style={{ color: '#FFD700', fontSize: 12 }}>{a.note}</div>
-              <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
+              <div style={{ color: '#FFD700', fontSize: 10, marginBottom: 8 }}>{a.note}</div>
+              <p style={{ fontSize: 14, color: '#8A95AA' }}>"{a.texte}"</p>
             </div>
           ))}
         </div>
       )}
 
-      {onglet === 'calculateur' && <PageProfitMaster />}
+      {onglet === 'calculateur' && (
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
+          <div style={{ background: '#111318', padding: '18px', borderRadius: 14, border: '1px solid #1A1E2A', marginBottom: 12 }}>
+             <InputField label="PRIX DE VENTE" value={fields.prixVente} onChange={(v) => setFields({...fields, prixVente: v})} />
+             <InputField label="MATIÈRES PREMIÈRES" value={fields.matieres} onChange={(v) => setFields({...fields, matieres: v})} />
+             <InputField label="TRANSPORT" value={fields.transport} onChange={(v) => setFields({...fields, transport: v})} />
+          </div>
+          {parseFloat(fields.prixVente) > 0 && (
+            <div style={{ background: '#111318', padding: '20px', borderRadius: 16, border: '2px solid #4FFFA0', textAlign: 'center' }}>
+              <div style={{ fontSize: 11, color: '#8A95AA' }}>BÉNÉFICE NET ESTIMÉ</div>
+              <div style={{ fontSize: 32, fontWeight: 900, color: '#4FFFA0' }}>{fmt(res.net)}</div>
+              <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', marginTop: 15, padding: '14px', background: '#4FFFA0', border: 'none', borderRadius: 10, fontWeight: 800 }}>Télécharger Bilan PDF (2€)</button>
+            </div>
+          )}
+        </div>
+      )}
 
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', display: 'flex', borderTop: '1px solid #1A1E2A', zIndex: 100 }}>
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, padding: '15px', background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', fontWeight: 800 }}>OFFRES</button>

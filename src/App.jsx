@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// ─── CONFIGURATION & LOGIQUE CALCULATEUR (TON CODE) ───────────────────────
+// ─── CONFIGURATION & LOGIQUE CALCULATEUR ───────────────────────────────────
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 
 const TAUX_OPTIONS = [
@@ -35,8 +35,8 @@ function calcul(f) {
   return { prixVente, matieres, transport, outillage, autresFrais, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
 }
 
-// ─── COMPOSANTS UI CALCULATEUR (TON DESIGN) ───────────────────────────────
-function InputField({ label, id, value, onChange, placeholder, prefix, hint }) {
+// ─── COMPOSANTS UI CALCULATEUR ─────────────────────────────────────────────
+function InputField({ label, value, onChange, placeholder, prefix, hint }) {
   return (
     <div style={{ marginBottom: 16 }}>
       <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#8A95AA', marginBottom: 6, textTransform: 'uppercase' }}>{label}</label>
@@ -107,30 +107,7 @@ function Section({ title, icon, children }) {
   );
 }
 
-// ─── PAGE AVIS ─────────────────────────────────────────────────────────────
-function PageAvis() {
-  const avis = [
-    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
-    { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" },
-  ];
-  return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
-      <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 20, textAlign: 'center' }}>AVIS UTILISATEURS</h2>
-      {avis.map((a, i) => (
-        <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontWeight: 800, color: '#E8EDF5' }}>{a.nom}</span>
-            <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
-          </div>
-          <div style={{ color: '#FFD700', fontSize: 12 }}>{a.note}</div>
-          <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ─── PAGE PARRAINAGE ───────────────────────────────────────────────────────
+// ─── PAGES CONTENU ─────────────────────────────────────────────────────────
 const OFFRES = [
   { id: 1, nom: 'Hello Bank', prime: '80€', categorie: 'Banque', emoji: '🏦', couleur: '#00A8E8' },
   { id: 2, nom: 'Joko', prime: '1€ + cashback', categorie: 'Cashback', emoji: '💸', couleur: '#FF6B35' },
@@ -140,38 +117,9 @@ const OFFRES = [
   { id: 6, nom: 'Winamax', prime: '40€', categorie: 'Paris', emoji: '⚽', couleur: '#E21421' }
 ];
 
-function PageParrainage() {
-  const [filtre, setFiltre] = useState('Tout');
-  const categories = ['Tout', ...new Set(OFFRES.map(o => o.categorie))];
-  const filtered = filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre);
-
-  return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
-      <header style={{ textAlign: 'center', marginBottom: 30 }}>
-        <h1 style={{ color: '#4FFFA0', fontSize: 28, fontWeight: 900 }}>Parrain 4P</h1>
-        <p style={{ color: '#8A95AA', fontSize: 13 }}>Hub Financier & Optimisation</p>
-      </header>
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20, paddingBottom: 10 }}>
-        {categories.map(cat => (
-          <button key={cat} onClick={() => setFiltre(cat)} style={{ padding: '8px 16px', borderRadius: 20, border: 'none', background: filtre === cat ? '#4FFFA0' : '#111318', color: filtre === cat ? '#0A0C10' : '#8A95AA', fontWeight: 700, whiteSpace: 'nowrap' }}>{cat}</button>
-        ))}
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {filtered.map(offre => (
-          <div key={offre.id} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 20, padding: '16px' }}>
-            <div style={{ fontSize: 24, marginBottom: 10 }}>{offre.emoji}</div>
-            <h3 style={{ color: '#E8EDF5', fontSize: 15, fontWeight: 800 }}>{offre.nom}</h3>
-            <p style={{ color: offre.couleur, fontSize: 14, fontWeight: 700 }}>{offre.prime}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── APPLICATION PRINCIPALE (FUSION) ───────────────────────────────────────
 function App() {
   const [onglet, setOnglet] = useState('parrainage');
+  const [filtre, setFiltre] = useState('Tout');
   const [fields, setFields] = useState({
     prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '', heures: '', tauxHoraire: '', tauxCotisations: '21.2', tauxPersonnalise: '', tauxOption: '21.2'
   });
@@ -187,34 +135,71 @@ function App() {
   return (
     <div style={{ minHeight: '100vh', background: '#0A0B0F', color: '#E8EDF5', fontFamily: 'sans-serif', overflowX: 'hidden' }}>
       
-      {onglet === 'parrainage' && <PageParrainage />}
+      {/* CONTENU PARRAINAGE */}
+      {onglet === 'parrainage' && (
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
+          <header style={{ textAlign: 'center', marginBottom: 30 }}>
+            <h1 style={{ color: '#4FFFA0', fontSize: 28, fontWeight: 900 }}>Parrain 4P</h1>
+            <p style={{ color: '#8A95AA', fontSize: 13 }}>Hub Financier & Optimisation</p>
+          </header>
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 20, paddingBottom: 10 }}>
+            {['Tout', ...new Set(OFFRES.map(o => o.categorie))].map(cat => (
+              <button key={cat} onClick={() => setFiltre(cat)} style={{ padding: '8px 16px', borderRadius: 20, border: 'none', background: filtre === cat ? '#4FFFA0' : '#111318', color: filtre === cat ? '#0A0C10' : '#8A95AA', fontWeight: 700, whiteSpace: 'nowrap' }}>{cat}</button>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {(filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre)).map(offre => (
+              <div key={offre.id} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 20, padding: '16px' }}>
+                <div style={{ fontSize: 24, marginBottom: 10 }}>{offre.emoji}</div>
+                <h3 style={{ color: '#E8EDF5', fontSize: 15, fontWeight: 800 }}>{offre.nom}</h3>
+                <p style={{ color: offre.couleur, fontSize: 14, fontWeight: 700 }}>{offre.prime}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       
-      {onglet === 'avis' && <PageAvis />}
+      {/* CONTENU AVIS */}
+      {onglet === 'avis' && (
+        <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px', paddingBottom: 120 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4FFFA0', marginBottom: 20, textAlign: 'center' }}>AVIS UTILISATEURS</h2>
+          {[
+            { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
+            { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" }
+          ].map((a, i) => (
+            <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ fontWeight: 800, color: '#E8EDF5' }}>{a.nom}</span>
+                <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
+              </div>
+              <div style={{ color: '#FFD700', fontSize: 12 }}>{a.note}</div>
+              <p style={{ fontSize: 14, color: '#8A95AA', marginTop: 8 }}>"{a.texte}"</p>
+            </div>
+          ))}
+        </div>
+      )}
 
+      {/* CONTENU CALCULATEUR */}
       {onglet === 'calculateur' && (
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '20px 16px', paddingBottom: 120 }}>
           <div style={{ textAlign: 'center', marginBottom: 25 }}>
             <h1 style={{ fontSize: 26, fontWeight: 900, color: '#4FFFA0' }}>ProfitMaster</h1>
             <p style={{ color: '#4A5568', fontSize: 13 }}>Calculateur de Rentabilité Pro</p>
           </div>
-
           <Section title="REVENUS" icon="💰">
             <InputField label="Prix de vente estimé" value={fields.prixVente} onChange={setField('prixVente')} />
           </Section>
-
           <Section title="COÛTS DIRECTS" icon="📦">
             <InputField label="Matières premières" value={fields.matieres} onChange={setField('matieres')} />
             <InputField label="Transport / Essence" value={fields.transport} onChange={setField('transport')} />
             <InputField label="Autres frais" value={fields.autresFrais} onChange={setField('autresFrais')} />
           </Section>
-
           <Section title="TEMPS PASSÉ" icon="🕐">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
               <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
             </div>
           </Section>
-
           <Section title="FISCALITÉ" icon="🏛️">
             <select value={fields.tauxOption} onChange={(e) => setFields(prev => ({ ...prev, tauxOption: e.target.value }))}
               style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 10, color: '#E8EDF5', padding: '12px', marginBottom: 10, outline: 'none' }}>
@@ -222,7 +207,6 @@ function App() {
             </select>
             {fields.tauxOption === 'custom' && <InputField label="Taux personnalisé (%)" prefix="%" value={fields.tauxPersonnalise} onChange={setField('tauxPersonnalise')} />}
           </Section>
-
           {res.prixVente > 0 && (
             <>
               <SanteIndicateur sante={res.sante} />
@@ -231,6 +215,9 @@ function App() {
                 <ResultCard label="Marge Nette" value={pct(res.marge)} />
               </div>
               <SimulationMensuelle beneficeNet={res.beneficeNet} />
+              <button onClick={() => window.open(STRIPE_LINK)} style={{ width: '100%', marginTop: 20, padding: '16px', background: '#4FFFA0', color: '#0A0B0F', border: 'none', borderRadius: 14, fontWeight: 800, cursor: 'pointer' }}>
+                Télécharger mon Bilan PDF (2€)
+              </button>
             </>
           )}
         </div>

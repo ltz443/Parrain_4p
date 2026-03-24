@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Analytics } from "@vercel/analytics/react";
 
 // ─── CONFIGURATION & LOGIQUE ──────────────────────────────────────────────
 const BREVO_LINK = 'https://45517a4f.sibforms.com/serve/MUIFAIWHHPs2aA0dLWK0WLFoI9DzFyIYzfEutzRc6vmIGTHfhOmt_x2Up2V8d9HyWuk-c23F4oV1QssydJGpDoeTETbj-o9H--j8ERFglfooimRO7aA5l0YoEUxVvPe8D1cVDy80rx_A6V6ZbAuwFxHRdais63yxsDteR96OWNuv0k_KBnN4Lv4JPkwhJ7i0v04FmB9iveYp_uUoAg==';
@@ -260,7 +259,6 @@ function App() {
         <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}><span style={{ fontSize: 18 }}>⭐</span> AVIS</button>
         <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', padding: '10px', fontSize: 10, fontWeight: 700, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}><span style={{ fontSize: 18 }}>📊</span> CALCUL</button>
       </div>
-      <Analytics />
     </div>
   );
 }

@@ -136,7 +136,7 @@ const OFFRES = [
       'Prime filleul : 10€ Betboost — Prime parrain : 10€ Betboost',
     ],
     type: 'lien',
-    lien: '#',
+    lien: 'https://betsson.fr/fr/%23register?language=fr&referralCode=8LAFsK',
   },
 ];
 

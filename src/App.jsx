@@ -138,6 +138,25 @@ const OFFRES = [
     type: 'lien',
     lien: 'https://betsson.fr/fr/%23register?language=fr&referralCode=8LAFsK',
   },
+  {
+    id: 'Unibet',
+    nom: 'Unibet',
+    categorie: 'Paris Sportifs',
+    emoji: '💰',
+    couleur: '#FF4500',
+    bonus: '30€',
+    bonusFilleul: '30€ Freebets',
+    bonusParrain: '30€ Freebets',
+    description: 'Unibet est une plateforme de paris sportifs internationale. Recois 30€.',
+    conditions: [
+      'S inscrire via le lien',
+      'Verifier son compte',
+      'Deposer 10€',
+      'Prime filleul : 30€ Freebets — Prime parrain : 30€ Freebets',
+    ],
+    type: 'lien',
+    lien: 'https://www.unibet.fr/inscription/?campaign=240326&parrain=AC1330D7A4D09111',
+  },
 ];
 
 const CATEGORIES = ['Tout', 'Banque', 'Cashback', 'Crypto', 'Or & Epargne', 'Crypto Exchange', 'Paris Sportifs'];

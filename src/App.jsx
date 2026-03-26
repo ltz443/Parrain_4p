@@ -342,7 +342,7 @@ function PageParrainage() {
           <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.6, marginBottom: 20 }}>{o.description}</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
             <div style={{ background: '#0A0B0F', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #1A1E2A' }}>
-              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>Tu gagnes</div>
+              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>prime parrain</div>
               <div style={{ fontSize: 20, fontWeight: 900, color: '#4FFFA0' }}>{o.bonusParrain}</div>
             </div>
             <div style={{ background: '#0A0B0F', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #1A1E2A' }}>

@@ -14,7 +14,7 @@ const OFFRES = [
     bonusParrain: '80€',
     description: 'Ouvre un compte Hello One et recois 40€ sans depot, puis 40€ de plus des le 10e achat carte.',
     conditions: [
-      '1ere ouverture d un compte de depot Hello One',
+      "1ere ouverture d'un compte de depot Hello One",
       '40€ offerts sans depot minimum',
       '40€ supplementaires au 10e achat carte bancaire',
       'Delai : 72 heures',

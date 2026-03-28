@@ -31,7 +31,7 @@ const OFFRES = [
     categorie: 'Cashback',
     emoji: '💸',
     couleur: '#FF6B35',
-    bonus: '1€ + cashback',
+    bonus: '5€ + cashback',
     bonusFilleul: '5€ a l inscription',
     bonusParrain: '5€ + 10% du cashback filleul',
     description: 'Joko transforme tes achats quotidiens en micro-economies automatiques en connectant ton compte bancaire.',

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// ─── MAP DOMAINES CLEARBIT ────────────────────────────────────────────────────
+// ─── CONFIGURATION LOGOS (BRANDFETCH) ─────────────────────────────────────────
+const BRANDFETCH_API_KEY = 'pk_BXZXZrJITlWofFOzS8oAoA';
+
 const LOGO_DOMAINS = {
   hellobank: 'hellobank.fr',
   joko:      'joko.com',
@@ -17,8 +19,31 @@ const LOGO_DOMAINS = {
 };
 
 function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
+  const [logoUrl, setLogoUrl] = useState(null);
   const [error, setError] = useState(false);
   const domain = LOGO_DOMAINS[id];
+
+  useEffect(() => {
+    if (domain) {
+      // Utilisation de l'API Brandfetch pour récupérer le logo exact
+      fetch(`https://api.brandfetch.io/v2/brands/${domain}`, {
+        headers: {
+          'Authorization': `Bearer ${BRANDFETCH_API_KEY}`
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.logos && data.logos.length > 0) {
+          // On cherche le logo de type "icon" ou le premier disponible
+          const icon = data.logos.find(l => l.type === 'icon') || data.logos[0];
+          setLogoUrl(icon.formats[0].src);
+        } else {
+          setError(true);
+        }
+      })
+      .catch(() => setError(true));
+    }
+  }, [domain]);
 
   const wrapperStyle = {
     width: size,
@@ -33,7 +58,7 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
     flexShrink: 0,
   };
 
-  if (!domain || error) {
+  if (!domain || error || !logoUrl) {
     return (
       <div style={{ ...wrapperStyle, fontSize: size * 0.5 }}>
         {emoji}
@@ -44,10 +69,9 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
   return (
     <div style={wrapperStyle}>
       <img
-        src={`https://logo.clearbit.com/${domain}`}
+        src={logoUrl}
         alt={id}
-        onError={() => setError(true)}
-        style={{ width: '70%', height: '70%', objectFit: 'contain', borderRadius: 4 }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
       />
     </div>
   );
@@ -473,7 +497,7 @@ function FormulaireChallenge() {
 
         <div style={{ background: 'rgba(79, 255, 160, 0.05)', padding: '12px', borderRadius: '8px', border: '1px dashed rgba(79, 255, 160, 0.3)', marginBottom: '15px' }}>
           <p style={{ fontSize: '11px', color: '#8A95AA', textAlign: 'center', lineHeight: '1.4' }}>
-            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" style={{color: '#4FFFA0', fontWeight: 'bold'}}>Instagram</a> pour valider le virement.
+            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" style={{color: '#4FFFA0', fontWeight: 'bold'}}>Instagram</a> pour valider le virement.
           </p>
         </div>
 

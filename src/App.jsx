@@ -33,7 +33,6 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
     flexShrink: 0,
   };
 
-  // Si pas de domaine ou erreur, on affiche l'émoji
   if (!domain || error) {
     return (
       <div style={{ ...wrapperStyle, fontSize: size * 0.5 }}>
@@ -45,13 +44,11 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
   return (
     <div style={wrapperStyle}>
       <img
-        // Utilisation d'un service combiné plus stable (Google + Logo.dev)
         src={`https://img.logo.dev/${domain}?token=pk_BXZXZrJITlWofFOzS8oAoA&size=128`} 
         alt={id}
         onError={(e) => {
-           // Si Logo.dev échoue, on tente Google Icons avant d'abandonner
            e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-           setError(false); // On réinitialise pour ne pas afficher l'émoji tout de suite
+           setError(false);
         }}
         style={{ width: '80%', height: '80%', objectFit: 'contain' }}
       />
@@ -63,245 +60,245 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
 const OFFRES = [
   {
     id: 'hellobank',
-    nom: 'Hello Bank',
-    categorie: 'Banque',
-    emoji: '🏦',
+    nom: "Hello Bank",
+    categorie: "Banque",
+    emoji: "🏦",
     couleur: '#00B4FF',
-    bonus: '80€',
-    bonusFilleul: '40€ + 40€',
-    bonusParrain: '80€',
-    description: 'Ouvre un compte Hello One et recois 40€ sans depot, puis 40€ de plus des le 10e achat carte.',
+    bonus: "80€",
+    bonusFilleul: "40€ + 40€",
+    bonusParrain: "80€",
+    description: "Ouvre un compte Hello One et reçois 40€ sans dépôt, puis 40€ de plus dès le 10e achat carte.",
     conditions: [
-      "1ere ouverture d'un compte de depot Hello One",
-      '40€ offerts sans depot minimum',
-      '40€ supplementaires au 10e achat carte bancaire',
-      'Delai : 72 heures',
+      "Première ouverture d’un compte de dépôt Hello One",
+      "40€ offerts sans dépôt minimum",
+      "40€ supplémentaires au 10e achat carte bancaire",
+      "Délai : 72 heures",
     ],
     type: 'contact',
     contact: '@parrain_4p',
-    note: 'Pour recevoir ton invitation, envoie ton prenom + adresse email sur Instagram',
-    shareText: 'Ouvre un compte Hello Bank et recois 80€ ! Contacte @parrain_4p sur Instagram.',
+    note: "Pour recevoir ton invitation, envoie ton prénom + adresse email sur Instagram",
+    shareText: "Ouvre un compte Hello Bank et reçois 80€ ! Contacte @parrain_4p sur Instagram.",
     shareUrl: 'https://parrain-4p.vercel.app',
   },
   {
     id: 'joko',
-    nom: 'Joko',
-    categorie: 'Cashback',
-    emoji: '💸',
+    nom: "Joko",
+    categorie: "Cashback",
+    emoji: "💸",
     couleur: '#FF6B35',
-    bonus: '1€ + cashback',
-    bonusFilleul: '1€ a l inscription',
-    bonusParrain: '5€ + 10% du cashback filleul',
-    description: 'Joko transforme tes achats quotidiens en micro-economies automatiques en connectant ton compte bancaire.',
+    bonus: "1€ + cashback",
+    bonusFilleul: "1€ à l’inscription",
+    bonusParrain: "5€ + 10% du cashback filleul",
+    description: "Joko transforme tes achats quotidiens en micro-économies automatiques en connectant ton compte bancaire.",
     conditions: [
-      'Telecharger l app Joko',
-      'Connecter son compte bancaire',
-      '5€ offert a l inscription avec le code',
-      'Delai : instantane',
+      "Télécharger l’app Joko",
+      "Connecter son compte bancaire",
+      "5€ offerts à l’inscription avec le code",
+      "Délai : instantané",
     ],
     type: 'code',
     code: 'skevdw',
-    shareText: 'Rejoins Joko avec mon code skevdw et gagne 1€ + du cashback automatique !',
+    shareText: "Rejoins Joko avec mon code skevdw et gagne 1€ + du cashback automatique !",
     shareUrl: 'https://parrain-4p.vercel.app',
   },
   {
     id: 'okx',
-    nom: 'okx',
-    categorie: 'Crypto',
-    emoji: '₿',
+    nom: "OKX",
+    categorie: "Crypto",
+    emoji: "₿",
     couleur: '#0052FF',
-    bonus: '40€',
-    bonusFilleul: '40€ en Bitcoin',
-    bonusParrain: '60€',
-    description: 'okx est la plateforme de reference pour acheter, vendre et stocker des cryptomonnaies en toute securite.',
+    bonus: "40€",
+    bonusFilleul: "40€ en Bitcoin",
+    bonusParrain: "60€",
+    description: "OKX est la plateforme de référence pour acheter, vendre et stocker des cryptomonnaies en toute sécurité.",
     conditions: [
-      'S inscrire via le lien de parrainage',
-      'Valider son identite (KYC)',
-      'Deposer 200€',
-      'Acheter 200€ de Bitcoin (BTC)',
-      'Recois 40€ de Bitcoin apres 24h — retirable integralement',
+      "S’inscrire via le lien de parrainage",
+      "Valider son identité (KYC)",
+      "Déposer 200€",
+      "Acheter 200€ de Bitcoin (BTC)",
+      "Reçois 40€ de Bitcoin après 24h — retirable intégralement",
     ],
     type: 'lien',
     lien: 'https://my.okx.com/fr-fr/join/90527625',
-    shareText: 'Inscris-toi sur Coinbase via mon lien et recois 20€ en Bitcoin !',
+    shareText: "Inscris-toi sur OKX via mon lien et reçois 40€ en Bitcoin !",
     shareUrl: 'https://my.okx.com/fr-fr/join/90527625',
   },
   {
     id: 'veracash',
-    nom: 'VeraCash',
-    categorie: 'Or & Epargne',
-    emoji: '🥇',
+    nom: "VeraCash",
+    categorie: "Or & Épargne",
+    emoji: "🥇",
     couleur: '#FFD700',
-    bonus: '10€ parrain',
-    bonusFilleul: 'Frais reduits',
-    bonusParrain: '10€',
-    description: 'VeraCash permet d epargner et payer avec de l or et de l argent physique. Une alternative solide aux banques classiques.',
+    bonus: "10€ parrain",
+    bonusFilleul: "Frais réduits",
+    bonusParrain: "10€",
+    description: "VeraCash permet d’épargner et payer avec de l’or et de l’argent physique. Une alternative solide aux banques classiques.",
     conditions: [
-      'S inscrire via le lien de parrainage',
-      'Verifier son identite',
-      'Deposer 10€ (retirable immediatement)',
-      'Frais de gestion reduits a vie',
+      "S’inscrire via le lien de parrainage",
+      "Vérifier son identité",
+      "Déposer 10€ (retirable immédiatement)",
+      "Frais de gestion réduits à vie",
     ],
     type: 'lien',
     lien: 'https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO',
-    shareText: 'Epargne en or avec VeraCash ! Inscris-toi via mon lien pour des frais reduits a vie.',
+    shareText: "Épargne en or avec VeraCash ! Inscris-toi via mon lien pour des frais réduits à vie.",
     shareUrl: 'https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO',
   },
   {
     id: 'robinhood',
-    nom: 'Robinhood',
-    categorie: 'Crypto Exchange',
-    emoji: '🏹',
+    nom: "Robinhood",
+    categorie: "Crypto Exchange",
+    emoji: "🏹",
     couleur: '#00C805',
-    bonus: '10€',
-    bonusFilleul: '10€',
-    bonusParrain: '10€',
-    description: 'Robinhood est un exchange crypto simple et intuitif pour acheter et vendre des cryptomonnaies sans frais caches.',
+    bonus: "10€",
+    bonusFilleul: "10€",
+    bonusParrain: "10€",
+    description: "Robinhood est un exchange crypto simple et intuitif pour acheter et vendre des cryptomonnaies sans frais cachés.",
     conditions: [
-      'S inscrire via le lien de parrainage',
-      'Valider son identite',
-      'Deposer 10€ (retirable immediatement)',
-      'Delai : immediat',
+      "S’inscrire via le lien de parrainage",
+      "Valider son identité",
+      "Déposer 10€ (retirable immédiatement)",
+      "Délai : immédiat",
     ],
     type: 'lien',
     lien: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
-    shareText: 'Rejoins Robinhood et recois 10€ ! Depot retirable immediatement.',
+    shareText: "Rejoins Robinhood et reçois 10€ ! Dépôt retirable immédiatement.",
     shareUrl: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
   },
   {
     id: 'winamax',
-    nom: 'Winamax',
-    categorie: 'Paris Sportifs',
-    emoji: '⚽',
+    nom: "Winamax",
+    categorie: "Paris Sportifs",
+    emoji: "⚽",
     couleur: '#E8002D',
-    bonus: '40€',
-    bonusFilleul: '40€',
-    bonusParrain: '40€',
-    description: 'Winamax est la reference des paris sportifs en France. Inscris-toi avec le code parrainage et recois 40€.',
+    bonus: "40€",
+    bonusFilleul: "40€",
+    bonusParrain: "40€",
+    description: "Winamax est la référence des paris sportifs en France. Inscris-toi avec le code parrainage et reçois 40€.",
     conditions: [
-      'S inscrire avec le code parrainage',
-      'Valider son inscription',
-      'Deposer 10€',
-      'Prime filleul : 40€ — Prime parrain : 40€',
+      "S’inscrire avec le code parrainage",
+      "Valider son inscription",
+      "Déposer 10€",
+      "Prime filleul : 40€ — Prime parrain : 40€",
     ],
     type: 'code',
     code: 'LTZXVU',
-    shareText: 'Inscris-toi sur Winamax avec le code LTZXVU et recois 40€ !',
+    shareText: "Inscris-toi sur Winamax avec le code LTZXVU et reçois 40€ !",
     shareUrl: 'https://parrain-4p.vercel.app',
   },
   {
     id: 'betsson',
-    nom: 'Betsson',
-    categorie: 'Paris Sportifs',
-    emoji: '🎯',
+    nom: "Betsson",
+    categorie: "Paris Sportifs",
+    emoji: "🎯",
     couleur: '#FF4500',
-    bonus: '10€ Betboost',
-    bonusFilleul: '10€ Betboost',
-    bonusParrain: '10€ Betboost',
-    description: 'Betsson est une plateforme de paris sportifs internationale. Recois 10€ Betboost en parrainant.',
+    bonus: "10€ Betboost",
+    bonusFilleul: "10€ Betboost",
+    bonusParrain: "10€ Betboost",
+    description: "Betsson est une plateforme de paris sportifs internationale. Reçois 10€ Betboost en parrainant.",
     conditions: [
-      'S inscrire via le lien',
-      'Verifier son compte',
-      'Deposer 10€',
-      'Prime filleul : 10€ Betboost — Prime parrain : 10€ Betboost',
+      "S’inscrire via le lien",
+      "Vérifier son compte",
+      "Déposer 10€",
+      "Prime filleul : 10€ Betboost — Prime parrain : 10€ Betboost",
     ],
     type: 'lien',
     lien: 'https://betsson.fr/fr/%23register?language=fr&referralCode=8LAFsK',
-    shareText: 'Inscris-toi sur Betsson via mon lien et recois 10€ Betboost !',
+    shareText: "Inscris-toi sur Betsson via mon lien et reçois 10€ Betboost !",
     shareUrl: 'https://betsson.fr/fr/%23register?language=fr&referralCode=8LAFsK',
   },
   {
     id: 'Unibet',
-    nom: 'Unibet',
-    categorie: 'Paris Sportifs',
-    emoji: '💰',
+    nom: "Unibet",
+    categorie: "Paris Sportifs",
+    emoji: "💰",
     couleur: '#FF4500',
-    bonus: '30€',
-    bonusFilleul: '30€ Freebets',
-    bonusParrain: '30€ Freebets',
-    description: 'Unibet est une plateforme de paris sportifs internationale. Recois 30€.',
+    bonus: "30€",
+    bonusFilleul: "30€ Freebets",
+    bonusParrain: "30€ Freebets",
+    description: "Unibet est une plateforme de paris sportifs internationale. Reçois 30€.",
     conditions: [
-      'S inscrire via le lien',
-      'Verifier son compte',
-      'Deposer 10€',
-      'Prime filleul : 30€ Freebets — Prime parrain : 30€ Freebets',
+      "S’inscrire via le lien",
+      "Vérifier son compte",
+      "Déposer 10€",
+      "Prime filleul : 30€ Freebets — Prime parrain : 30€ Freebets",
     ],
     type: 'lien',
     lien: 'https://www.unibet.fr/inscription/?campaign=240326&parrain=AC1330D7A4D09111',
-    shareText: 'Inscris-toi sur Unibet via mon lien et recois 30€ en Freebets !',
+    shareText: "Inscris-toi sur Unibet via mon lien et reçois 30€ en Freebets !",
     shareUrl: 'https://www.unibet.fr/inscription/?campaign=240326&parrain=AC1330D7A4D09111',
   },
   {
     id: 'engie',
-    nom: 'Engie',
-    categorie: 'Energie',
-    emoji: '⚡',
+    nom: "Engie",
+    categorie: "Énergie",
+    emoji: "⚡",
     couleur: '#00B4FF',
-    bonus: '20€',
-    bonusFilleul: '20€ sur ta premiere facture',
-    bonusParrain: '20€ sur la prochaine facture',
-    description: 'groupe énergétique axé sur les énergies renouvelables',
+    bonus: "20€",
+    bonusFilleul: "20€ sur ta première facture",
+    bonusParrain: "20€ sur la prochaine facture",
+    description: "Groupe énergétique axé sur les énergies renouvelables.",
     conditions: [
-      'S inscrire avec le code de parrainage',
-      'souscription d une offre electricite ou gaz naturelle',
+      "S’inscrire avec le code de parrainage",
+      "Souscription d’une offre électricité ou gaz naturel",
     ],
     type: 'code',
     code: 'ZUA255872',
-    shareText: 'Rejoins Engie avec mon code parrainage !',
+    shareText: "Rejoins Engie avec mon code parrainage !",
     shareUrl: 'https://parrain-4p.vercel.app',
   },
   {
     id: 'nordvpn',
-    nom: 'NordVPN',
-    categorie: 'VPN',
-    emoji: '🔒',
+    nom: "NordVPN",
+    categorie: "VPN",
+    emoji: "🔒",
     couleur: '#4687FF',
-    bonus: '1 à 3 Mois',
-    bonusFilleul: '1 a 3 mois offert',
-    bonusParrain: '3 mois offert',
-    description: 'Offre de parrainage NordVPN — a completer.',
+    bonus: "1 à 3 Mois",
+    bonusFilleul: "1 à 3 mois offerts",
+    bonusParrain: "3 mois offerts",
+    description: "Protégez votre vie privée avec le VPN leader du marché.",
     conditions: [
-      'S inscrire via le lien de parrainage',
-      'souscription abonnement 1 ans 3 mois offert',
-      'souscription abonnement mensuelle 1 mois offert',
+      "S’inscrire via le lien de parrainage",
+      "Souscription abonnement 1 an : 3 mois offerts",
+      "Souscription abonnement mensuel : 1 mois offert",
     ],
     type: 'lien',
     lien: 'https://refer-nordvpn.com/jFCxwAkTEVV',
-    shareText: 'Protege ta connexion avec NordVPN via mon lien !',
+    shareText: "Protège ta connexion avec NordVPN via mon lien !",
     shareUrl: 'https://parrain-4p.vercel.app',
   },
   {
     id: 'myfin',
-    nom: 'Myfin',
-    categorie: 'Banque',
-    emoji: '💳',
+    nom: "Myfin",
+    categorie: "Banque",
+    emoji: "💳",
     couleur: '#22c55e',
-    bonus: '10€',
-    bonusFilleul: '10€',
-    bonusParrain: '10€',
-    description: 'solution digitale de gestion financiere personnelle',
+    bonus: "10€",
+    bonusFilleul: "10€",
+    bonusParrain: "10€",
+    description: "Solution digitale de gestion financière personnelle.",
     conditions: [
-      'S inscrire avec le code parrainage',
-      'Verifier son compte',
-      'Deposer 10€',
-      'utilise la carte virtuelle et dépose 10 euros sur Betclic',
-      'retire tes 10€ sur Betclic',
+      "S’inscrire avec le code parrainage",
+      "Vérifier son compte",
+      "Déposer 10€",
+      "Utiliser la carte virtuelle et déposer 10 euros sur Betclic",
+      "Retirer tes 10€ sur Betclic",
     ],
     type: 'code',
     code: 'LE00BB5I',
-    shareText: 'Rejoins Myfin via mon lien !',
+    shareText: "Rejoins Myfin via mon lien !",
     shareUrl: 'https://parrain-4p.vercel.app',
   },
 ];
 
-const CATEGORIES = ['Tout', 'Banque', 'Cashback', 'Crypto', 'Or & Epargne', 'Crypto Exchange', 'Paris Sportifs'];
+const CATEGORIES = ['Tout', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Crypto Exchange', 'Paris Sportifs'];
 
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 const TAUX_OPTIONS = [
-  { label: 'Auto-entrepreneur - Prestation de services (21.2%)', value: 21.2 },
-  { label: 'Auto-entrepreneur - Vente de marchandises (12.8%)', value: 12.8 },
-  { label: 'EIRL / EI au reel (estimation 45%)', value: 45 },
-  { label: 'Personnalise', value: null },
+  { label: "Auto-entrepreneur - Prestation de services (21.2%)", value: 21.2 },
+  { label: "Auto-entrepreneur - Vente de marchandises (12.8%)", value: 12.8 },
+  { label: "EIRL / EI au réel (estimation 45%)", value: 45 },
+  { label: "Personnalisé", value: null },
 ];
 
 const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n || 0);
@@ -321,9 +318,9 @@ function calcul(f) {
   const totalCharges = matieres + transport + outillage + autresFrais + coutMain + cotisations;
   const beneficeNet = prixVente - totalCharges;
   const marge = prixVente > 0 ? (beneficeNet / prixVente) * 100 : 0;
-  let sante = 'Deficitaire';
-  if (marge >= 20) sante = 'Rentable';
-  else if (marge >= 0) sante = 'Risque';
+  let sante = "Déficitaire";
+  if (marge >= 20) sante = "Rentable";
+  else if (marge >= 0) sante = "Risqué";
   return { prixVente, matieres, transport, outillage, autresFrais, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
 }
 
@@ -397,7 +394,7 @@ function Checklist({ offreId, conditions }) {
       ))}
       {done === total && (
         <div style={{ background: 'rgba(79,255,160,0.1)', border: '1px solid #4FFFA0', borderRadius: 10, padding: '10px', textAlign: 'center', marginTop: 8 }}>
-          <span style={{ fontSize: 13, color: '#4FFFA0', fontWeight: 800 }}>🎉 Toutes les etapes completees !</span>
+          <span style={{ fontSize: 13, color: '#4FFFA0', fontWeight: 800 }}>🎉 Toutes les étapes complétées !</span>
         </div>
       )}
     </div>
@@ -417,7 +414,7 @@ function BoutonPartage({ offre }) {
     } else {
       try {
         await navigator.clipboard.writeText(offre.shareText + ' ' + offre.shareUrl);
-        alert('Lien copie !');
+        alert("Lien copié !");
       } catch (e) { }
     }
   };
@@ -479,7 +476,7 @@ function FormulaireChallenge() {
 
         <div style={{ background: 'rgba(79, 255, 160, 0.05)', padding: '12px', borderRadius: '8px', border: '1px dashed rgba(79, 255, 160, 0.3)', marginBottom: '15px' }}>
           <p style={{ fontSize: '11px', color: '#8A95AA', textAlign: 'center', lineHeight: '1.4' }}>
-            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" style={{color: '#4FFFA0', fontWeight: 'bold'}}>Instagram</a> pour valider le virement.
+            📸 N’oublie pas d’envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" style={{color: '#4FFFA0', fontWeight: 'bold'}}>Instagram</a> pour valider le virement.
           </p>
         </div>
 
@@ -523,11 +520,11 @@ function PageParrainage() {
           <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.6, marginBottom: 20 }}>{o.description}</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
             <div style={{ background: '#0A0B0F', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #1A1E2A' }}>
-              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>prime parrain</div>
+              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>Prime parrain</div>
               <div style={{ fontSize: 20, fontWeight: 900, color: '#4FFFA0' }}>{o.bonusParrain}</div>
             </div>
             <div style={{ background: '#0A0B0F', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #1A1E2A' }}>
-              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>Filleul recoit</div>
+              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>Filleul reçoit</div>
               <div style={{ fontSize: 20, fontWeight: 900, color: '#E8EDF5' }}>{o.bonusFilleul}</div>
             </div>
           </div>
@@ -537,13 +534,13 @@ function PageParrainage() {
               <div style={{ fontSize: 11, color: '#4A5568', marginBottom: 6, textTransform: 'uppercase' }}>Code parrainage</div>
               <div style={{ fontSize: 28, fontWeight: 900, color: '#4FFFA0', fontFamily: 'monospace', letterSpacing: '0.1em' }}>{o.code}</div>
               <button onClick={() => copier(o.code)} style={{ marginTop: 10, background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontSize: 13, fontWeight: 700, padding: '8px 20px', cursor: 'pointer' }}>
-                {copied ? 'Copie !' : 'Copier le code'}
+                {copied ? "Copié !" : "Copier le code"}
               </button>
             </div>
           )}
           {o.type === 'lien' && o.lien !== '#' && (
             <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none' }}>
-              S inscrire with mon lien →
+              S’inscrire avec mon lien →
             </a>
           )}
           {o.type === 'contact' && (
@@ -588,7 +585,7 @@ function PageParrainage() {
 
 function PageAvis() {
   const avis = [
-    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
+    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j’ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
     { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" },
     { nom: "Tom", date: "Il y a 1 mois", texte: "Déjà 120€ de gains cumulés grâce aux offres crypto. Top !", note: "⭐⭐⭐⭐⭐" }
   ];
@@ -603,7 +600,7 @@ function PageAvis() {
             <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
           </div>
           <div style={{ color: '#FFD700', fontSize: 12, marginBottom: 8 }}>{a.note}</div>
-          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>"{a.texte}"</p>
+          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>“{a.texte}”</p>
         </div>
       ))}
     </div>
@@ -626,7 +623,7 @@ function PageProfitMaster() {
   }, []);
 
   const handlePDFClick = useCallback(() => {
-    if (pdfPaid) alert('Fonctionnalite PDF disponible');
+    if (pdfPaid) alert("Fonctionnalité PDF disponible");
     else setShowPaywall(true);
   }, [pdfPaid]);
 
@@ -643,22 +640,22 @@ function PageProfitMaster() {
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
       <Section title="REVENUS" icon="💰">
-        <InputField label="Prix de vente estime" value={fields.prixVente} onChange={setField('prixVente')} hint="Le montant facture au client" />
+        <InputField label="Prix de vente estimé" value={fields.prixVente} onChange={setField('prixVente')} hint="Le montant facturé au client" />
       </Section>
-      <Section title="COUTS DIRECTS" icon="📦">
-        <InputField label="Matieres premieres" value={fields.matieres} onChange={setField('matieres')} />
+      <Section title="COÛTS DIRECTS" icon="📦">
+        <InputField label="Matières premières" value={fields.matieres} onChange={setField('matieres')} />
         <InputField label="Transport / Essence" value={fields.transport} onChange={setField('transport')} />
         <InputField label="Outillage" value={fields.outillage} onChange={setField('outillage')} />
         <InputField label="Autres frais" value={fields.autresFrais} onChange={setField('autresFrais')} />
       </Section>
-      <Section title="TEMPS PASSE" icon="🕐">
+      <Section title="TEMPS PASSÉ" icon="🕐">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
           <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
         </div>
-        <div style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>Cout main oeuvre : <span style={{ color: '#8A95AA' }}>{fmt(res.coutMain)}</span></div>
+        <div style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>Coût main d’œuvre : <span style={{ color: '#8A95AA' }}>{fmt(res.coutMain)}</span></div>
       </Section>
-      <Section title="FISCALITE" icon="🏛️">
+      <Section title="FISCALITÉ" icon="🏛️">
         <div style={{ position: 'relative', marginBottom: 12 }}>
           <select value={fields.tauxOption} onChange={(e) => setFields((prev) => ({ ...prev, tauxOption: e.target.value }))}
             style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', fontSize: 13, padding: '10px 12px', outline: 'none', cursor: 'pointer' }}>
@@ -672,20 +669,20 @@ function PageProfitMaster() {
       </Section>
       {res.prixVente > 0 && (
         <div style={{ marginTop: 4 }}>
-          <div style={{ fontSize: 12, fontWeight: 800, color: '#4FFFA0', textTransform: 'uppercase', marginBottom: 10, letterSpacing: '0.08em' }}>Resultats en temps reel</div>
-          <div style={{ background: res.sante === 'Rentable' ? 'rgba(79,255,160,0.1)' : res.sante === 'Risque' ? 'rgba(255,190,50,0.1)' : 'rgba(255,80,80,0.1)', border: '1.5px solid ' + (res.sante === 'Rentable' ? '#4FFFA0' : res.sante === 'Risque' ? '#FFBE32' : '#FF5050'), borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <span style={{ fontSize: 18 }}>{res.sante === 'Rentable' ? '✅' : res.sante === 'Risque' ? '⚠️' : '🔴'}</span>
+          <div style={{ fontSize: 12, fontWeight: 800, color: '#4FFFA0', textTransform: 'uppercase', marginBottom: 10, letterSpacing: '0.08em' }}>Résultats en temps réel</div>
+          <div style={{ background: res.sante === 'Rentable' ? 'rgba(79,255,160,0.1)' : res.sante === 'Risqué' ? 'rgba(255,190,50,0.1)' : 'rgba(255,80,80,0.1)', border: '1.5px solid ' + (res.sante === 'Rentable' ? '#4FFFA0' : res.sante === 'Risqué' ? '#FFBE32' : '#FF5050'), borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 18 }}>{res.sante === 'Rentable' ? '✅' : res.sante === 'Risqué' ? '⚠️' : '🔴'}</span>
             <div>
-              <div style={{ fontSize: 10, color: '#8A95AA', textTransform: 'uppercase' }}>Sante du projet</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: res.sante === 'Rentable' ? '#4FFFA0' : res.sante === 'Risque' ? '#FFBE32' : '#FF5050' }}>{res.sante}</div>
+              <div style={{ fontSize: 10, color: '#8A95AA', textTransform: 'uppercase' }}>Santé du projet</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: res.sante === 'Rentable' ? '#4FFFA0' : res.sante === 'Risqué' ? '#FFBE32' : '#FF5050' }}>{res.sante}</div>
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
             {[
-              { label: 'Benefice Net', value: fmt(res.beneficeNet), h: true },
-              { label: 'Marge Nette', value: pct(res.marge), h: false },
-              { label: 'Total Charges', value: fmt(res.totalCharges), h: false },
-              { label: 'Cotisations', value: fmt(res.cotisations), h: false },
+              { label: "Bénéfice Net", value: fmt(res.beneficeNet), h: true },
+              { label: "Marge Nette", value: pct(res.marge), h: false },
+              { label: "Total Charges", value: fmt(res.totalCharges), h: false },
+              { label: "Cotisations", value: fmt(res.cotisations), h: false },
             ].map(({ label, value, h }) => (
               <div key={label} style={{ background: h ? 'rgba(79,255,160,0.07)' : '#111318', border: '1.5px solid ' + (h ? '#4FFFA0' : '#1E2230'), borderRadius: 10, padding: '12px 14px' }}>
                 <div style={{ fontSize: 10, color: '#8A95AA', textTransform: 'uppercase', marginBottom: 3 }}>{label}</div>
@@ -706,14 +703,14 @@ function PageProfitMaster() {
             ))}
           </div>
           <button onClick={handlePDFClick} style={{ width: '100%', background: pdfPaid ? 'linear-gradient(135deg, #4FFFA0, #2ECC71)' : '#111318', border: '2px solid #4FFFA0', borderRadius: 12, color: pdfPaid ? '#0A0B0F' : '#4FFFA0', fontSize: 14, fontWeight: 800, padding: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-            {pdfPaid ? 'Telecharger mon Bilan PDF' : 'Telecharger le Bilan PDF - 2,00 €'}
+            {pdfPaid ? "Télécharger mon Bilan PDF" : "Télécharger le Bilan PDF - 2,00 €"}
           </button>
         </div>
       )}
       {res.prixVente === 0 && (
         <div style={{ textAlign: 'center', padding: '30px 20px', color: '#2E3545' }}>
           <div style={{ fontSize: 36, marginBottom: 10 }}>📊</div>
-          <p style={{ fontSize: 14 }}>Renseignez votre prix de vente pour voir les resultats.</p>
+          <p style={{ fontSize: 14 }}>Renseignez votre prix de vente pour voir les résultats.</p>
         </div>
       )}
       {showPaywall && (
@@ -721,13 +718,13 @@ function PageProfitMaster() {
           <div style={{ background: '#111318', border: '1.5px solid #4FFFA0', borderRadius: 20, maxWidth: 400, width: '100%', padding: '32px 28px', position: 'relative' }}>
             <button onClick={() => setShowPaywall(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: '#4A5568', fontSize: 22, cursor: 'pointer' }}>X</button>
             <div style={{ fontSize: 32, marginBottom: 12 }}>🔒</div>
-            <h2 style={{ color: '#E8EDF5', fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Securisez votre projet</h2>
+            <h2 style={{ color: '#E8EDF5', fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Sécurisez votre projet</h2>
             <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', marginBottom: 20, textAlign: 'center' }}>
               <div style={{ fontSize: 36, fontWeight: 900, color: '#4FFFA0' }}>2,00 €</div>
-              <div style={{ fontSize: 12, color: '#8A95AA' }}>Paiement securise via Stripe</div>
+              <div style={{ fontSize: 12, color: '#8A95AA' }}>Paiement sécurisé via Stripe</div>
             </div>
             <button onClick={handlePay} style={{ width: '100%', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', border: 'none', borderRadius: 12, color: '#0A0B0F', fontSize: 16, fontWeight: 800, padding: '15px', cursor: 'pointer' }}>
-              Payer et Telecharger
+              Payer et Télécharger
             </button>
           </div>
         </div>
@@ -753,7 +750,7 @@ export default function App() {
         <h1 style={{ fontSize: 24, fontWeight: 900, background: 'linear-gradient(90deg, #4FFFA0, #A8FFD8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           Parrain 4P
         </h1>
-        <p style={{ color: '#4A5568', fontSize: 12, marginTop: 2 }}>Parrainages + Calculateur de Rentabilite</p>
+        <p style={{ color: '#4A5568', fontSize: 12, marginTop: 2 }}>Parrainages + Calculateur de Rentabilité</p>
       </div>
       {onglet === 'parrainage' && <PageParrainage />}
       {onglet === 'avis' && <PageAvis />}

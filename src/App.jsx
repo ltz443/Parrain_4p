@@ -129,7 +129,7 @@ const OFFRES = [
     emoji: '₿',
     couleur: '#0052FF',
     bonus: '40€',
-    bonusFilleul: '40€ en Bitcoin',
+    bonusFilleul: '40€ en BTC',
     bonusParrain: '60€',
     description: 'okx est la plateforme de reference pour acheter, vendre et stocker des cryptomonnaies en toute securite.',
     conditions: [

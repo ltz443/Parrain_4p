@@ -87,7 +87,7 @@ const OFFRES = [
     couleur: '#FF6B35',
     bonus: "1€ + cashback",
     bonusFilleul: "1€ à l’inscription",
-    bonusParrain: "5€ + 10% du cashback filleul",
+    bonusParrain: "3€ + 10% du cashback filleul",
     description: "Joko transforme tes achats quotidiens en micro-économies automatiques en connectant ton compte bancaire.",
     conditions: [
       "Télécharger l’app Joko et utilise mon code de parrainage",
@@ -136,7 +136,6 @@ const OFFRES = [
       "S’inscrire via le lien de parrainage",
       "Vérifier son identité",
       "Déposer 10€ (retirable immédiatement)",
-      "Frais de gestion réduits à vie",
     ],
     type: 'lien',
     lien: 'https://www.veracash.com/fr/inscription?sponsorMemberPseudo=DEVOMIZO',
@@ -157,7 +156,7 @@ const OFFRES = [
       "S’inscrire via le lien de parrainage",
       "Valider son identité",
       "Déposer 10€ (retirable immédiatement)",
-      "Délai : immédiat",
+      "Délai : 6 mois",
     ],
     type: 'lien',
     lien: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
@@ -178,7 +177,6 @@ const OFFRES = [
       "S’inscrire avec le code parrainage",
       "Valider son inscription",
       "Déposer 10€",
-      "Prime filleul : 40€ — Prime parrain : 40€",
     ],
     type: 'code',
     code: 'LTZXVU',
@@ -199,7 +197,6 @@ const OFFRES = [
       "S’inscrire via le lien",
       "Vérifier son compte",
       "Déposer 10€",
-      "Prime filleul : 10€ Betboost — Prime parrain : 10€ Betboost",
     ],
     type: 'lien',
     lien: 'https://betsson.fr/fr/%23register?language=fr&referralCode=8LAFsK',
@@ -220,7 +217,6 @@ const OFFRES = [
       "S’inscrire via le lien",
       "Vérifier son compte",
       "Déposer 10€",
-      "Prime filleul : 30€ Freebets — Prime parrain : 30€ Freebets",
     ],
     type: 'lien',
     lien: 'https://www.unibet.fr/inscription/?campaign=240326&parrain=AC1330D7A4D09111',
@@ -290,7 +286,7 @@ const OFFRES = [
   },
 ];
 
-const CATEGORIES = ['Tout', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Crypto Exchange', 'Paris Sportifs'];
+const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Crypto Exchange', 'Paris Sportifs'];
 
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 const TAUX_OPTIONS = [

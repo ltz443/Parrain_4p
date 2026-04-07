@@ -72,7 +72,6 @@ const OFFRES = [
       "Première ouverture d’un compte de dépôt Hello One",
       "40€ offerts sans dépôt minimum",
       "40€ supplémentaires au 10e achat carte bancaire",
-      "Délai : 72 heures",
     ],
     type: 'contact',
     contact: '@parrain_4p',

@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
-// ─── CONFIGURATION LOGOS (BRANDFETCH) ─────────────────────────────────────────
-const BRANDFETCH_API_KEY = 'pk_BXZXZrJITlWofFOzS8oAoA';
-
+// ─── CONFIGURATION LOGOS ──────────────────────────────────────────────────────
 const LOGO_DOMAINS = {
   hellobank: 'hellobank.fr',
   joko:      'joko.com',
@@ -19,31 +17,8 @@ const LOGO_DOMAINS = {
 };
 
 function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
-  const [logoUrl, setLogoUrl] = useState(null);
   const [error, setError] = useState(false);
   const domain = LOGO_DOMAINS[id];
-
-  useEffect(() => {
-    if (domain) {
-      // Utilisation de l'API Brandfetch pour récupérer le logo exact
-      fetch(`https://api.brandfetch.io/v2/brands/${domain}`, {
-        headers: {
-          'Authorization': `Bearer ${BRANDFETCH_API_KEY}`
-        }
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.logos && data.logos.length > 0) {
-          // On cherche le logo de type "icon" ou le premier disponible
-          const icon = data.logos.find(l => l.type === 'icon') || data.logos[0];
-          setLogoUrl(icon.formats[0].src);
-        } else {
-          setError(true);
-        }
-      })
-      .catch(() => setError(true));
-    }
-  }, [domain]);
 
   const wrapperStyle = {
     width: size,
@@ -58,7 +33,8 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
     flexShrink: 0,
   };
 
-  if (!domain || error || !logoUrl) {
+  // Si pas de domaine ou erreur, on affiche l'émoji
+  if (!domain || error) {
     return (
       <div style={{ ...wrapperStyle, fontSize: size * 0.5 }}>
         {emoji}
@@ -69,9 +45,15 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
   return (
     <div style={wrapperStyle}>
       <img
-        src={logoUrl}
+        // Utilisation d'un service combiné plus stable (Google + Logo.dev)
+        src={`https://img.logo.dev/${domain}?token=pk_BXZXZrJITlWofFOzS8oAoA&size=128`} 
         alt={id}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        onError={(e) => {
+           // Si Logo.dev échoue, on tente Google Icons avant d'abandonner
+           e.target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+           setError(false); // On réinitialise pour ne pas afficher l'émoji tout de suite
+        }}
+        style={{ width: '80%', height: '80%', objectFit: 'contain' }}
       />
     </div>
   );
@@ -129,7 +111,7 @@ const OFFRES = [
     emoji: '₿',
     couleur: '#0052FF',
     bonus: '40€',
-    bonusFilleul: '40€ en BTC',
+    bonusFilleul: '40€ en Bitcoin',
     bonusParrain: '60€',
     description: 'okx est la plateforme de reference pour acheter, vendre et stocker des cryptomonnaies en toute securite.',
     conditions: [

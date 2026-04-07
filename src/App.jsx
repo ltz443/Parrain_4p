@@ -371,6 +371,70 @@ function BoutonPartage({ offre }) {
   );
 }
 
+// ─── FORMULAIRE DE CHALLENGE FIDÉLITÉ (Lien Intégré) ───────────────────────────
+function FormulaireChallenge() {
+  const [method, setMethod] = useState('revolut');
+  const inputBaseStyle = {
+    width: '100%',
+    background: '#0A0B0F',
+    border: '1.5px solid #1E2230',
+    borderRadius: 8,
+    color: '#FFF',
+    padding: '12px',
+    outline: 'none',
+    fontSize: '14px',
+    marginBottom: '10px'
+  };
+
+  return (
+    <div style={{ background: '#111318', border: '1px solid #4FFFA0', borderRadius: 16, padding: '20px', marginTop: 24 }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <h3 style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0', marginBottom: 8 }}>🏆 Challenge 3-en-1</h3>
+        <p style={{ fontSize: 12, color: '#8A95AA' }}>Complète 3 offres et reçois <strong style={{color: '#4FFFA0'}}>10€ de bonus</strong> de ma part !</p>
+      </div>
+
+      <form action="https://formspree.io/f/mreojpvq" method="POST">
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input type="text" name="prenom" placeholder="Prénom" required style={inputBaseStyle} />
+          <input type="text" name="instagram" placeholder="@Pseudo Instagram" required style={inputBaseStyle} />
+        </div>
+        <input type="email" name="email" placeholder="Ton adresse email" required style={inputBaseStyle} />
+        <input type="text" name="offres" placeholder="Les 3 offres choisies" required style={inputBaseStyle} />
+
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '15px' }}>
+          <label style={{ fontSize: '12px', color: '#8A95AA', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <input type="radio" name="pay_method" value="revolut" checked={method === 'revolut'} onChange={() => setMethod('revolut')} />
+            Revolut
+          </label>
+          <label style={{ fontSize: '12px', color: '#8A95AA', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <input type="radio" name="pay_method" value="rib" checked={method === 'rib'} onChange={() => setMethod('rib')} />
+            RIB
+          </label>
+        </div>
+
+        {method === 'revolut' ? (
+          <input type="text" name="revolut_tag" placeholder="Ton @Tag Revolut" required style={inputBaseStyle} />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+             <input type="text" name="nom_famille" placeholder="Nom de famille (pour le RIB)" required style={inputBaseStyle} />
+             <input type="text" name="iban" placeholder="Ton IBAN" required style={inputBaseStyle} />
+          </div>
+        )}
+
+        <div style={{ background: 'rgba(79, 255, 160, 0.05)', padding: '12px', borderRadius: '8px', border: '1px dashed rgba(79, 255, 160, 0.3)', marginBottom: '15px' }}>
+          <p style={{ fontSize: '11px', color: '#8A95AA', textAlign: 'center', lineHeight: '1.4' }}>
+            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" style={{color: '#4FFFA0', fontWeight: 'bold'}}>Instagram</a> pour valider le virement.
+          </p>
+        </div>
+
+        <button type="submit" style={{ width: '100%', background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontWeight: 800, padding: '12px', cursor: 'pointer', fontSize: '14px' }}>
+          Envoyer ma demande
+        </button>
+      </form>
+    </div>
+  );
+}
+
 function PageParrainage() {
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
@@ -459,14 +523,10 @@ function PageParrainage() {
           </button>
         ))}
       </div>
-      <div style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '20px', marginTop: 24, textAlign: 'center' }}>
-        <h3 style={{ fontSize: 16, fontWeight: 900, color: '#4FFFA0', marginBottom: 8 }}>Newsletter Exclue 📥</h3>
-        <p style={{ fontSize: 12, color: '#8A95AA', marginBottom: 16 }}>Reçois les nouveaux bons plans avant tout le monde.</p>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <input type="email" placeholder="Ton email..." style={{ flex: 1, background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#FFF', padding: '10px 12px', outline: 'none' }} />
-          <button style={{ background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontWeight: 800, padding: '0 16px', cursor: 'pointer' }}>OK</button>
-        </div>
-      </div>
+      
+      {/* Nouveau Formulaire Challenge (remplace la Newsletter) */}
+      <FormulaireChallenge />
+      
     </div>
   );
 }

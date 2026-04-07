@@ -90,9 +90,9 @@ const OFFRES = [
     bonusParrain: "5€ + 10% du cashback filleul",
     description: "Joko transforme tes achats quotidiens en micro-économies automatiques en connectant ton compte bancaire.",
     conditions: [
-      "Télécharger l’app Joko",
-      "Connecter son compte bancaire",
-      "5€ offerts à l’inscription avec le code",
+      "Télécharger l’app Joko et utilise mon code de parrainage",
+      "Connecte ton compte bancaire",
+      "1€ offerts à l’inscription",
       "Délai : instantané",
     ],
     type: 'code',

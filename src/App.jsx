@@ -1,6 +1,95 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
+// ============================================================
+// MODULE FAVORIS (Intégré)
+// ============================================================
+
+const FavStore = {
+  KEY: "p4_favs",
+  get: () => {
+    try {
+      const v = localStorage.getItem(FavStore.KEY);
+      return v ? JSON.parse(v) : [];
+    } catch { return []; }
+  },
+  set: (ids) => {
+    try { localStorage.setItem(FavStore.KEY, JSON.stringify(ids)); } catch {}
+  },
+};
+
+function useFavorites() {
+  const [favs, setFavs] = useState(() => FavStore.get());
+  const [favOnly, setFavOnly] = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => { if (e.key === FavStore.KEY) setFavs(FavStore.get()); };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
+
+  const toggle = useCallback((id) => {
+    setFavs((prev) => {
+      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+      FavStore.set(next);
+      return next;
+    });
+  }, []);
+
+  const isFav = useCallback((id) => favs.includes(id), [favs]);
+  return { favs, isFav, toggle, favOnly, setFavOnly, count: favs.length };
+}
+
+function FavButton({ offerId, isFav, onToggle }) {
+  const [burst, setBurst] = useState(false);
+  const handleClick = (e) => {
+    e.stopPropagation();
+    onToggle(offerId);
+    if (!isFav) { setBurst(true); setTimeout(() => setBurst(false), 400); }
+  };
+  return (
+    <button
+      onClick={handleClick}
+      style={{
+        position: 'absolute', top: 8, right: 8, background: 'none', border: 'none',
+        cursor: 'pointer', padding: 4, zIndex: 2, transition: 'transform 0.15s'
+      }}
+      className={burst ? "fav-burst" : ""}
+    >
+      <span style={{ 
+        fontSize: 18, 
+        color: isFav ? '#C9A96E' : '#4A5568',
+        opacity: isFav ? 1 : 0.5,
+        transition: 'all 0.2s'
+      }}>
+        {isFav ? "♥" : "♡"}
+      </span>
+    </button>
+  );
+}
+
+function FavFilterBtn({ active, count, onToggle }) {
+  return (
+    <button
+      onClick={() => onToggle(!active)}
+      style={{
+        position: 'relative', background: active ? 'rgba(201,169,110,0.15)' : '#111318',
+        border: `1px solid ${active ? '#C9A96E' : '#1A1E2A'}`,
+        borderRadius: 10, width: 40, height: 40, cursor: 'pointer', display: 'flex',
+        alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s'
+      }}
+    >
+      <span style={{ color: active ? '#C9A96E' : '#8A95AA', fontSize: 18 }}>{active ? "♥" : "♡"}</span>
+      {count > 0 && !active && (
+        <span style={{
+          position: 'absolute', top: -5, right: -5, background: '#C9A96E', color: '#0A0B0F',
+          fontSize: 9, fontWeight: 900, borderRadius: 10, padding: '2px 5px', border: '2px solid #0A0B0F'
+        }}>{count}</span>
+      )}
+    </button>
+  );
+}
+
 // ─── CONFIGURATION LOGOS ──────────────────────────────────────────────────────
 const LOGO_DOMAINS = {
   hellobank: 'hellobank.fr',
@@ -483,12 +572,18 @@ function FormulaireChallenge() {
   );
 }
 
-function PageParrainage() {
+function PageParrainage({ favState }) {
+  const { isFav, toggle, favOnly, count } = favState;
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const filtrees = filtre === 'Tout' ? OFFRES : OFFRES.filter(o => o.categorie === filtre);
+  // LOGIQUE DE FILTRAGE COMBINÉE (Catégorie + Favoris)
+  const filtrees = OFFRES.filter(o => {
+    const matchCat = filtre === 'Tout' || o.categorie === filtre;
+    const matchFav = !favOnly || isFav(o.id);
+    return matchCat && matchFav;
+  });
 
   const copier = (texte) => {
     navigator.clipboard.writeText(texte).then(() => {
@@ -504,7 +599,8 @@ function PageParrainage() {
         <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
           ← Retour
         </button>
-        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', marginBottom: 16 }}>
+        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', marginBottom: 16, position: 'relative' }}>
+          <FavButton offerId={o.id} isFav={isFav(o.id)} onToggle={toggle} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
             <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={56} borderRadius={16} />
             <div>
@@ -561,18 +657,29 @@ function PageParrainage() {
           </button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {filtrees.map(o => (
-          <button key={o.id} onClick={() => setSelected(o)} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s' }}>
-            <div style={{ marginBottom: 10 }}>
-              <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={44} borderRadius={12} />
+      
+      {filtrees.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '40px 20px', color: '#4A5568' }}>
+          <span style={{ fontSize: 40 }}>🏮</span>
+          <p style={{ marginTop: 10 }}>Aucune offre favorite pour le moment.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {filtrees.map(o => (
+            <div key={o.id} style={{ position: 'relative' }}>
+              <FavButton offerId={o.id} isFav={isFav(o.id)} onToggle={toggle} />
+              <button onClick={() => setSelected(o)} style={{ width: '100%', height: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s' }}>
+                <div style={{ marginBottom: 10 }}>
+                  <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={44} borderRadius={12} />
+                </div>
+                <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
+                <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 6 }}>{o.nom}</div>
+                <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
+              </button>
             </div>
-            <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 6 }}>{o.nom}</div>
-            <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
-          </button>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
       <FormulaireChallenge />
     </div>
   );
@@ -730,26 +837,64 @@ function PageProfitMaster() {
 
 export default function App() {
   const [onglet, setOnglet] = useState('parrainage');
+  const favState = useFavorites(); // ÉTAT GLOBAL DES FAVORIS
 
   useEffect(() => {
     const style = document.createElement('style');
-    style.textContent = `* { margin: 0; padding: 0; box-sizing: border-box; }  body { background: #0A0B0F; color: #E8EDF5; font-family: sans-serif; }  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }  select { -webkit-appearance: none; appearance: none; }  ::-webkit-scrollbar { width: 4px; height: 4px; }  ::-webkit-scrollbar-track { background: #0A0B0F; }  ::-webkit-scrollbar-thumb { background: #1E2230; border-radius: 2px; }`;
+    style.textContent = `
+      * { margin: 0; padding: 0; box-sizing: border-box; }  
+      body { background: #0A0B0F; color: #E8EDF5; font-family: sans-serif; }  
+      input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }  
+      select { -webkit-appearance: none; appearance: none; }  
+      ::-webkit-scrollbar { width: 4px; height: 4px; }  
+      ::-webkit-scrollbar-track { background: #0A0B0F; }  
+      ::-webkit-scrollbar-thumb { background: #1E2230; border-radius: 2px; }
+      @keyframes favBurst {
+        0%   { transform: scale(1); }
+        40%  { transform: scale(1.4); }
+        100% { transform: scale(1); }
+      }
+      .fav-burst { animation: favBurst 0.4s ease-out; }
+    `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
   }, []);
 
   return (
     <div style={{ minHeight: '100vh', background: '#0A0B0F', paddingBottom: 80 }}>
-      <div style={{ background: 'linear-gradient(180deg, #111318 0%, #0A0B0F 100%)', borderBottom: '1px solid #1A1E2A', padding: '18px 20px 16px', textAlign: 'center' }}>
-        <div style={{ fontSize: 10, color: '#4FFFA0', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 4 }}>HUB FINANCIER</div>
-        <h1 style={{ fontSize: 24, fontWeight: 900, background: 'linear-gradient(90deg, #4FFFA0, #A8FFD8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          Parrain 4P
-        </h1>
-        <p style={{ color: '#4A5568', fontSize: 12, marginTop: 2 }}>Parrainages + Calculateur de Rentabilité</p>
+      {/* HEADER AVEC BOUTON FILTRE FAVORIS */}
+      <div style={{ 
+        background: 'linear-gradient(180deg, #111318 0%, #0A0B0F 100%)', 
+        borderBottom: '1px solid #1A1E2A', 
+        padding: '18px 20px 16px', 
+        display: 'flex', 
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 10, color: '#4FFFA0', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 4 }}>HUB FINANCIER</div>
+          <h1 style={{ fontSize: 24, fontWeight: 900, background: 'linear-gradient(90deg, #4FFFA0, #A8FFD8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Parrain 4P
+          </h1>
+        </div>
+        
+        {onglet === 'parrainage' && (
+          <FavFilterBtn 
+            active={favState.favOnly} 
+            count={favState.count} 
+            onToggle={favState.setFavOnly} 
+          />
+        )}
       </div>
-      {onglet === 'parrainage' && <PageParrainage />}
+
+      <div style={{ textAlign: 'center', marginTop: -8, paddingBottom: 10 }}>
+         <p style={{ color: '#4A5568', fontSize: 12 }}>Parrainages + Calculateur de Rentabilité</p>
+      </div>
+
+      {onglet === 'parrainage' && <PageParrainage favState={favState} />}
       {onglet === 'avis' && <PageAvis />}
       {onglet === 'calculateur' && <PageProfitMaster />}
+
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', zIndex: 100 }}>
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <span style={{ fontSize: 20 }}>🎁</span>

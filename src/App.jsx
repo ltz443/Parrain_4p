@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // ─── LOGIQUE DES FAVORIS (AJOUTÉE) ───────────────────────────────────────────
 const FavStore = {
@@ -830,6 +831,7 @@ export default function App() {
           {onglet === 'calculateur' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
       </div>
+      <SpeedInsights />
     </div>
   );
 }

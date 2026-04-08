@@ -58,7 +58,7 @@ function FavButton({ offerId, isFav, onToggle }) {
     >
       <span style={{ 
         fontSize: 18, 
-        color: isFav ? '#C9A96E' : '#4A5568',
+        color: isFav ? '#4FFFA0' : '#4A5568',
         opacity: isFav ? 1 : 0.5,
         transition: 'all 0.2s'
       }}>
@@ -73,17 +73,15 @@ function FavFilterBtn({ active, count, onToggle }) {
     <button
       onClick={() => onToggle(!active)}
       style={{
-        position: 'relative', background: active ? 'rgba(201,169,110,0.15)' : '#111318',
-        border: `1px solid ${active ? '#C9A96E' : '#1A1E2A'}`,
-        borderRadius: 10, width: 40, height: 40, cursor: 'pointer', display: 'flex',
-        alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s'
+        background: 'none', border: 'none', cursor: 'pointer', position: 'relative',
+        display: 'flex', alignItems: 'center', justifyContent: 'center'
       }}
     >
-      <span style={{ color: active ? '#C9A96E' : '#8A95AA', fontSize: 18 }}>{active ? "♥" : "♡"}</span>
+      <span style={{ color: active ? '#4FFFA0' : '#8A95AA', fontSize: 24 }}>{active ? "♥" : "♡"}</span>
       {count > 0 && !active && (
         <span style={{
-          position: 'absolute', top: -5, right: -5, background: '#C9A96E', color: '#0A0B0F',
-          fontSize: 9, fontWeight: 900, borderRadius: 10, padding: '2px 5px', border: '2px solid #0A0B0F'
+          position: 'absolute', top: -4, right: -8, background: '#4FFFA0', color: '#0A0B0F',
+          fontSize: 9, fontWeight: 900, borderRadius: 10, padding: '2px 5px'
         }}>{count}</span>
       )}
     </button>
@@ -573,12 +571,11 @@ function FormulaireChallenge() {
 }
 
 function PageParrainage({ favState }) {
-  const { isFav, toggle, favOnly, count } = favState;
+  const { isFav, toggle, favOnly } = favState;
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // LOGIQUE DE FILTRAGE COMBINÉE (Catégorie + Favoris)
   const filtrees = OFFRES.filter(o => {
     const matchCat = filtre === 'Tout' || o.categorie === filtre;
     const matchFav = !favOnly || isFav(o.id);
@@ -657,29 +654,21 @@ function PageParrainage({ favState }) {
           </button>
         ))}
       </div>
-      
-      {filtrees.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px 20px', color: '#4A5568' }}>
-          <span style={{ fontSize: 40 }}>🏮</span>
-          <p style={{ marginTop: 10 }}>Aucune offre favorite pour le moment.</p>
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          {filtrees.map(o => (
-            <div key={o.id} style={{ position: 'relative' }}>
-              <FavButton offerId={o.id} isFav={isFav(o.id)} onToggle={toggle} />
-              <button onClick={() => setSelected(o)} style={{ width: '100%', height: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s' }}>
-                <div style={{ marginBottom: 10 }}>
-                  <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={44} borderRadius={12} />
-                </div>
-                <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
-                <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 6 }}>{o.nom}</div>
-                <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        {filtrees.map(o => (
+          <div key={o.id} style={{ position: 'relative' }}>
+            <FavButton offerId={o.id} isFav(o.id)} onToggle={toggle} />
+            <button onClick={() => setSelected(o)} style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s' }}>
+              <div style={{ marginBottom: 10 }}>
+                <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={44} borderRadius={12} />
+              </div>
+              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 6 }}>{o.nom}</div>
+              <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
+            </button>
+          </div>
+        ))}
+      </div>
       <FormulaireChallenge />
     </div>
   );
@@ -696,228 +685,4 @@ function PageAvis() {
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
       <h2 style={{ fontSize: 20, fontWeight: 900, color: '#4FFFA0', marginBottom: 20, textAlign: 'center' }}>Avis de la Communauté</h2>
       {avis.map((a, i) => (
-        <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontWeight: 800, color: '#E8EDF5' }}>{a.nom}</span>
-            <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
-          </div>
-          <div style={{ color: '#FFD700', fontSize: 12, marginBottom: 8 }}>{a.note}</div>
-          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>“{a.texte}”</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function PageProfitMaster() {
-  const [fields, setFields] = useState({
-    prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '',
-    heures: '', tauxHoraire: '', tauxCotisations: '21.2', tauxPersonnalise: '', tauxOption: '21.2',
-  });
-  const [showPaywall, setShowPaywall] = useState(false);
-  const [pdfPaid, setPdfPaid] = useState(false);
-  const setField = (key) => (val) => setFields((prev) => ({ ...prev, [key]: val }));
-  const res = calcul(fields);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('paid') === 'true') setPdfPaid(true);
-  }, []);
-
-  const handlePDFClick = useCallback(() => {
-    if (pdfPaid) alert("Fonctionnalité PDF disponible");
-    else setShowPaywall(true);
-  }, [pdfPaid]);
-
-  const handlePay = () => {
-    window.open(STRIPE_LINK, '_blank');
-    setShowPaywall(false);
-  };
-
-  const tauxActuel = fields.tauxOption === 'custom' ? (parseFloat(fields.tauxPersonnalise) || 0) : parseFloat(fields.tauxOption);
-  useEffect(() => {
-    setFields((prev) => ({ ...prev, tauxCotisations: String(tauxActuel) }));
-  }, [tauxActuel]);
-
-  return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-      <Section title="REVENUS" icon="💰">
-        <InputField label="Prix de vente estimé" value={fields.prixVente} onChange={setField('prixVente')} hint="Le montant facturé au client" />
-      </Section>
-      <Section title="COÛTS DIRECTS" icon="📦">
-        <InputField label="Matières premières" value={fields.matieres} onChange={setField('matieres')} />
-        <InputField label="Transport / Essence" value={fields.transport} onChange={setField('transport')} />
-        <InputField label="Outillage" value={fields.outillage} onChange={setField('outillage')} />
-        <InputField label="Autres frais" value={fields.autresFrais} onChange={setField('autresFrais')} />
-      </Section>
-      <Section title="TEMPS PASSÉ" icon="🕐">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
-          <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
-        </div>
-        <div style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>Coût main d’œuvre : <span style={{ color: '#8A95AA' }}>{fmt(res.coutMain)}</span></div>
-      </Section>
-      <Section title="FISCALITÉ" icon="🏛️">
-        <div style={{ position: 'relative', marginBottom: 12 }}>
-          <select value={fields.tauxOption} onChange={(e) => setFields((prev) => ({ ...prev, tauxOption: e.target.value }))}
-            style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', fontSize: 13, padding: '10px 12px', outline: 'none', cursor: 'pointer' }}>
-            {TAUX_OPTIONS.map((o) => (
-              <option key={o.label} value={o.value === null ? 'custom' : String(o.value)}>{o.label}</option>
-            ))}
-          </select>
-        </div>
-        {fields.tauxOption === 'custom' && <InputField label="Taux (%)" prefix="%" value={fields.tauxPersonnalise} onChange={setField('tauxPersonnalise')} />}
-        <div style={{ fontSize: 11, color: '#4A5568' }}>Cotisations : <span style={{ color: '#8A95AA' }}>{fmt(res.cotisations)}</span></div>
-      </Section>
-      {res.prixVente > 0 && (
-        <div style={{ marginTop: 4 }}>
-          <div style={{ fontSize: 12, fontWeight: 800, color: '#4FFFA0', textTransform: 'uppercase', marginBottom: 10, letterSpacing: '0.08em' }}>Résultats en temps réel</div>
-          <div style={{ background: res.sante === 'Rentable' ? 'rgba(79,255,160,0.1)' : res.sante === 'Risqué' ? 'rgba(255,190,50,0.1)' : 'rgba(255,80,80,0.1)', border: '1.5px solid ' + (res.sante === 'Rentable' ? '#4FFFA0' : res.sante === 'Risqué' ? '#FFBE32' : '#FF5050'), borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <span style={{ fontSize: 18 }}>{res.sante === 'Rentable' ? '✅' : res.sante === 'Risqué' ? '⚠️' : '🔴'}</span>
-            <div>
-              <div style={{ fontSize: 10, color: '#8A95AA', textTransform: 'uppercase' }}>Santé du projet</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: res.sante === 'Rentable' ? '#4FFFA0' : res.sante === 'Risqué' ? '#FFBE32' : '#FF5050' }}>{res.sante}</div>
-            </div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-            {[
-              { label: "Bénéfice Net", value: fmt(res.beneficeNet), h: true },
-              { label: "Marge Nette", value: pct(res.marge), h: false },
-              { label: "Total Charges", value: fmt(res.totalCharges), h: false },
-              { label: "Cotisations", value: fmt(res.cotisations), h: false },
-            ].map(({ label, value, h }) => (
-              <div key={label} style={{ background: h ? 'rgba(79,255,160,0.07)' : '#111318', border: '1.5px solid ' + (h ? '#4FFFA0' : '#1E2230'), borderRadius: 10, padding: '12px 14px' }}>
-                <div style={{ fontSize: 10, color: '#8A95AA', textTransform: 'uppercase', marginBottom: 3 }}>{label}</div>
-                <div style={{ fontSize: h ? 22 : 17, fontWeight: 800, color: h ? '#4FFFA0' : '#E8EDF5', fontFamily: 'monospace' }}>{value}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 14, padding: '18px 16px', marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-              <span style={{ fontSize: 16 }}>🚀</span>
-              <h3 style={{ fontSize: 13, fontWeight: 800, color: '#4FFFA0', letterSpacing: '0.06em' }}>SIMULATION MENSUELLE</h3>
-            </div>
-            {[5, 10, 20, 30, 50].map((nb) => (
-              <div key={nb} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0A0B0F', borderRadius: 8, padding: '10px 14px', marginBottom: 6, border: '1px solid #1A1E2A' }}>
-                <span style={{ fontSize: 13, color: '#8A95AA' }}><strong style={{ color: '#E8EDF5' }}>{nb} clients</strong> / mois</span>
-                <span style={{ fontSize: 15, fontWeight: 800, color: res.beneficeNet * nb >= 2000 ? '#4FFFA0' : '#E8EDF5', fontFamily: 'monospace' }}>{fmt(res.beneficeNet * nb)}</span>
-              </div>
-            ))}
-          </div>
-          <button onClick={handlePDFClick} style={{ width: '100%', background: pdfPaid ? 'linear-gradient(135deg, #4FFFA0, #2ECC71)' : '#111318', border: '2px solid #4FFFA0', borderRadius: 12, color: pdfPaid ? '#0A0B0F' : '#4FFFA0', fontSize: 14, fontWeight: 800, padding: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-            {pdfPaid ? "Télécharger mon Bilan PDF" : "Télécharger le Bilan PDF - 2,00 €"}
-          </button>
-        </div>
-      )}
-      {res.prixVente === 0 && (
-        <div style={{ textAlign: 'center', padding: '30px 20px', color: '#2E3545' }}>
-          <div style={{ fontSize: 36, marginBottom: 10 }}>📊</div>
-          <p style={{ fontSize: 14 }}>Renseignez votre prix de vente pour voir les résultats.</p>
-        </div>
-      )}
-      {showPaywall && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'rgba(5,6,10,0.88)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(8px)' }}>
-          <div style={{ background: '#111318', border: '1.5px solid #4FFFA0', borderRadius: 20, maxWidth: 400, width: '100%', padding: '32px 28px', position: 'relative' }}>
-            <button onClick={() => setShowPaywall(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: '#4A5568', fontSize: 22, cursor: 'pointer' }}>X</button>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>🔒</div>
-            <h2 style={{ color: '#E8EDF5', fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Sécurisez votre projet</h2>
-            <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', marginBottom: 20, textAlign: 'center' }}>
-              <div style={{ fontSize: 36, fontWeight: 900, color: '#4FFFA0' }}>2,00 €</div>
-              <div style={{ fontSize: 12, color: '#8A95AA' }}>Paiement sécurisé via Stripe</div>
-            </div>
-            <button onClick={handlePay} style={{ width: '100%', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', border: 'none', borderRadius: 12, color: '#0A0B0F', fontSize: 16, fontWeight: 800, padding: '15px', cursor: 'pointer' }}>
-              Payer et Télécharger
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function App() {
-  const [onglet, setOnglet] = useState('parrainage');
-  const favState = useFavorites(); // ÉTAT GLOBAL DES FAVORIS
-
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      * { margin: 0; padding: 0; box-sizing: border-box; }  
-      body { background: #0A0B0F; color: #E8EDF5; font-family: sans-serif; }  
-      input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }  
-      select { -webkit-appearance: none; appearance: none; }  
-      ::-webkit-scrollbar { width: 4px; height: 4px; }  
-      ::-webkit-scrollbar-track { background: #0A0B0F; }  
-      ::-webkit-scrollbar-thumb { background: #1E2230; border-radius: 2px; }
-      @keyframes favBurst {
-        0%   { transform: scale(1); }
-        40%  { transform: scale(1.4); }
-        100% { transform: scale(1); }
-      }
-      .fav-burst { animation: favBurst 0.4s ease-out; }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
-
-  return (
-    <div style={{ minHeight: '100vh', background: '#0A0B0F', paddingBottom: 80 }}>
-      {/* HEADER AVEC BOUTON FILTRE FAVORIS */}
-      <div style={{ 
-        background: 'linear-gradient(180deg, #111318 0%, #0A0B0F 100%)', 
-        borderBottom: '1px solid #1A1E2A', 
-        padding: '18px 20px 16px', 
-        display: 'flex', 
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 10, color: '#4FFFA0', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 4 }}>HUB FINANCIER</div>
-          <h1 style={{ fontSize: 24, fontWeight: 900, background: 'linear-gradient(90deg, #4FFFA0, #A8FFD8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Parrain 4P
-          </h1>
-        </div>
-        
-        {onglet === 'parrainage' && (
-          <FavFilterBtn 
-            active={favState.favOnly} 
-            count={favState.count} 
-            onToggle={favState.setFavOnly} 
-          />
-        )}
-      </div>
-
-      <div style={{ textAlign: 'center', marginTop: -8, paddingBottom: 10 }}>
-         <p style={{ color: '#4A5568', fontSize: 12 }}>Parrainages + Calculateur de Rentabilité</p>
-      </div>
-
-      {onglet === 'parrainage' && <PageParrainage favState={favState} />}
-      {onglet === 'avis' && <PageAvis />}
-      {onglet === 'calculateur' && <PageProfitMaster />}
-
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', zIndex: 100 }}>
-        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-          <span style={{ fontSize: 20 }}>🎁</span>
-          <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Parrainages</span>
-          {onglet === 'parrainage' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
-        </button>
-        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-          <span style={{ fontSize: 20 }}>⭐</span>
-          <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Avis</span>
-          {onglet === 'avis' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
-        </button>
-        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-          <span style={{ fontSize: 20 }}>📊</span>
-          <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Calculateur</span>
-          {onglet === 'calculateur' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-const container = document.getElementById('root');
-if (container) {
-  const root = createRoot(container);
-  root.render(<App />);
-}
+        <div key={i} style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom:

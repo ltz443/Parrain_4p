@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
@@ -11,7 +11,7 @@ const FavStore = {
     } catch { return []; }
   },
   set: (ids) => {
-    try { localStorage.setItem(FavStore.KEY, JSON.stringify(ids)); } catch {}
+    try { localStorage.setItem(FavStore.KEY, JSON.stringify(ids)); } catch { }
   },
 };
 
@@ -32,16 +32,16 @@ function useFavorites() {
 // ─── CONFIGURATION LOGOS ──────────────────────────────────────────────────────
 const LOGO_DOMAINS = {
   hellobank: 'hellobank.fr',
-  joko:      'joko.com',
-  okx:       'okx.com',
-  veracash:  'veracash.com',
+  joko: 'joko.com',
+  okx: 'okx.com',
+  veracash: 'veracash.com',
   robinhood: 'robinhood.com',
-  winamax:   'winamax.fr',
-  betsson:   'betsson.fr',
-  Unibet:    'unibet.fr',
-  engie:     'engie.fr',
-  nordvpn:   'nordvpn.com',
-  myfin:     'myfin.eu',
+  winamax: 'winamax.fr',
+  betsson: 'betsson.fr',
+  Unibet: 'unibet.fr',
+  engie: 'engie.fr',
+  nordvpn: 'nordvpn.com',
+  myfin: 'myfin.eu',
 };
 
 function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
@@ -329,8 +329,8 @@ const OFFRES = [
 ];
 
 const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Crypto Exchange', 'Paris Sportifs'];
-
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
+
 const TAUX_OPTIONS = [
   { label: "Auto-entrepreneur - Prestation de services (21.2%)", value: 21.2 },
   { label: "Auto-entrepreneur - Vente de marchandises (12.8%)", value: 12.8 },
@@ -481,7 +481,7 @@ function FormulaireChallenge() {
     <div style={{ background: '#111318', border: '1px solid #4FFFA0', borderRadius: 16, padding: '20px', marginTop: 24 }}>
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <h3 style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0', marginBottom: 8 }}>🏆 Challenge 3-en-1</h3>
-        <p style={{ fontSize: 12, color: '#8A95AA' }}>Complète 3 offres et reçois <strong style={{color: '#4FFFA0'}}>10€ de bonus</strong> de ma part !</p>
+        <p style={{ fontSize: 12, color: '#8A95AA' }}>Complète 3 offres et reçois <strong style={{ color: '#4FFFA0' }}>10€ de bonus</strong> de ma part !</p>
       </div>
       <form action="https://formspree.io/f/mreojpvq" method="POST">
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -506,14 +506,14 @@ function FormulaireChallenge() {
           <input type="text" name="revolut_tag" placeholder="Ton @Tag Revolut" required style={inputBaseStyle} />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-             <input type="text" name="nom_famille" placeholder="Nom de famille (pour le RIB)" required style={inputBaseStyle} />
-             <input type="text" name="iban" placeholder="Ton IBAN" required style={inputBaseStyle} />
+            <input type="text" name="nom_famille" placeholder="Nom de famille (pour le RIB)" required style={inputBaseStyle} />
+            <input type="text" name="iban" placeholder="Ton IBAN" required style={inputBaseStyle} />
           </div>
         )}
 
         <div style={{ background: 'rgba(79, 255, 160, 0.05)', padding: '12px', borderRadius: '8px', border: '1px dashed rgba(79, 255, 160, 0.3)', marginBottom: '15px' }}>
           <p style={{ fontSize: '11px', color: '#8A95AA', textAlign: 'center', lineHeight: '1.4' }}>
-            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" style={{color: '#4FFFA0', fontWeight: 'bold'}}>Instagram</a> pour valider le virement.
+            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" style={{ color: '#4FFFA0', fontWeight: 'bold' }}>Instagram</a> pour valider le virement.
           </p>
         </div>
 
@@ -536,185 +536,102 @@ function FavButton({ id, isFav, toggle }) {
 
 // ─── CAROUSEL OFFRES DU MOMENT ────────────────────────────────────────────────
 function CarouselOffresDuMoment({ offres, onSelect }) {
-  const scrollRef = useRef(null);
   const offresBoostees = offres.filter(o => o.offresdumoment);
-
   if (offresBoostees.length === 0) return null;
 
   return (
-    <div style={{
-      background: 'linear-gradient(160deg, #1C1508 0%, #0F0C04 100%)',
-      borderRadius: 20,
-      padding: '22px 0 20px',
-      marginBottom: 20,
-      border: '1px solid rgba(212,160,23,0.25)',
-      overflow: 'hidden',
-      position: 'relative',
-    }}>
-      <div style={{
-        position: 'absolute',
-        top: -40,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: 200,
-        height: 80,
-        background: 'radial-gradient(ellipse, rgba(212,160,23,0.18) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{ padding: '0 18px', marginBottom: 16 }}>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-          background: 'rgba(212,160,23,0.15)',
-          border: '1px solid rgba(212,160,23,0.4)',
-          borderRadius: 20,
-          padding: '4px 10px',
-          marginBottom: 10,
-        }}>
-          <div style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: '#D4A017',
-            boxShadow: '0 0 6px #D4A017',
-            animation: 'pulse 1.5s ease-in-out infinite',
-          }} />
-          <span style={{ fontSize: 9, fontWeight: 800, color: '#D4A017', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-            Limité dans le temps
-          </span>
-        </div>
-
-        <div style={{ fontSize: 22, fontWeight: 900, color: '#F5E8C0', lineHeight: 1.1, marginBottom: 6 }}>
-          Offres du Moment
-        </div>
-        <div style={{ fontSize: 13, color: '#7A6840', lineHeight: 1.4 }}>
-          Ces offres sont boostées — profites-en avant expiration
-        </div>
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingLeft: 2 }}>
+        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4FFFA0', boxShadow: '0 0 5px #4FFFA0' }} />
+        <span style={{ fontSize: 11, fontWeight: 800, color: '#4FFFA0', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+          Offres du moment
+        </span>
+        <div style={{ flex: 1, height: 1, background: '#1A1E2A', marginLeft: 4 }} />
+        <span style={{ fontSize: 10, color: '#4A5568', fontWeight: 600 }}>⚡ Limité</span>
       </div>
-
-      <div
-        ref={scrollRef}
-        style={{
-          display: 'flex',
-          gap: 12,
-          overflowX: 'auto',
-          paddingLeft: 18,
-          paddingRight: 18,
-          paddingBottom: 4,
-          scrollSnapType: 'x mandatory',
-          WebkitOverflowScrolling: 'touch',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
-      >
-        {offresBoostees.map((o, i) => (
-          <CarouselCard key={o.id} offre={o} onSelect={onSelect} index={i} />
+      <div style={{
+        display: 'flex',
+        gap: 10,
+        overflowX: 'auto',
+        paddingBottom: 2,
+        scrollSnapType: 'x mandatory',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+      }}>
+        {offresBoostees.map(o => (
+          <CarouselCard key={o.id} offre={o} onSelect={onSelect} />
         ))}
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        div::-webkit-scrollbar { display: none; }
-      `}</style>
+      <style>{`div::-webkit-scrollbar{display:none}`}</style>
     </div>
   );
 }
 
-function CarouselCard({ offre, onSelect, index }) {
+function CarouselCard({ offre, onSelect }) {
   const [pressed, setPressed] = useState(false);
 
   return (
     <div
-      style={{
-        minWidth: 240,
-        scrollSnapAlign: 'start',
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(212,160,23,0.2)',
-        borderRadius: 18,
-        padding: '16px',
-        flexShrink: 0,
-        transform: pressed ? 'scale(0.97)' : 'scale(1)',
-        transition: 'transform 0.15s ease',
-        cursor: 'pointer',
-      }}
+      onClick={() => onSelect(offre)}
       onTouchStart={() => setPressed(true)}
       onTouchEnd={() => setPressed(false)}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
       onMouseLeave={() => setPressed(false)}
-      onClick={() => onSelect(offre)}
+      style={{
+        minWidth: 160,
+        maxWidth: 160,
+        scrollSnapAlign: 'start',
+        background: '#111318',
+        border: '1px solid #1A1E2A',
+        borderRadius: 16,
+        padding: '13px 12px',
+        flexShrink: 0,
+        cursor: 'pointer',
+        transform: pressed ? 'scale(0.96)' : 'scale(1)',
+        transition: 'transform 0.12s ease',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 5,
-          background: 'rgba(79,255,160,0.1)',
-          border: '1px solid rgba(79,255,160,0.3)',
-          borderRadius: 20,
-          padding: '3px 8px',
-        }}>
-          <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#4FFFA0' }} />
-          <span style={{ fontSize: 9, fontWeight: 800, color: '#4FFFA0', letterSpacing: '0.1em' }}>NOUVEAU</span>
-        </div>
-        <div style={{ fontSize: 26, fontWeight: 900, color: '#D4A017', lineHeight: 1 }}>
-          {offre.boostLabel || offre.bonus}
-        </div>
+      <div style={{
+        position: 'absolute',
+        top: 0, left: 0, right: 0,
+        height: 2,
+        background: offre.couleur,
+        opacity: 0.7,
+        borderRadius: '16px 16px 0 0',
+      }} />
+
+      <div style={{ marginBottom: 8 }}>
+        <LogoOffre id={offre.id} emoji={offre.emoji} couleur={offre.couleur} size={36} borderRadius={10} />
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-        <LogoOffre id={offre.id} emoji={offre.emoji} couleur={offre.couleur} size={48} borderRadius={14} />
-        <div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: '#F5E8C0' }}>{offre.nom}</div>
-          <div style={{ fontSize: 12, color: '#7A6840', marginTop: 2 }}>{offre.bonus}</div>
-        </div>
+      <div style={{ fontSize: 13, fontWeight: 800, color: '#E8EDF5', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {offre.nom}
       </div>
 
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          onClick={(e) => { e.stopPropagation(); onSelect(offre); }}
-          style={{
-            flex: 1,
-            background: '#D4A017',
-            border: 'none',
-            borderRadius: 10,
-            color: '#0A0B0F',
-            fontSize: 13,
-            fontWeight: 800,
-            padding: '10px',
-            cursor: 'pointer',
-          }}
-        >
-          Profiter
-        </button>
-        <button
-          onClick={(e) => { e.stopPropagation(); onSelect(offre); }}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#7A6840',
-            fontSize: 13,
-            fontWeight: 600,
-            padding: '10px',
-            cursor: 'pointer',
-          }}
-        >
-          Détails
-        </button>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
+      <div style={{ fontSize: 15, fontWeight: 900, color: '#4FFFA0', marginBottom: 10 }}>
+        {offre.boostLabel || offre.bonus}
+      </div>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); onSelect(offre); }}
+        style={{
+          width: '100%',
           background: 'rgba(79,255,160,0.1)',
           border: '1px solid rgba(79,255,160,0.25)',
-          borderRadius: 10,
-          padding: '6px 10px',
-        }}>
-          <span style={{ fontSize: 10, fontWeight: 800, color: '#4FFFA0' }}>En cours</span>
-        </div>
-      </div>
+          borderRadius: 8,
+          color: '#4FFFA0',
+          fontSize: 12,
+          fontWeight: 800,
+          padding: '7px 0',
+          cursor: 'pointer',
+        }}
+      >
+        Profiter →
+      </button>
     </div>
   );
 }
@@ -843,7 +760,7 @@ function PageAvis() {
             <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
           </div>
           <div style={{ color: '#FFD700', fontSize: 12, marginBottom: 8 }}>{a.note}</div>
-          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>"{a.texte}"</p>
+          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>”{a.texte}”</p>
         </div>
       ))}
     </div>
@@ -998,7 +915,6 @@ export default function App() {
             Parrain 4P
           </h1>
         </div>
-
         {onglet === 'parrainage' && (
           <button
             onClick={() => favState.setFavOnly(!favState.favOnly)}

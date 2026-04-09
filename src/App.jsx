@@ -106,7 +106,8 @@ const OFFRES = [
     note: "Pour recevoir ton invitation, envoie ton prénom + adresse email sur Instagram",
     shareText: "Ouvre un compte Hello Bank et reçois 80€ ! Contacte @parrain_4p sur Instagram.",
     shareUrl: 'https://parrain-4p.vercel.app',
-    offresdumoment: false,
+    offresdumoment: true,
+    boostLabel: '+40€',
   },
   {
     id: 'joko',
@@ -152,7 +153,7 @@ const OFFRES = [
     shareText: "Inscris-toi sur OKX via mon lien et reçois 40€ en Bitcoin !",
     shareUrl: 'https://my.okx.com/fr-fr/join/90527625',
     offresdumoment: true,
-    boostLabel: '+40€',
+    boostLabel: '+60',
   },
   {
     id: 'veracash',
@@ -195,8 +196,7 @@ const OFFRES = [
     lien: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
     shareText: "Rejoins Robinhood et reçois 10€ ! Dépôt retirable immédiatement.",
     shareUrl: 'https://join.robinhood.com/eu_crypto/leot-ad308a260/',
-    offresdumoment: true,
-    boostLabel: '+50€',
+    offresdumoment: false,
   },
   {
     id: 'winamax',
@@ -217,8 +217,7 @@ const OFFRES = [
     code: 'LTZXVU',
     shareText: "Inscris-toi sur Winamax avec le code LTZXVU et reçois 40€ !",
     shareUrl: 'https://parrain-4p.vercel.app',
-    offresdumoment: true,
-    boostLabel: '+40€',
+    offresdumoment: false,
   },
   {
     id: 'betsson',

@@ -42,6 +42,9 @@ const LOGO_DOMAINS = {
   engie: 'engie.fr',
   nordvpn: 'nordvpn.com',
   myfin: 'myfin.eu',
+  scrambly: 'scrambly.io',
+  kraken: 'kraken.com',
+  fortuneo: 'fortuneo.fr',
 };
 
 function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {

@@ -153,7 +153,7 @@ const OFFRES = [
     shareText: "Inscris-toi sur OKX via mon lien et reçois 40€ en Bitcoin !",
     shareUrl: 'https://my.okx.com/fr-fr/join/90527625',
     offresdumoment: true,
-    boostLabel: '+60',
+    boostLabel: '+60€',
   },
   {
     id: 'veracash',

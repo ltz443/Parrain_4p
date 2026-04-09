@@ -267,7 +267,7 @@ const OFFRES = [
   {
     id: 'robinhood',
     nom: "Robinhood",
-    categorie: "Crypto Exchange",
+    categorie: "Crypto",
     emoji: "🏹",
     couleur: '#00C805',
     bonus: "10€",
@@ -375,7 +375,7 @@ const OFFRES = [
   },
 ];
 
-const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Crypto Exchange', 'Paris Sportifs'];
+const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play To earn', 'Paris Sportifs'];
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 
 const TAUX_OPTIONS = [

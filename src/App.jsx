@@ -107,7 +107,7 @@ const OFFRES = [
     shareText: "Ouvre un compte Hello Bank et reçois 80€ ! Contacte @parrain_4p sur Instagram.",
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
-    boostLabel: '+40€',
+    boostLabel: '+80€',
   },
   {
     id: 'joko',

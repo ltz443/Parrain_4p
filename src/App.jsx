@@ -772,7 +772,7 @@ function PageParrainage({ favState }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
-            <FavButton id={o.id} isFav(o.id) toggle={toggle} />
+            <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
             <button 
               onClick={() => setSelected(o)} 
               style={{ 

@@ -772,14 +772,47 @@ function PageParrainage({ favState }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
-            <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
-            <button onClick={() => setSelected(o)} style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s' }}>
+            <FavButton id={o.id} isFav(o.id) toggle={toggle} />
+            <button 
+              onClick={() => setSelected(o)} 
+              style={{ 
+                width: '100%', 
+                background: '#111318', 
+                border: '1px solid #1A1E2A', 
+                borderRadius: 16, 
+                padding: '16px 12px 34px 12px', // Padding bas augmenté pour laisser la place au bouton flottant
+                cursor: 'pointer', 
+                textAlign: 'left', 
+                transition: 'all 0.2s',
+                position: 'relative',
+                minHeight: '145px', // Hauteur minimum pour uniformiser les cartes
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
               <div style={{ marginBottom: 10 }}>
                 <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={44} borderRadius={12} />
               </div>
               <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 6 }}>{o.nom}</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 4 }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
+
+              {/* BOUTON FLOTTANT DÉTAIL EN BAS À DROITE */}
+              <div style={{ 
+                position: 'absolute', 
+                bottom: '10px', 
+                right: '10px', 
+                background: 'rgba(79, 255, 160, 0.1)', 
+                border: '1px solid rgba(79, 255, 160, 0.3)',
+                borderRadius: '8px',
+                padding: '4px 8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <span style={{ fontSize: '10px', fontWeight: '800', color: '#4FFFA0', textTransform: 'uppercase' }}>Détail</span>
+                <span style={{ fontSize: '10px', color: '#4FFFA0' }}>→</span>
+              </div>
             </button>
           </div>
         ))}

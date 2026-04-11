@@ -45,6 +45,7 @@ const LOGO_DOMAINS = {
   scrambly: 'scrambly.io',
   kraken: 'kraken.com',
   fortuneo: 'fortuneo.fr',
+  trading212: 'trading212.com',
 };
 
 function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
@@ -135,6 +136,28 @@ const OFFRES = [
     shareUrl: 'https://my.okx.com/fr-fr/join/90527625',
     offresdumoment: true,
     boostLabel: '+60€',
+  },
+  {
+    id: 'trading212',
+    nom: "Trading 212",
+    categorie: "Banque",
+    emoji: "📈",
+    couleur: '#1DB954',
+    bonus: "11€ à 100€",
+    bonusFilleul: "11€ à 100€",
+    bonusParrain: "11€ à 100€",
+    description: "Trading 212 est une app d'investissement en actions et ETFs. Reçois une action gratuite d'une valeur de 11€ à 100€ en t'inscrivant via mon lien.",
+    conditions: [
+      "S'inscrire via le lien de parrainage",
+      "Valider son identité (KYC)",
+      "Déposer 11€",
+      "Délai : 3 heures",
+    ],
+    type: 'lien',
+    lien: 'https://www.trading212.com/invite/4Dqc53P2G2O',
+    shareText: "Inscris-toi sur Trading 212 via mon lien et reçois une action gratuite entre 11€ et 100€ !",
+    shareUrl: 'https://parrain-4p.vercel.app,
+    offresdumoment: true,
   },
   {
     id: 'winamax',

@@ -88,59 +88,6 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
   );
 }
 
-// ─── COMPOSANT TIMER ──────────────────────────────────────────────────────────
-function Timer({ dateFin }) {
-  const calcRemaining = useCallback(() => {
-    const now = Date.now();
-    const end = new Date(dateFin).getTime();
-    const diff = end - now;
-    if (diff <= 0) return null;
-    const totalSeconds = Math.floor(diff / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    return { days, hours, minutes, totalSeconds };
-  }, [dateFin]);
-
-  const [remaining, setRemaining] = useState(calcRemaining);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRemaining(calcRemaining());
-    }, 60000); 
-    return () => clearInterval(interval);
-  }, [calcRemaining]);
-
-  if (!remaining) return null;
-
-  const isUrgent = remaining.days === 0;
-  const color = isUrgent ? '#FF5050' : '#FFBE32';
-  const bgColor = isUrgent ? 'rgba(255,80,80,0.12)' : 'rgba(255,190,50,0.12)';
-  const borderColor = isUrgent ? 'rgba(255,80,80,0.35)' : 'rgba(255,190,50,0.35)';
-
-  const label = remaining.days > 0
-    ? `${remaining.days}j ${remaining.hours}h`
-    : `${remaining.hours}h ${remaining.minutes}m`;
-
-  return (
-    <div style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 4,
-      background: bgColor,
-      border: `1px solid ${borderColor}`,
-      borderRadius: 6,
-      padding: '3px 7px',
-      marginTop: 5,
-    }}>
-      <span style={{ fontSize: 10 }}>⏱️</span>
-      <span style={{ fontSize: 10, fontWeight: 800, color, letterSpacing: '0.04em' }}>
-        {label}
-      </span>
-    </div>
-  );
-}
-
 // ─── DONNÉES PARRAINAGE ────────────────────────────────────────────────────────
 const OFFRES = [
   {
@@ -154,7 +101,7 @@ const OFFRES = [
     bonusParrain: "80€",
     description: "Ouvre un compte Hello One et reçois 40€ sans dépôt, puis 40€ de plus dès le 10e achat carte.",
     conditions: [
-      "Première ouverture d’un compte de dépôt Hello One",
+      "Première ouverture d'un compte de dépôt Hello One",
       "40€ offerts sans dépôt minimum",
       "40€ supplémentaires au 10e achat carte bancaire",
     ],
@@ -165,7 +112,6 @@ const OFFRES = [
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
     boostLabel: '+80€',
-    dateFin: '2026-04-14T00:00:00',
   },
   {
     id: 'okx',
@@ -178,7 +124,7 @@ const OFFRES = [
     bonusParrain: "60€",
     description: "OKX est la plateforme de référence pour acheter, vendre et stocker des cryptomonnaies en toute sécurité.",
     conditions: [
-      "S’inscrire via le lien de parrainage",
+      "S'inscrire via le lien de parrainage",
       "Valider son identité (KYC)",
       "Déposer 200€",
       "Acheter 200€ de Bitcoin (BTC)",
@@ -190,7 +136,6 @@ const OFFRES = [
     shareUrl: 'https://my.okx.com/fr-fr/join/90527625',
     offresdumoment: true,
     boostLabel: '+60€',
-    dateFin: '2026-04-15T00:00:00',
   },
   {
     id: 'trading212',
@@ -201,9 +146,9 @@ const OFFRES = [
     bonus: "11€ à 100€",
     bonusFilleul: "11€ à 100€",
     bonusParrain: "11€ à 100€",
-    description: "Trading 212 est une app d’investissement en actions et ETFs. Reçois une action gratuite d’une valeur de 11€ à 100€ en t’inscrivant via mon lien.",
+    description: "Trading 212 est une app d'investissement en actions et ETFs. Reçois une action gratuite d'une valeur de 11€ à 100€ en t'inscrivant via mon lien.",
     conditions: [
-      "S’inscrire via le lien de parrainage",
+      "S'inscrire via le lien de parrainage",
       "Valider son identité (KYC)",
       "Déposer 11€",
       "Délai : 3 heures",
@@ -213,7 +158,6 @@ const OFFRES = [
     shareText: "Inscris-toi sur Trading 212 via mon lien et reçois une action gratuite entre 11€ et 100€ !",
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
-    dateFin: '2026-04-29T23:59:59',
   },
   {
     id: 'winamax',
@@ -226,7 +170,7 @@ const OFFRES = [
     bonusParrain: "40€",
     description: "Winamax est la référence des paris sportifs en France. Inscris-toi avec le code parrainage et reçois 40€.",
     conditions: [
-      "S’inscrire avec le code parrainage",
+      "S'inscrire avec le code parrainage",
       "Valider son inscription",
       "Déposer 10€",
     ],
@@ -247,7 +191,7 @@ const OFFRES = [
     bonusParrain: "30€ Freebets",
     description: "Unibet est une plateforme de paris sportifs internationale. Reçois 30€.",
     conditions: [
-      "S’inscrire via le lien",
+      "S'inscrire via le lien",
       "Vérifier son compte",
       "Déposer 10€",
     ],
@@ -266,9 +210,9 @@ const OFFRES = [
     bonus: "20€",
     bonusFilleul: "20€",
     bonusParrain: "15€",
-    description: "Scrambly est une app play-to-earn où tu complètes des missions pour gagner de l’argent réel, retirable dès 25€.",
+    description: "Scrambly est une app play-to-earn où tu complètes des missions pour gagner de l'argent réel, retirable dès 25€.",
     conditions: [
-      "S’inscrire avec le code de parrainage",
+      "S'inscrire avec le code de parrainage",
       "Compléter les missions de bienvenue",
       "Atteindre le seuil de retrait",
       "Retirer tes 25€",
@@ -288,9 +232,9 @@ const OFFRES = [
     bonus: "15€ à 100€",
     bonusFilleul: "15€ à 100€",
     bonusParrain: "15€ à 100€",
-    description: "Kraken est l’une des plateformes crypto les plus sécurisées au monde. Récompense variable selon ton volume d’achat.",
+    description: "Kraken est l'une des plateformes crypto les plus sécurisées au monde. Récompense variable selon ton volume d'achat.",
     conditions: [
-      "S’inscrire via le lien de parrainage",
+      "S'inscrire via le lien de parrainage",
       "Valider son identité (KYC)",
       "Déposer 200€",
       "Acheter 200€ de Bitcoin (BTC)",
@@ -298,7 +242,7 @@ const OFFRES = [
     ],
     type: 'lien',
     lien: 'https://invite.kraken.com/JDNW/7mtg1yns',
-    shareText: "Inscris-toi sur Kraken via mon lien et reçois jusqu’à 100€ en crypto !",
+    shareText: "Inscris-toi sur Kraken via mon lien et reçois jusqu'à 100€ en crypto !",
     shareUrl: 'https://invite.kraken.com/JDNW/7mtg1yns',
     offresdumoment: false,
   },
@@ -313,8 +257,8 @@ const OFFRES = [
     bonusParrain: "20€ sur la prochaine facture",
     description: "Groupe énergétique axé sur les énergies renouvelables.",
     conditions: [
-      "S’inscrire avec le code de parrainage",
-      "Souscription d’une offre électricité ou gaz naturel",
+      "S'inscrire avec le code de parrainage",
+      "Souscription d'une offre électricité ou gaz naturel",
     ],
     type: 'code',
     code: 'ZUA255872',
@@ -331,9 +275,9 @@ const OFFRES = [
     bonus: "10€ parrain",
     bonusFilleul: "Frais réduits",
     bonusParrain: "10€",
-    description: "VeraCash permet d’épargner et payer avec de l’or et de l’argent physique. Une alternative solide aux banques classiques.",
+    description: "VeraCash permet d'épargner et payer avec de l'or et de l'argent physique. Une alternative solide aux banques classiques.",
     conditions: [
-      "S’inscrire via le lien de parrainage",
+      "S'inscrire via le lien de parrainage",
       "Vérifier son identité",
       "Déposer 10€ (retirable immédiatement)",
     ],
@@ -354,7 +298,7 @@ const OFFRES = [
     bonusParrain: "10€",
     description: "Robinhood est un exchange crypto simple et intuitif pour acheter et vendre des cryptomonnaies sans frais cachés.",
     conditions: [
-      "S’inscrire via le lien de parrainage",
+      "S'inscrire via le lien de parrainage",
       "Valider son identité",
       "Déposer 10€ (retirable immédiatement)",
       "Délai : 6 mois",
@@ -376,7 +320,7 @@ const OFFRES = [
     bonusParrain: "10€ Betboost",
     description: "Betsson est une plateforme de paris sportifs internationale. Reçois 10€ Betboost en parrainant.",
     conditions: [
-      "S’inscrire via le lien",
+      "S'inscrire via le lien",
       "Vérifier son compte",
       "Déposer 10€",
     ],
@@ -397,7 +341,7 @@ const OFFRES = [
     bonusParrain: "10€",
     description: "Solution digitale de gestion financière personnelle.",
     conditions: [
-      "S’inscrire avec le code parrainage",
+      "S'inscrire avec le code parrainage",
       "Vérifier son compte",
       "Déposer 10€",
       "Utiliser la carte virtuelle et déposer 10 euros sur Betclic",
@@ -416,13 +360,13 @@ const OFFRES = [
     emoji: "💸",
     couleur: '#FF6B35',
     bonus: "1€ + cashback",
-    bonusFilleul: "1€ à l’inscription",
+    bonusFilleul: "1€ à l'inscription",
     bonusParrain: "3€ + 10% du cashback filleul",
     description: "Joko transforme tes achats quotidiens en micro-économies automatiques en connectant ton compte bancaire.",
     conditions: [
-      "Télécharger l’app Joko et utilise mon code de parrainage",
+      "Télécharger l'app Joko et utilise mon code de parrainage",
       "Connecte ton compte bancaire",
-      "1€ offerts à l’inscription",
+      "1€ offerts à l'inscription",
       "Délai : instantané",
     ],
     type: 'code',
@@ -442,7 +386,7 @@ const OFFRES = [
     bonusParrain: "3 mois offerts",
     description: "Protégez votre vie privée avec le VPN leader du marché.",
     conditions: [
-      "S’inscrire via le lien de parrainage",
+      "S'inscrire via le lien de parrainage",
       "Souscription abonnement 1 an : 3 mois offerts",
       "Souscription abonnement mensuel : 1 mois offert",
     ],
@@ -454,8 +398,8 @@ const OFFRES = [
   },
 ];
 
-const CATEGORIES = ["Tout", "Énergie", "Banque", "Cashback", "Crypto", "Or & Épargne", "Play to Earn", "Paris Sportifs"];
-const STRIPE_LINK = "https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00";
+const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];
+const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 
 const TAUX_OPTIONS = [
   { label: "Auto-entrepreneur - Prestation de services (21.2%)", value: 21.2 },
@@ -738,11 +682,9 @@ function CarouselCard({ offre, onSelect }) {
         {offre.nom}
       </div>
 
-      <div style={{ fontSize: 15, fontWeight: 900, color: '#4FFFA0' }}>
+      <div style={{ fontSize: 15, fontWeight: 900, color: '#4FFFA0', marginBottom: 10 }}>
         {offre.boostLabel || offre.bonus}
       </div>
-
-      {offre.dateFin && <Timer dateFin={offre.dateFin} />}
 
       <button
         onClick={(e) => { e.stopPropagation(); onSelect(offre); }}
@@ -756,7 +698,6 @@ function CarouselCard({ offre, onSelect }) {
           fontWeight: 800,
           padding: '7px 0',
           cursor: 'pointer',
-          marginTop: 10,
         }}
       >
         Profiter →
@@ -855,19 +796,19 @@ function PageParrainage({ favState }) {
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
-            <button
-              onClick={() => setSelected(o)}
-              style={{
-                width: '100%',
-                background: '#111318',
-                border: '1px solid #1A1E2A',
-                borderRadius: 16,
-                padding: '16px 12px 34px 12px',
-                cursor: 'pointer',
-                textAlign: 'left',
+            <button 
+              onClick={() => setSelected(o)} 
+              style={{ 
+                width: '100%', 
+                background: '#111318', 
+                border: '1px solid #1A1E2A', 
+                borderRadius: 16, 
+                padding: '16px 12px 34px 12px', // Padding bas augmenté pour laisser la place au bouton flottant
+                cursor: 'pointer', 
+                textAlign: 'left', 
                 transition: 'all 0.2s',
                 position: 'relative',
-                minHeight: '145px',
+                minHeight: '145px', // Hauteur minimum pour uniformiser les cartes
                 display: 'flex',
                 flexDirection: 'column'
               }}
@@ -878,12 +819,13 @@ function PageParrainage({ favState }) {
               <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
               <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 4 }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
-              {o.dateFin && <Timer dateFin={o.dateFin} />}
-              <div style={{
-                position: 'absolute',
-                bottom: '10px',
-                right: '10px',
-                background: 'rgba(79, 255, 160, 0.1)',
+
+              {/* BOUTON FLOTTANT DÉTAIL EN BAS À DROITE */}
+              <div style={{ 
+                position: 'absolute', 
+                bottom: '10px', 
+                right: '10px', 
+                background: 'rgba(79, 255, 160, 0.1)', 
                 border: '1px solid rgba(79, 255, 160, 0.3)',
                 borderRadius: '8px',
                 padding: '4px 8px',

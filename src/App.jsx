@@ -156,7 +156,7 @@ const OFFRES = [
     type: 'lien',
     lien: 'https://www.trading212.com/invite/4Dqc53P2G2O',
     shareText: "Inscris-toi sur Trading 212 via mon lien et reçois une action gratuite entre 11€ et 100€ !",
-    shareUrl: 'https://parrain-4p.vercel.app,
+    shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
   },
   {

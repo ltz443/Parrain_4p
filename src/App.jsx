@@ -88,6 +88,60 @@ function LogoOffre({ id, emoji, couleur, size = 44, borderRadius = 12 }) {
   );
 }
 
+// ─── COMPOSANT TIMER ──────────────────────────────────────────────────────────
+function Timer({ dateFin }) {
+  const calcRemaining = useCallback(() => {
+    const now = Date.now();
+    const end = new Date(dateFin).getTime();
+    const diff = end - now;
+    if (diff <= 0) return null;
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return { days, hours, minutes };
+  }, [dateFin]);
+
+  const [remaining, setRemaining] = useState(calcRemaining);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRemaining(calcRemaining());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [calcRemaining]);
+
+  if (!remaining) return null;
+
+  const label = remaining.days > 0
+    ? `${remaining.days}j ${remaining.hours}h`
+    : `${remaining.hours}h ${remaining.minutes}m`;
+
+  return (
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 3,
+      background: 'rgba(255,80,80,0.12)',
+      border: '1px solid rgba(255,80,80,0.35)',
+      borderRadius: 5,
+      padding: '2px 5px',
+      marginTop: 4,
+      width: 'fit-content',
+      maxWidth: 'fit-content',
+      flexShrink: 0,
+      alignSelf: 'flex-start',
+      whiteSpace: 'nowrap',
+      lineHeight: 1,
+    }}>
+      <span style={{ fontSize: 9 }}>⏱️</span>
+      <span style={{ fontSize: 9, fontWeight: 800, color: '#FF5050', letterSpacing: '0.03em' }}>
+        {label}
+      </span>
+    </span>
+  );
+}
+
 // ─── DONNÉES PARRAINAGE ────────────────────────────────────────────────────────
 const OFFRES = [
   {
@@ -112,6 +166,7 @@ const OFFRES = [
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
     boostLabel: '+80€',
+    dateFin: '2026-04-14T00:00:00',
   },
   {
     id: 'okx',
@@ -136,6 +191,7 @@ const OFFRES = [
     shareUrl: 'https://my.okx.com/fr-fr/join/90527625',
     offresdumoment: true,
     boostLabel: '+60€',
+    dateFin: '2026-04-15T00:00:00',
   },
   {
     id: 'trading212',
@@ -158,6 +214,7 @@ const OFFRES = [
     shareText: "Inscris-toi sur Trading 212 via mon lien et reçois une action gratuite entre 11€ et 100€ !",
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
+    dateFin: '2026-04-29T23:59:59',
   },
   {
     id: 'winamax',
@@ -402,9 +459,9 @@ const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & É
 const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
 
 const TAUX_OPTIONS = [
-  { label: "Auto-entrepreneur - Prestation de services (21.2%)", value: 21.2 },
-  { label: "Auto-entrepreneur - Vente de marchandises (12.8%)", value: 12.8 },
-  { label: "EIRL / EI au réel (estimation 45%)", value: 45 },
+  { label: "Auto-entrepreneur - Prestation (21.2%)", value: 21.2 },
+  { label: "Auto-entrepreneur - Vente (12.8%)", value: 12.8 },
+  { label: "EIRL / EI au réel (est. 45%)", value: 45 },
   { label: "Personnalisé", value: null },
 ];
 
@@ -544,7 +601,8 @@ function FormulaireChallenge() {
     padding: '12px',
     outline: 'none',
     fontSize: '14px',
-    marginBottom: '10px'
+    marginBottom: '10px',
+    fontFamily: 'inherit'
   };
 
   return (
@@ -560,7 +618,6 @@ function FormulaireChallenge() {
         </div>
         <input type="email" name="email" placeholder="Ton adresse email" required style={inputBaseStyle} />
         <input type="text" name="offres" placeholder="Les 3 offres choisies" required style={inputBaseStyle} />
-
         <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '15px' }}>
           <label style={{ fontSize: '12px', color: '#8A95AA', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
             <input type="radio" name="pay_method" value="revolut" checked={method === 'revolut'} onChange={() => setMethod('revolut')} />
@@ -571,7 +628,6 @@ function FormulaireChallenge() {
             RIB
           </label>
         </div>
-
         {method === 'revolut' ? (
           <input type="text" name="revolut_tag" placeholder="Ton @Tag Revolut" required style={inputBaseStyle} />
         ) : (
@@ -580,14 +636,12 @@ function FormulaireChallenge() {
             <input type="text" name="iban" placeholder="Ton IBAN" required style={inputBaseStyle} />
           </div>
         )}
-
         <div style={{ background: 'rgba(79, 255, 160, 0.05)', padding: '12px', borderRadius: '8px', border: '1px dashed rgba(79, 255, 160, 0.3)', marginBottom: '15px' }}>
           <p style={{ fontSize: '11px', color: '#8A95AA', textAlign: 'center', lineHeight: '1.4' }}>
-            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" style={{ color: '#4FFFA0', fontWeight: 'bold' }}>Instagram</a> pour valider le virement.
+            📸 N'oublie pas d'envoyer tes 3 preuves sur <a href="https://www.instagram.com/parrain_4p" target="_blank" rel="noreferrer" style={{ color: '#4FFFA0', fontWeight: 'bold' }}>Instagram</a> pour valider le virement.
           </p>
         </div>
-
-        <button type="submit" style={{ width: '100%', background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontWeight: 800, padding: '12px', cursor: 'pointer', fontSize: '14px' }}>
+        <button type="submit" style={{ width: '100%', background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontWeight: 800, padding: '12px', cursor: 'pointer', fontSize: '14px', fontFamily: 'inherit' }}>
           Envoyer ma demande
         </button>
       </form>
@@ -633,7 +687,6 @@ function CarouselOffresDuMoment({ offres, onSelect }) {
           <CarouselCard key={o.id} offre={o} onSelect={onSelect} />
         ))}
       </div>
-      <style>{`div::-webkit-scrollbar{display:none}`}</style>
     </div>
   );
 }
@@ -673,19 +726,16 @@ function CarouselCard({ offre, onSelect }) {
         opacity: 0.7,
         borderRadius: '16px 16px 0 0',
       }} />
-
       <div style={{ marginBottom: 8 }}>
         <LogoOffre id={offre.id} emoji={offre.emoji} couleur={offre.couleur} size={36} borderRadius={10} />
       </div>
-
       <div style={{ fontSize: 13, fontWeight: 800, color: '#E8EDF5', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {offre.nom}
       </div>
-
-      <div style={{ fontSize: 15, fontWeight: 900, color: '#4FFFA0', marginBottom: 10 }}>
+      <div style={{ fontSize: 15, fontWeight: 900, color: '#4FFFA0' }}>
         {offre.boostLabel || offre.bonus}
       </div>
-
+      {offre.dateFin && <Timer dateFin={offre.dateFin} />}
       <button
         onClick={(e) => { e.stopPropagation(); onSelect(offre); }}
         style={{
@@ -698,6 +748,9 @@ function CarouselCard({ offre, onSelect }) {
           fontWeight: 800,
           padding: '7px 0',
           cursor: 'pointer',
+          marginTop: 8,
+          display: 'block',
+          fontFamily: 'inherit'
         }}
       >
         Profiter →
@@ -730,7 +783,7 @@ function PageParrainage({ favState }) {
     const o = selected;
     return (
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-        <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>
           ← Retour
         </button>
         <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', marginBottom: 16, position: 'relative' }}>
@@ -758,21 +811,21 @@ function PageParrainage({ favState }) {
             <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', marginBottom: 12, border: '1px dashed #4FFFA0', textAlign: 'center' }}>
               <div style={{ fontSize: 11, color: '#4A5568', marginBottom: 6, textTransform: 'uppercase' }}>Code parrainage</div>
               <div style={{ fontSize: 28, fontWeight: 900, color: '#4FFFA0', fontFamily: 'monospace', letterSpacing: '0.1em' }}>{o.code}</div>
-              <button onClick={() => copier(o.code)} style={{ marginTop: 10, background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontSize: 13, fontWeight: 700, padding: '8px 20px', cursor: 'pointer' }}>
+              <button onClick={() => copier(o.code)} style={{ marginTop: 10, background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontSize: 13, fontWeight: 700, padding: '8px 20px', cursor: 'pointer', fontFamily: 'inherit' }}>
                 {copied ? "Copié !" : "Copier le code"}
               </button>
             </div>
           )}
           {o.type === 'lien' && o.lien !== '#' && (
-            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none' }}>
-              S’inscrire avec mon lien →
+            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', fontFamily: 'inherit' }}>
+              S'inscrire avec mon lien →
             </a>
           )}
           {o.type === 'contact' && (
             <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', border: '1px dashed #4FFFA0', textAlign: 'center' }}>
               <div style={{ fontSize: 12, color: '#8A95AA', marginBottom: 8, lineHeight: 1.5 }}>{o.note}</div>
-              <a href={'https://instagram.com/' + o.contact.replace('@', '')} target="_blank" rel="noreferrer" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #833AB4, #FD1D1D, #F56040)', borderRadius: 10, color: '#fff', fontSize: 15, fontWeight: 800, padding: '12px 24px', textDecoration: 'none' }}>
-                Me contacter sur Instagram {o.contact}
+              <a href={'https://instagram.com/' + o.contact.replace('@', '')} target="_blank" rel="noreferrer" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #833AB4, #FD1D1D, #F56040)', borderRadius: 10, color: '#fff', fontSize: 15, fontWeight: 800, padding: '12px 24px', textDecoration: 'none', fontFamily: 'inherit' }}>
+                Me contacter sur {o.contact}
               </a>
             </div>
           )}
@@ -787,7 +840,7 @@ function PageParrainage({ favState }) {
       <CarouselOffresDuMoment offres={OFFRES} onSelect={setSelected} />
       <div style={{ marginBottom: 16, overflowX: 'auto', display: 'flex', gap: 8, paddingBottom: 4 }}>
         {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: '1px solid ' + (filtre === cat ? '#4FFFA0' : '#1A1E2A'), borderRadius: 20, color: filtre === cat ? '#0A0B0F' : '#8A95AA', fontSize: 12, fontWeight: 700, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+          <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: '1px solid ' + (filtre === cat ? '#4FFFA0' : '#1A1E2A'), borderRadius: 20, color: filtre === cat ? '#0A0B0F' : '#8A95AA', fontSize: 12, fontWeight: 700, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
             {cat}
           </button>
         ))}
@@ -796,21 +849,23 @@ function PageParrainage({ favState }) {
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
-            <button 
-              onClick={() => setSelected(o)} 
-              style={{ 
-                width: '100%', 
-                background: '#111318', 
-                border: '1px solid #1A1E2A', 
-                borderRadius: 16, 
-                padding: '16px 12px 34px 12px', // Padding bas augmenté pour laisser la place au bouton flottant
-                cursor: 'pointer', 
-                textAlign: 'left', 
+            <button
+              onClick={() => setSelected(o)}
+              style={{
+                width: '100%',
+                background: '#111318',
+                border: '1px solid #1A1E2A',
+                borderRadius: 16,
+                padding: '16px 12px 34px 12px',
+                cursor: 'pointer',
+                textAlign: 'left',
                 transition: 'all 0.2s',
                 position: 'relative',
-                minHeight: '145px', // Hauteur minimum pour uniformiser les cartes
+                minHeight: '145px',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                fontFamily: 'inherit'
               }}
             >
               <div style={{ marginBottom: 10 }}>
@@ -819,13 +874,12 @@ function PageParrainage({ favState }) {
               <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
               <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 4 }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
-
-              {/* BOUTON FLOTTANT DÉTAIL EN BAS À DROITE */}
-              <div style={{ 
-                position: 'absolute', 
-                bottom: '10px', 
-                right: '10px', 
-                background: 'rgba(79, 255, 160, 0.1)', 
+              {o.dateFin && <Timer dateFin={o.dateFin} />}
+              <div style={{
+                position: 'absolute',
+                bottom: '10px',
+                right: '10px',
+                background: 'rgba(79, 255, 160, 0.1)',
                 border: '1px solid rgba(79, 255, 160, 0.3)',
                 borderRadius: '8px',
                 padding: '4px 8px',
@@ -848,7 +902,7 @@ function PageParrainage({ favState }) {
 // ─── PAGE AVIS ────────────────────────────────────────────────────────────────
 function PageAvis() {
   const avis = [
-    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j’ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
+    { nom: "Lucas", date: "Il y a 2 jours", texte: "Super rapide pour Hello Bank, j'ai reçu mes 80€ comme prévu ! 🔥", note: "⭐⭐⭐⭐⭐" },
     { nom: "Sarah", date: "La semaine dernière", texte: "Le calculateur ProfitMaster est bluffant de précision.", note: "⭐⭐⭐⭐⭐" },
     { nom: "Tom", date: "Il y a 1 mois", texte: "Déjà 120€ de gains cumulés grâce aux offres crypto. Top !", note: "⭐⭐⭐⭐⭐" }
   ];
@@ -863,7 +917,7 @@ function PageAvis() {
             <span style={{ fontSize: 12, color: '#4A5568' }}>{a.date}</span>
           </div>
           <div style={{ color: '#FFD700', fontSize: 12, marginBottom: 8 }}>{a.note}</div>
-          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>”{a.texte}”</p>
+          <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.5 }}>"{a.texte}"</p>
         </div>
       ))}
     </div>
@@ -917,12 +971,12 @@ function PageProfitMaster() {
           <InputField label="Heures" prefix="h" value={fields.heures} onChange={setField('heures')} />
           <InputField label="Taux/heure" value={fields.tauxHoraire} onChange={setField('tauxHoraire')} />
         </div>
-        <div style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>Coût main d’œuvre : <span style={{ color: '#8A95AA' }}>{fmt(res.coutMain)}</span></div>
+        <div style={{ fontSize: 11, color: '#4A5568', marginTop: 4 }}>Coût main d'œuvre : <span style={{ color: '#8A95AA' }}>{fmt(res.coutMain)}</span></div>
       </Section>
       <Section title="FISCALITÉ" icon="🏛️">
         <div style={{ position: 'relative', marginBottom: 12 }}>
           <select value={fields.tauxOption} onChange={(e) => setFields((prev) => ({ ...prev, tauxOption: e.target.value }))}
-            style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', fontSize: 13, padding: '10px 12px', outline: 'none', cursor: 'pointer' }}>
+            style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', fontSize: 13, padding: '10px 12px', outline: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>
             {TAUX_OPTIONS.map((o) => (
               <option key={o.label} value={o.value === null ? 'custom' : String(o.value)}>{o.label}</option>
             ))}
@@ -966,15 +1020,9 @@ function PageProfitMaster() {
               </div>
             ))}
           </div>
-          <button onClick={handlePDFClick} style={{ width: '100%', background: pdfPaid ? 'linear-gradient(135deg, #4FFFA0, #2ECC71)' : '#111318', border: '2px solid #4FFFA0', borderRadius: 12, color: pdfPaid ? '#0A0B0F' : '#4FFFA0', fontSize: 14, fontWeight: 800, padding: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <button onClick={handlePDFClick} style={{ width: '100%', background: pdfPaid ? 'linear-gradient(135deg, #4FFFA0, #2ECC71)' : '#111318', border: '2px solid #4FFFA0', borderRadius: 12, color: pdfPaid ? '#0A0B0F' : '#4FFFA0', fontSize: 14, fontWeight: 800, padding: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit' }}>
             {pdfPaid ? "Télécharger mon Bilan PDF" : "Télécharger le Bilan PDF - 2,00 €"}
           </button>
-        </div>
-      )}
-      {res.prixVente === 0 && (
-        <div style={{ textAlign: 'center', padding: '30px 20px', color: '#2E3545' }}>
-          <div style={{ fontSize: 36, marginBottom: 10 }}>📊</div>
-          <p style={{ fontSize: 14 }}>Renseignez votre prix de vente pour voir les résultats.</p>
         </div>
       )}
       {showPaywall && (
@@ -987,7 +1035,7 @@ function PageProfitMaster() {
               <div style={{ fontSize: 36, fontWeight: 900, color: '#4FFFA0' }}>2,00 €</div>
               <div style={{ fontSize: 12, color: '#8A95AA' }}>Paiement sécurisé via Stripe</div>
             </div>
-            <button onClick={handlePay} style={{ width: '100%', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', border: 'none', borderRadius: 12, color: '#0A0B0F', fontSize: 16, fontWeight: 800, padding: '15px', cursor: 'pointer' }}>
+            <button onClick={handlePay} style={{ width: '100%', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', border: 'none', borderRadius: 12, color: '#0A0B0F', fontSize: 16, fontWeight: 800, padding: '15px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Payer et Télécharger
             </button>
           </div>
@@ -1004,7 +1052,14 @@ export default function App() {
 
   useEffect(() => {
     const style = document.createElement('style');
-    style.textContent = `* { margin: 0; padding: 0; box-sizing: border-box; }  body { background: #0A0B0F; color: #E8EDF5; font-family: sans-serif; }  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }  select { -webkit-appearance: none; appearance: none; }  ::-webkit-scrollbar { width: 4px; height: 4px; }  ::-webkit-scrollbar-track { background: #0A0B0F; }  ::-webkit-scrollbar-thumb { background: #1E2230; border-radius: 2px; }`;
+    style.textContent = `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { background: #0A0B0F; color: #E8EDF5; font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+      input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+      select { -webkit-appearance: none; appearance: none; }
+      ::-webkit-scrollbar { display: none; }
+    `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
   }, []);
@@ -1013,7 +1068,7 @@ export default function App() {
     <div style={{ minHeight: '100vh', background: '#0A0B0F', paddingBottom: 80 }}>
       <div style={{ background: 'linear-gradient(180deg, #111318 0%, #0A0B0F 100%)', borderBottom: '1px solid #1A1E2A', padding: '18px 20px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ textAlign: 'left' }}>
-          <div style={{ fontSize: 10, color: '#4FFFA0', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 4 }}>HUB FINANCIER</div>
+          <div style={{ fontSize: 10, color: '#4FFFA0', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 4, fontWeight: 700 }}>HUB FINANCIER</div>
           <h1 style={{ fontSize: 24, fontWeight: 900, background: 'linear-gradient(90deg, #4FFFA0, #A8FFD8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Parrain 4P
           </h1>
@@ -1021,7 +1076,7 @@ export default function App() {
         {onglet === 'parrainage' && (
           <button
             onClick={() => favState.setFavOnly(!favState.favOnly)}
-            style={{ background: favState.favOnly ? '#4FFFA0' : '#111318', border: '1px solid #1A1E2A', borderRadius: 12, padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+            style={{ background: favState.favOnly ? '#4FFFA0' : '#111318', border: '1px solid #1A1E2A', borderRadius: 12, padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}
           >
             <span style={{ fontSize: 14 }}>{favState.favOnly ? '❤️' : '🤍'}</span>
             <span style={{ fontSize: 12, fontWeight: 800, color: favState.favOnly ? '#0A0B0F' : '#4FFFA0' }}>{favState.count}</span>
@@ -1029,24 +1084,24 @@ export default function App() {
         )}
       </div>
 
-      <p style={{ color: '#4A5568', fontSize: 12, marginTop: -8, textAlign: 'center', paddingBottom: 10 }}>Parrainages + Calculateur de Rentabilité</p>
+      <p style={{ color: '#4A5568', fontSize: 12, marginTop: -8, textAlign: 'center', paddingBottom: 10, fontWeight: 500 }}>Parrainages + Calculateur de Rentabilité</p>
 
       {onglet === 'parrainage' && <PageParrainage favState={favState} />}
       {onglet === 'avis' && <PageAvis />}
       {onglet === 'calculateur' && <PageProfitMaster />}
 
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', zIndex: 100 }}>
-        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
           <span style={{ fontSize: 20 }}>🎁</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Parrainages</span>
           {onglet === 'parrainage' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
-        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
           <span style={{ fontSize: 20 }}>⭐</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Avis</span>
           {onglet === 'avis' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}
         </button>
-        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', padding: '12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
           <span style={{ fontSize: 20 }}>📊</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Calculateur</span>
           {onglet === 'calculateur' && <div style={{ width: 20, height: 2, background: '#4FFFA0', borderRadius: 1 }} />}

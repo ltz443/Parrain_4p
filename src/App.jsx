@@ -214,7 +214,6 @@ const OFFRES = [
     shareText: "Inscris-toi sur Trading 212 via mon lien et reçois une action gratuite entre 11€ et 100€ !",
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
-    dateFin: '2026-04-29T23:59:59',
   },
   {
     id: 'winamax',

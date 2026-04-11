@@ -221,9 +221,9 @@ const OFFRES = [
     categorie: "Paris Sportifs",
     emoji: "⚽",
     couleur: '#E8002D',
-    bonus: "40€",
-    bonusFilleul: "40€",
-    bonusParrain: "40€",
+    bonus: "20€",
+    bonusFilleul: "20€",
+    bonusParrain: "20€",
     description: "Winamax est la référence des paris sportifs en France. Inscris-toi avec le code parrainage et reçois 40€.",
     conditions: [
       "S'inscrire avec le code parrainage",

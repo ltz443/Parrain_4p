@@ -328,7 +328,7 @@ const OFFRES = [
     categorie: "Or & Épargne",
     emoji: "🥇",
     couleur: '#FFD700',
-    bonus: "10€ parrain",
+    bonus: "Frais réduits",
     bonusFilleul: "Frais réduits",
     bonusParrain: "10€",
     description: "VeraCash permet d'épargner et payer avec de l'or et de l'argent physique. Une alternative solide aux banques classiques.",

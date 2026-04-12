@@ -206,7 +206,7 @@ const OFFRES = [
     conditions: [
       "S'inscrire via le lien de parrainage",
       "Valider son identité (KYC)",
-      "Déposer 11€",
+      "Déposer 1€",
       "Délai : 3 heures",
     ],
     type: 'lien',

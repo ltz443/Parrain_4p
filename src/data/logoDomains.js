@@ -1,0 +1,16 @@
+export const LOGO_DOMAINS = {
+  hellobank: 'hellobank.fr',
+  joko: 'joko.com',
+  okx: 'okx.com',
+  veracash: 'veracash.com',
+  robinhood: 'robinhood.com',
+  winamax: 'winamax.fr',
+  betsson: 'betsson.fr',
+  engie: 'engie.fr',
+  nordvpn: 'nordvpn.com',
+  myfin: 'myfin.eu',
+  scrambly: 'scrambly.io',
+  kraken: 'kraken.com',
+  fortuneo: 'fortuneo.fr',
+  trading212: 'trading212.com',
+};

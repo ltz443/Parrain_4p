@@ -166,7 +166,7 @@ const OFFRES = [
     shareUrl: 'https://parrain-4p.vercel.app',
     offresdumoment: true,
     boostLabel: '+80€',
-    dateFin: '2026-04-14T00:00:00',
+    dateFin: '2026-04-16T00:00:00',
   },
   {
     id: 'okx',

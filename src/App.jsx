@@ -152,7 +152,7 @@ const OFFRES = [
     couleur: '#00B4FF',
     bonus: "80€",
     bonusFilleul: "40€ + 40€",
-    bonusParrain: "80€",
+    bonusParrain: "20€",
     description: "Ouvre un compte Hello One et reçois 40€ sans dépôt, puis 40€ de plus dès le 10e achat carte.",
     conditions: [
       "Première ouverture d'un compte de dépôt Hello One",

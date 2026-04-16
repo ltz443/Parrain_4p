@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
-import { OFFRES } from './data/offres';
+import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarouselOffresDuMoment';
 import LogoOffre from './LogoOffre';
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────

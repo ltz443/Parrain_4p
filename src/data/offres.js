@@ -1,6 +1,4 @@
-
-// ─── DONNÉES PARRAINAGE ────────────────────────────────────────────────────────
-const OFFRES = [
+export const OFFRES = [
   {
     id: 'hellobank',
     nom: "Hello Bank",

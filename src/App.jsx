@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarouselOffresDuMoment';
-import LogoOffre from './LogoOffre';
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
 const FavStore = {
   KEY: "p4_favs",

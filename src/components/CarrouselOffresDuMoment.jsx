@@ -5,12 +5,10 @@ function Timer({ dateFin }) {
   const calcRemaining = () => {
     const diff = new Date(dateFin).getTime() - Date.now();
     if (diff <= 0) return null;
-
     const s = Math.floor(diff / 1000);
     const days = Math.floor(s / 86400);
     const hours = Math.floor((s % 86400) / 3600);
     const minutes = Math.floor((s % 3600) / 60);
-
     return { days, hours, minutes };
   };
 
@@ -83,11 +81,9 @@ function CarouselCard({ offre, onSelect }) {
         opacity: 0.7, 
         borderRadius: '16px 16px 0 0' 
       }} />
-
       <div style={{ marginBottom: 8 }}>
         <LogoOffre id={offre.id} emoji={offre.emoji} couleur={offre.couleur} size={36} borderRadius={10} />
       </div>
-
       <div style={{ 
         fontSize: 13, 
         fontWeight: 800, 
@@ -99,13 +95,10 @@ function CarouselCard({ offre, onSelect }) {
       }}>
         {offre.nom}
       </div>
-
       <div style={{ fontSize: 15, fontWeight: 900, color: '#4FFFA0' }}>
         {offre.boostLabel || offre.bonus}
       </div>
-
       {offre.dateFin && <Timer dateFin={offre.dateFin} />}
-
       <button 
         onClick={(e) => { e.stopPropagation(); onSelect(offre); }}
         style={{ 
@@ -137,13 +130,18 @@ export default function CarouselOffresDuMoment({ offres, onSelect }) {
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingLeft: 2 }}>
         <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4FFFA0', boxShadow: '0 0 5px #4FFFA0' }} />
-        <span style={{ fontSize: 11, fontWeight: 800, color: '#4FFFA0', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+        <span style={{ 
+          fontSize: 11, 
+          fontWeight: 800, 
+          color: '#4FFFA0', 
+          letterSpacing: '0.14em', 
+          textTransform: 'uppercase' 
+        }}>
           Offres du moment
         </span>
         <div style={{ flex: 1, height: 1, background: '#1A1E2A', marginLeft: 4 }} />
         <span style={{ fontSize: 10, color: '#4A5568', fontWeight: 600 }}>⚡ Limité</span>
       </div>
-
       <div style={{ 
         display: 'flex', 
         gap: 10, 
@@ -153,9 +151,7 @@ export default function CarouselOffresDuMoment({ offres, onSelect }) {
         WebkitOverflowScrolling: 'touch', 
         scrollbarWidth: 'none' 
       }}>
-        {offresBoostees.map(o => (
-          <CarouselCard key={o.id} offre={o} onSelect={onSelect} />
-        ))}
+        {offresBoostees.map(o => <CarouselCard key={o.id} offre={o} onSelect={onSelect} />)}
       </div>
     </div>
   );

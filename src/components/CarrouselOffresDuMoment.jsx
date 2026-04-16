@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LogoOffre from './LogoOffre';
-import Timer from 'Timer';
+import Timer from './Timer'; // ✅ correction ici (chemin local)
+
 // ─── CAROUSEL OFFRES DU MOMENT ────────────────────────────────────────────────
 export function CarouselOffresDuMoment({ offres, onSelect }) {
   const offresBoostees = offres.filter(o => o.offresdumoment);
@@ -39,6 +40,7 @@ export function CarouselOffresDuMoment({ offres, onSelect }) {
         >
           Offres du moment
         </span>
+
         <div
           style={{
             flex: 1,
@@ -47,6 +49,7 @@ export function CarouselOffresDuMoment({ offres, onSelect }) {
             marginLeft: 4,
           }}
         />
+
         <span style={{ fontSize: 10, color: '#4A5568', fontWeight: 600 }}>
           ⚡ Limité
         </span>

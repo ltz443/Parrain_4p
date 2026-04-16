@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { OFFRES } from './data/offres';
+import CarouselOffresDuMoment from './components/CarouselOffresDuMoment';
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
 const FavStore = {
   KEY: "p4_favs",

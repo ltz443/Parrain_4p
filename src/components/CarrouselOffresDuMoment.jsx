@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import LogoOffre from './LogoOffre';
+import Timer from 'Timer';
 // ─── CAROUSEL OFFRES DU MOMENT ────────────────────────────────────────────────
 export function CarouselOffresDuMoment({ offres, onSelect }) {
   const offresBoostees = offres.filter(o => o.offresdumoment);

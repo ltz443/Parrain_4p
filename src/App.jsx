@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import LogoOffre from './components/LogoOffre';
-import CarouselOffresDuMoment from './components/CarouselOffresDuMoment';
+import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import { OFFRES } from './data/offres';
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
 const FavStore = {

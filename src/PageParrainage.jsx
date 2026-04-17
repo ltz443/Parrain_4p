@@ -6,6 +6,52 @@ import { OFFRES } from './data/offres';
 
 const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];
 
+// ─── COMPOSANT BOUTON PARTAGE (RÉ-INTÉGRÉ) ──────────────────────────
+function BoutonPartage({ offre }) {
+  const partager = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: offre.nom + ' — ' + offre.bonus,
+          text: offre.shareText,
+          url: offre.shareUrl,
+        });
+      } catch (e) { }
+    } else {
+      navigator.clipboard.writeText(offre.shareText + ' ' + offre.shareUrl);
+      alert("Lien copié !");
+    }
+  };
+  return (
+    <button onClick={partager} style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 10, fontFamily: 'inherit' }}>
+      📤 Partager cette offre
+    </button>
+  );
+}
+
+// ─── COMPOSANT FORMULAIRE (RÉ-INTÉGRÉ) ─────────────────────────────
+function FormulaireChallenge() {
+  const [method, setMethod] = useState('revolut');
+  const inputStyle = { width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#FFF', padding: '12px', marginBottom: '10px', outline: 'none', fontFamily: 'inherit' };
+
+  return (
+    <div style={{ background: '#111318', border: '1px solid #4FFFA0', borderRadius: 16, padding: '20px', marginTop: 24 }}>
+      <h3 style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0', textAlign: 'center', marginBottom: 8 }}>🏆 Challenge 3-en-1</h3>
+      <p style={{ fontSize: 12, color: '#8A95AA', textAlign: 'center', marginBottom: 20 }}>Reçois <strong style={{ color: '#4FFFA0' }}>10€ de bonus</strong> après 3 offres !</p>
+      <form action="https://formspree.io/f/mreojpvq" method="POST">
+        <input type="text" name="pseudo" placeholder="@Pseudo Instagram" required style={inputStyle} />
+        <input type="text" name="offres" placeholder="Les 3 offres choisies" required style={inputStyle} />
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginBottom: 15 }}>
+          <label style={{ color: '#8A95AA', fontSize: 12 }}><input type="radio" name="pay" value="revolut" checked={method === 'revolut'} onChange={() => setMethod('revolut')} /> Revolut</label>
+          <label style={{ color: '#8A95AA', fontSize: 12 }}><input type="radio" name="pay" value="rib" checked={method === 'rib'} onChange={() => setMethod('rib')} /> RIB</label>
+        </div>
+        <input type="text" name="id_paiement" placeholder={method === 'revolut' ? "Ton @Tag Revolut" : "Ton IBAN"} required style={inputStyle} />
+        <button type="submit" style={{ width: '100%', background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontWeight: 800, padding: '12px', cursor: 'pointer' }}>Envoyer ma demande</button>
+      </form>
+    </div>
+  );
+}
+
 // ─── COMPOSANT CHECKLIST (RÉ-INTÉGRÉ) ───────────────────────────────
 function Checklist({ offreId, conditions }) {
   const storageKey = 'checklist_' + offreId;
@@ -19,27 +65,27 @@ function Checklist({ offreId, conditions }) {
   const toggle = (i) => {
     const next = { ...checked, [i]: !checked[i] };
     setChecked(next);
-    try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch (e) { }
+    localStorage.setItem(storageKey, JSON.stringify(next));
   };
 
-  const total = conditions.length;
   const done = Object.values(checked).filter(Boolean).length;
+  const total = conditions.length;
 
   return (
     <div style={{ marginBottom: 20 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: '#4FFFA0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Ma progression</div>
-        <div style={{ fontSize: 11, color: done === total ? '#4FFFA0' : '#8A95AA', fontWeight: 700 }}>{done}/{total}</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#4FFFA0', textTransform: 'uppercase' }}>Progression</div>
+        <div style={{ fontSize: 11, color: '#8A95AA' }}>{done}/{total}</div>
       </div>
-      <div style={{ background: '#0A0B0F', borderRadius: 6, height: 4, marginBottom: 12, overflow: 'hidden' }}>
-        <div style={{ background: '#4FFFA0', height: '100%', width: (done / total * 100) + '%', borderRadius: 6, transition: 'width 0.3s ease' }} />
+      <div style={{ background: '#0A0B0F', height: 4, borderRadius: 2, marginBottom: 15, overflow: 'hidden' }}>
+        <div style={{ background: '#4FFFA0', height: '100%', width: `${(done/total)*100}%`, transition: '0.3s' }} />
       </div>
       {conditions.map((c, i) => (
-        <div key={i} onClick={() => toggle(i)} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10, cursor: 'pointer' }}>
-          <div style={{ width: 20, height: 20, borderRadius: 6, border: '2px solid ' + (checked[i] ? '#4FFFA0' : '#1E2230'), background: checked[i] ? '#4FFFA0' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.2s' }}>
-            {checked[i] && <span style={{ fontSize: 11, color: '#0A0B0F', fontWeight: 900 }}>✓</span>}
+        <div key={i} onClick={() => toggle(i)} style={{ display: 'flex', gap: 10, marginBottom: 8, cursor: 'pointer', alignItems: 'flex-start' }}>
+          <div style={{ width: 18, height: 18, borderRadius: 4, border: '2px solid ' + (checked[i] ? '#4FFFA0' : '#1E2230'), background: checked[i] ? '#4FFFA0' : 'transparent', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {checked[i] && <span style={{ color: '#0A0B0F', fontSize: 10, fontWeight: 900 }}>✓</span>}
           </div>
-          <span style={{ fontSize: 13, color: checked[i] ? '#4A5568' : '#8A95AA', lineHeight: 1.5, textDecoration: checked[i] ? 'line-through' : 'none' }}>{c}</span>
+          <span style={{ fontSize: 13, color: checked[i] ? '#4A5568' : '#8A95AA', textDecoration: checked[i] ? 'line-through' : 'none' }}>{c}</span>
         </div>
       ))}
     </div>
@@ -50,7 +96,7 @@ function Checklist({ offreId, conditions }) {
 function FavButton({ id, isFav, toggle }) {
   return (
     <button onClick={(e) => { e.stopPropagation(); toggle(id); }} style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(0,0,0,0.3)', border: 'none', borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
-      <span style={{ fontSize: 16, color: isFav ? '#FF4B4B' : '#FFF', transition: 'all 0.2s' }}>{isFav ? '❤️' : '🤍'}</span>
+      <span style={{ fontSize: 16, color: isFav ? '#FF4B4B' : '#FFF' }}>{isFav ? '❤️' : '🤍'}</span>
     </button>
   );
 }
@@ -79,51 +125,38 @@ export default function PageParrainage({ favState }) {
     const o = selected;
     return (
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-        <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>
-          ← Retour
-        </button>
-        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', marginBottom: 16, position: 'relative' }}>
+        <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>← Retour</button>
+        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', position: 'relative' }}>
           <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
             <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={56} borderRadius={16} />
             <div>
-              <div style={{ fontSize: 11, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{o.categorie}</div>
+              <div style={{ fontSize: 11, color: '#4A5568', textTransform: 'uppercase' }}>{o.categorie}</div>
               <h2 style={{ fontSize: 22, fontWeight: 900, color: '#E8EDF5' }}>{o.nom}</h2>
             </div>
           </div>
           <p style={{ fontSize: 14, color: '#8A95AA', lineHeight: 1.6, marginBottom: 20 }}>{o.description}</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
             <div style={{ background: '#0A0B0F', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #1A1E2A' }}>
-              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>Prime parrain</div>
-              <div style={{ fontSize: 20, fontWeight: 900, color: '#4FFFA0' }}>{o.bonusParrain}</div>
+              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase' }}>Prime parrain</div>
+              <div style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0' }}>{o.bonusParrain}</div>
             </div>
             <div style={{ background: '#0A0B0F', borderRadius: 10, padding: '12px', textAlign: 'center', border: '1px solid #1A1E2A' }}>
-              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', marginBottom: 4 }}>Filleul reçoit</div>
-              <div style={{ fontSize: 20, fontWeight: 900, color: '#E8EDF5' }}>{o.bonusFilleul}</div>
+              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase' }}>Filleul reçoit</div>
+              <div style={{ fontSize: 18, fontWeight: 900, color: '#E8EDF5' }}>{o.bonusFilleul}</div>
             </div>
           </div>
           <Checklist offreId={o.id} conditions={o.conditions} />
           {o.type === 'code' && (
-            <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', marginBottom: 12, border: '1px dashed #4FFFA0', textAlign: 'center' }}>
-              <div style={{ fontSize: 11, color: '#4A5568', marginBottom: 6, textTransform: 'uppercase' }}>Code parrainage</div>
-              <div style={{ fontSize: 28, fontWeight: 900, color: '#4FFFA0', fontFamily: 'monospace', letterSpacing: '0.1em' }}>{o.code}</div>
-              <button onClick={() => copier(o.code)} style={{ marginTop: 10, background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontSize: 13, fontWeight: 700, padding: '8px 20px', cursor: 'pointer', fontFamily: 'inherit' }}>
+            <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', border: '1px dashed #4FFFA0', textAlign: 'center', marginBottom: 12 }}>
+              <div style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0', fontFamily: 'monospace' }}>{o.code}</div>
+              <button onClick={() => copier(o.code)} style={{ marginTop: 10, background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontSize: 13, fontWeight: 700, padding: '8px 20px', cursor: 'pointer' }}>
                 {copied ? "Copié !" : "Copier le code"}
               </button>
             </div>
           )}
-          {o.type === 'lien' && o.lien !== '#' && (
-            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', fontFamily: 'inherit' }}>
-              S'inscrire avec mon lien →
-            </a>
-          )}
-          {o.type === 'contact' && (
-            <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', border: '1px dashed #4FFFA0', textAlign: 'center' }}>
-              <div style={{ fontSize: 12, color: '#8A95AA', marginBottom: 8, lineHeight: 1.5 }}>{o.note}</div>
-              <a href={'https://instagram.com/' + o.contact.replace('@', '')} target="_blank" rel="noreferrer" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #833AB4, #FD1D1D, #F56040)', borderRadius: 10, color: '#fff', fontSize: 15, fontWeight: 800, padding: '12px 24px', textDecoration: 'none', fontFamily: 'inherit' }}>
-                Me contacter sur {o.contact}
-              </a>
-            </div>
+          {o.type === 'lien' && (
+            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none' }}>S'inscrire avec mon lien →</a>
           )}
           <BoutonPartage offre={o} />
         </div>
@@ -136,56 +169,19 @@ export default function PageParrainage({ favState }) {
       <CarouselOffresDuMoment offres={OFFRES} onSelect={setSelected} />
       <div style={{ marginBottom: 16, overflowX: 'auto', display: 'flex', gap: 8, paddingBottom: 4 }}>
         {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: '1px solid ' + (filtre === cat ? '#4FFFA0' : '#1A1E2A'), borderRadius: 20, color: filtre === cat ? '#0A0B0F' : '#8A95AA', fontSize: 12, fontWeight: 700, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>
-            {cat}
-          </button>
+          <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: '1px solid ' + (filtre === cat ? '#4FFFA0' : '#1A1E2A'), borderRadius: 20, color: filtre === cat ? '#0A0B0F' : '#8A95AA', fontSize: 12, fontWeight: 700, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap' }}>{cat}</button>
         ))}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
-            <button
-              onClick={() => setSelected(o)}
-              style={{
-                width: '100%',
-                background: '#111318',
-                border: '1px solid #1A1E2A',
-                borderRadius: 16,
-                padding: '16px 12px 34px 12px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.2s',
-                position: 'relative',
-                minHeight: '145px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                fontFamily: 'inherit'
-              }}
-            >
-              <div style={{ marginBottom: 10 }}>
-                <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={44} borderRadius={12} />
-              </div>
-              <div style={{ fontSize: 10, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{o.categorie}</div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#E8EDF5', marginBottom: 4 }}>{o.nom}</div>
+            <button onClick={() => setSelected(o)} style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 34px', cursor: 'pointer', textAlign: 'left', minHeight: 145, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit' }}>
+              <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={40} borderRadius={10} />
+              <div style={{ fontSize: 10, color: '#4A5568', marginTop: 10 }}>{o.categorie}</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5' }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
               {o.dateFin && <Timer dateFin={o.dateFin} />}
-              <div style={{
-                position: 'absolute',
-                bottom: '10px',
-                right: '10px',
-                background: 'rgba(79, 255, 160, 0.1)',
-                border: '1px solid rgba(79, 255, 160, 0.3)',
-                borderRadius: '8px',
-                padding: '4px 8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
-                <span style={{ fontSize: '10px', fontWeight: '800', color: '#4FFFA0', textTransform: 'uppercase' }}>Détail</span>
-                <span style={{ fontSize: '10px', color: '#4FFFA0' }}>→</span>
-              </div>
             </button>
           </div>
         ))}

@@ -182,7 +182,7 @@ export default function PageParrainage({ favState }) {
               <div style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5' }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
               {o.dateFin && <Timer dateFin={o.dateFin} />}
-              <div style={{ background: '#0A0B0F', border: '1.5px solid #4FFFA0', borderRadius: 8, color: '#4FFFA0', fontSize: 12, fontWeight: 700, padding: '8px 12px', textAlign: 'center', marginTop: 10, cursor: 'pointer' }}>DÉTAIL →</div>
+              <div style={{ alignSelf: 'flex-end', background: 'rgba(79, 255, 160, 0.05)', border: '1px solid #4FFFA0', borderRadius: 8, color: '#4FFFA0', fontSize: 11, fontWeight: 800, padding: '6px 12px', marginTop: 10, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.02em' }}>Détail →</div>
             </button>
           </div>
         ))}

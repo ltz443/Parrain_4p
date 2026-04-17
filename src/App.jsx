@@ -1,3 +1,4 @@
+import PageParrainage from './PageParrainage'; // Vérifie bien le nom du fichier
 
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
 const FavStore = {

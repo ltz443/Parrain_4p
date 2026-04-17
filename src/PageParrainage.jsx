@@ -176,12 +176,13 @@ export default function PageParrainage({ favState }) {
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
-            <button onClick={() => setSelected(o)} style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 34px', cursor: 'pointer', textAlign: 'left', minHeight: 145, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden' }}>
+            <button onClick={() => setSelected(o)} style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 12px', cursor: 'pointer', textAlign: 'left', minHeight: 180, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden', justifyContent: 'space-between' }}>
               <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={40} borderRadius={10} />
               <div style={{ fontSize: 10, color: '#4A5568', marginTop: 10 }}>{o.categorie}</div>
               <div style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5' }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
               {o.dateFin && <Timer dateFin={o.dateFin} />}
+              <div style={{ background: '#0A0B0F', border: '1.5px solid #4FFFA0', borderRadius: 8, color: '#4FFFA0', fontSize: 12, fontWeight: 700, padding: '8px 12px', textAlign: 'center', marginTop: 10, cursor: 'pointer' }}>DÉTAIL →</div>
             </button>
           </div>
         ))}

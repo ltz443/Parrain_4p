@@ -4,6 +4,7 @@ import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import { OFFRES } from './data/offres';
 import Timer from './components/Timer';
+import PageParrainage from './PageParrainage';
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
 const FavStore = {
   KEY: "p4_favs",

@@ -1,5 +1,19 @@
-// ─── PAGE PARRAINAGE ──────────────────────────────────────────────────────────
-function PageParrainage({ favState }) {
+import React, { useState } from 'react';
+
+import LogoOffre from './components/LogoOffre';
+import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
+import Timer from './components/Timer';
+import Checklist from './components/Checklist';
+import BoutonPartage from './components/BoutonPartage';
+import FavButton from './components/FavButton';
+import FormulaireChallenge from './components/FormulaireChallenge';
+
+// Import des données
+import { OFFRES } from './data/offres';
+
+const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];
+
+export default function PageParrainage({ favState }) {
   const { isFav, toggle, favOnly } = favState;
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
@@ -18,6 +32,7 @@ function PageParrainage({ favState }) {
     });
   };
 
+  // VUE DÉTAILLÉE D'UNE OFFRE
   if (selected) {
     const o = selected;
     return (
@@ -74,6 +89,7 @@ function PageParrainage({ favState }) {
     );
   }
 
+  // VUE LISTE PRINCIPALE
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
       <CarouselOffresDuMoment offres={OFFRES} onSelect={setSelected} />

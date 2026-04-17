@@ -8,7 +8,6 @@ const LOGO_DOMAINS = {
   robinhood: 'robinhood.com',
   winamax: 'winamax.fr',
   betsson: 'betsson.fr',
-  unibet: 'unibet.fr',
   engie: 'engie.fr',
   nordvpn: 'nordvpn.com',
   myfin: 'myfin.eu',
@@ -16,6 +15,7 @@ const LOGO_DOMAINS = {
   kraken: 'kraken.com',
   fortuneo: 'fortuneo.fr',
   trading212: 'trading212.com',
+  unibet: 'unibet.fr',
 };
 
 const LogoOffre = ({ id, emoji, couleur, size = 44, borderRadius = 12 }) => {

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import Timer from './components/Timer';
-import BoutonPartage from './components/BoutonPartage';
-import FormulaireChallenge from './components/FormulaireChallenge';
 import { OFFRES } from './data/offres';
 
 const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];

@@ -1,4 +1,5 @@
-function Timer({ dateFin }) {
+import React, { useState, useEffect, useCallback } from 'react';
+export default function Timer({ dateFin }) {
   const calcRemaining = useCallback(() => {
     const now = Date.now();
     const end = new Date(dateFin).getTime();

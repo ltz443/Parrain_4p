@@ -57,9 +57,9 @@ export default function PageAvis() {
       <div style={{ background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px', marginBottom: 20 }}>
         <h3 style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5', marginBottom: 12 }}>Laisser un avis</h3>
         <input value={nom} onChange={e => setNom(e.target.value)} placeholder="Ton prénom" style={{ ...inputStyle, marginBottom: 10 }} />
-        <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
           {[1,2,3,4,5].map(n => (
-            <button key={n} onClick={() => setNote(n)} style={{ flex: 1, background: note >= n ? '#FFD700' : '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, fontSize: 18, padding: '8px 0', cursor: 'pointer' }}>⭐</button>
+            <span key={n} onClick={() => setNote(n)} style={{ fontSize: 28, cursor: 'pointer', opacity: note >= n ? 1 : 0.3 }}>⭐</span>
           ))}
         </div>
         <textarea value={texte} onChange={e => setTexte(e.target.value)} placeholder="Ton expérience..." rows={3} style={{ ...inputStyle, resize: 'none', marginBottom: 10 }} />

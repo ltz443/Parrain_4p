@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import PageParrainage from './PageParrainage';
 import PageAvis from './components/PageAvis';
+import PageProfitMaster from './components/PageProfitMaster';
 // ─── LOGIQUE DES FAVORIS ───────────────────────────────────────────
 const FavStore = {
   KEY: "p4_favs",
@@ -28,69 +29,6 @@ function useFavorites() {
   }, []);
   const isFav = useCallback((id) => favs.includes(id), [favs]);
   return { favs, isFav, toggle, favOnly, setFavOnly, count: favs.length };
-}
-
-// ─── CONFIGURATION CALCULATEUR ───────────────────────────────────────
-const STRIPE_LINK = 'https://buy.stripe.com/14A8wPadZ2MmbRF0A4a3u00';
-const TAUX_OPTIONS = [
-  { label: "Auto-entrepreneur - Prestation (21.2%)", value: 21.2 },
-  { label: "Auto-entrepreneur - Vente (12.8%)", value: 12.8 },
-  { label: "EIRL / EI au réel (est. 45%)", value: 45 },
-  { label: "Personnalisé", value: null },
-];
-
-const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(n || 0);
-const pct = (n) => `${(n || 0).toFixed(1)}%`;
-
-function calcul(f) {
-  const prixVente = parseFloat(f.prixVente) || 0;
-  const matieres = parseFloat(f.matieres) || 0;
-  const transport = parseFloat(f.transport) || 0;
-  const outillage = parseFloat(f.outillage) || 0;
-  const autresFrais = parseFloat(f.autresFrais) || 0;
-  const heures = parseFloat(f.heures) || 0;
-  const tauxHoraire = parseFloat(f.tauxHoraire) || 0;
-  const taux = parseFloat(f.tauxCotisations) || 0;
-  const coutMain = heures * tauxHoraire;
-  const cotisations = (prixVente * taux) / 100;
-  const totalCharges = matieres + transport + outillage + autresFrais + coutMain + cotisations;
-  const beneficeNet = prixVente - totalCharges;
-  const marge = prixVente > 0 ? (beneficeNet / prixVente) * 100 : 0;
-  let sante = "Déficitaire";
-  if (marge >= 20) sante = "Rentable";
-  else if (marge >= 0) sante = "Risqué";
-  return { prixVente, matieres, transport, outillage, autresFrais, coutMain, cotisations, totalCharges, beneficeNet, marge, sante };
-}
-
-function InputField({ label, value, onChange, placeholder, prefix, hint }) {
-  return (
-    <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#8A95AA', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</label>
-      <div style={{ position: 'relative' }}>
-        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#4FFFA0', fontSize: 13, fontWeight: 700 }}>{prefix || '€'}</span>
-        <input
-          type="number" min="0" step="0.01" value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder || '0'}
-          inputMode="decimal"
-          style={{ width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 8, color: '#E8EDF5', fontSize: 15, padding: '10px 12px 10px 30px', outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace' }}
-        />
-      </div>
-      {hint && <p style={{ fontSize: 10, color: '#4A5568', marginTop: 3 }}>{hint}</p>}
-    </div>
-  );
-}
-
-function Section({ title, icon, children }) {
-  return (
-    <div style={{ background: '#111318', borderRadius: 14, padding: '18px 16px', marginBottom: 12, border: '1px solid #1A1E2A' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-        <span style={{ fontSize: 16 }}>{icon}</span>
-        <h3 style={{ fontSize: 13, fontWeight: 800, color: '#4FFFA0', letterSpacing: '0.06em' }}>{title}</h3>
-      </div>
-      {children}
-    </div>
-  );
 }
 
 // ─── PAGE CALCULATEUR ─────────────────────────────────────────────────────────

@@ -16,6 +16,7 @@ const LOGO_DOMAINS = {
   fortuneo: 'fortuneo.fr',
   trading212: 'trading212.com',
   unibet: 'unibet.fr',
+  boursorama: 'boursorama.com'
 };
 
 const LogoOffre = ({ id, emoji, couleur, size = 44, borderRadius = 12 }) => {

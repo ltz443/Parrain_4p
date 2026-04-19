@@ -72,7 +72,7 @@ Ce projet est personnel, mais tu peux proposer :
 ## 📬 Contact
 
 Pour toute question ou opportunité :  
-👉 À compléter (Discord, Twitter, etc.)
+👉 instagram : parrain_4p
 
 ---
 

@@ -71,7 +71,7 @@ export const OFFRES = [
     offresdumoment: true,
   },
   {
-    id: 'Boursorama',
+    id: 'boursorama',
     nom: "Boursorama",
     categorie: "Banque",
     couleur: '#1DB954',

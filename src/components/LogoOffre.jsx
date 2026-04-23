@@ -17,6 +17,7 @@ const LOGO_DOMAINS = {
   trading212: 'trading212.com',
   unibet: 'unibet.fr',
   boursorama: 'boursorama.com'
+  bankin: 'bankin.com'
 };
 
 const LogoOffre = ({ id, emoji, couleur, size = 44, borderRadius = 12 }) => {

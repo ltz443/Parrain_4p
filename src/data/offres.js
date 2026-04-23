@@ -7,7 +7,7 @@ export const OFFRES = [
     couleur: "#00B4FF",
     bonus: "80 €",
     bonusFilleul: "40 € + 40 €",
-    bonusParrain: "20 €",
+    bonusParrain: "100€",
     description: "Ouvre un compte Hello One et reçois 40 € sans dépôt, puis 40 € de plus dès le 10e achat par carte.",
     conditions: [
       "Première ouverture d’un compte de dépôt Hello One",
@@ -21,7 +21,7 @@ export const OFFRES = [
     shareUrl: "https://parrain-4p.vercel.app",
     offresdumoment: true,
     boostLabel: "+80 €",
-    dateFin: "2026-04-15T00:00:00",
+    dateFin: "2026-04-25T00:00:00",
   },
   {
     id: "okx",

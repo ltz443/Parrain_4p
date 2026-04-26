@@ -4,7 +4,7 @@ const sections = {
   mentions: {
     titre: '📋 Mentions Légales',
     contenu: `
-Éditeur du site : LTZ44
+Éditeur du site : parrain_4p
 Contact : Instagram @parrain_4p
 Hébergeur : Vercel Inc., 340 Pine Street, Suite 1200, San Francisco, CA 94104, États-Unis
 

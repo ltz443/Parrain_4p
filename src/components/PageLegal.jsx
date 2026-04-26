@@ -12,7 +12,7 @@ Ce site est un hub personnel de codes de parrainage.
     `
   },
   cgu: {
-    titre: '📜 Conditions Générales d'Utilisation',
+    titre: "📜 Conditions Générales d'Utilisation",
     contenu: `
 En accédant à ce site, vous acceptez les présentes conditions.
 

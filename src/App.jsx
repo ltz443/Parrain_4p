@@ -70,14 +70,15 @@ export default function App() {
       {onglet === 'parrainage' && <PageParrainage favState={favState} />}
       {onglet === 'avis' && <PageAvis />}
       {onglet === 'calculateur' && <PageProfitMaster />}
-      {onglet === 'legal' && <PageLegal />}
+      {onglet === 'faq' && <PageFAQ />}
+
 
       {/* BARRE DE NAVIGATION */}
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', height: 70, zIndex: 1000 }}>
         <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>🎁<br/>Offres</button>
         <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>⭐<br/>Avis</button>
         <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>📊<br/>Calcul</button>
-        <button onClick={() => setOnglet('legal')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'legal' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>⚖️<br/>Légal</button>
+        <button onClick={() => setOnglet('faq')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'faq' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>❓<br/>FAQ</button>
       </div>
     </div>
   );

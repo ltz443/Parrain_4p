@@ -4,7 +4,7 @@ const ASSETS_TO_CACHE = [
   '/index.html',
   '/styles.css',
   '/script.js',
-  '/icons/icon-192x192.png'
+  '/icons/icon-192.png'
 ];
 
 // Installation : Mise en cache des fichiers

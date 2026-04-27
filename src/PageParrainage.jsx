@@ -6,13 +6,38 @@ import { OFFRES } from './data/offres';
 
 const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];
 
+// ─── RUBAN DIAGONAL ──────────────────────────────────────────────────
+function RubanIndisponible() {
+  return (
+    <div style={{
+      position: 'absolute',
+      width: '160%',
+      padding: '8px 0',
+      top: '38%',
+      left: '-30%',
+      transform: 'rotate(-45deg)',
+      background: 'rgba(60,60,60,0.93)',
+      backdropFilter: 'blur(4px)',
+      textAlign: 'center',
+      borderTop: '1px solid rgba(255,255,255,0.12)',
+      borderBottom: '1px solid rgba(255,255,255,0.12)',
+      zIndex: 10,
+      pointerEvents: 'none',
+    }}>
+      <span style={{ color: '#aaa', fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase' }}>
+        Indisponible
+      </span>
+    </div>
+  );
+}
+
 // ─── COMPOSANT BOUTON PARTAGE (RÉ-INTÉGRÉ) ──────────────────────────
 function BoutonPartage({ offre }) {
   const partager = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: offre.nom + ' — ' + offre.bonus,
+          title: offre.nom + ' - ' + offre.bonus,
           text: offre.shareText,
           url: offre.shareUrl,
         });
@@ -78,7 +103,7 @@ function Checklist({ offreId, conditions }) {
         <div style={{ fontSize: 11, color: '#8A95AA' }}>{done}/{total}</div>
       </div>
       <div style={{ background: '#0A0B0F', height: 4, borderRadius: 2, marginBottom: 15, overflow: 'hidden' }}>
-        <div style={{ background: '#4FFFA0', height: '100%', width: `${(done/total)*100}%`, transition: '0.3s' }} />
+        <div style={{ background: '#4FFFA0', height: '100%', width: `${(done / total) * 100}%`, transition: '0.3s' }} />
       </div>
       {conditions.map((c, i) => (
         <div key={i} onClick={() => toggle(i)} style={{ display: 'flex', gap: 10, marginBottom: 8, cursor: 'pointer', alignItems: 'flex-start' }}>
@@ -126,7 +151,8 @@ export default function PageParrainage({ favState }) {
     return (
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
         <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>← Retour</button>
-        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', position: 'relative' }}>
+        <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', position: 'relative', overflow: 'hidden' }}>
+          {o.disponible === false && <RubanIndisponible />}
           <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
             <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={56} borderRadius={16} />
@@ -156,7 +182,7 @@ export default function PageParrainage({ favState }) {
             </div>
           )}
           {o.type === 'lien' && (
-            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', marginBottom: 10 }}>S'inscrire avec mon lien →</a>
+            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', marginBottom: 10 }}>S’inscrire avec mon lien →</a>
           )}
           <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>📸 Me contacter sur Instagram</a>
           <BoutonPartage offre={o} />
@@ -177,7 +203,11 @@ export default function PageParrainage({ favState }) {
         {filtrees.map(o => (
           <div key={o.id} style={{ position: 'relative' }}>
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
-            <button onClick={() => setSelected(o)} style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 12px', cursor: 'pointer', textAlign: 'left', minHeight: 180, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden', justifyContent: 'space-between' }}>
+            <button
+              onClick={() => setSelected(o)}
+              style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 12px', cursor: 'pointer', textAlign: 'left', minHeight: 180, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden', justifyContent: 'space-between', opacity: o.disponible === false ? 0.7 : 1 }}
+            >
+              {o.disponible === false && <RubanIndisponible />}
               <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={40} borderRadius={10} />
               <div style={{ fontSize: 10, color: '#4A5568', marginTop: 10 }}>{o.categorie}</div>
               <div style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5' }}>{o.nom}</div>

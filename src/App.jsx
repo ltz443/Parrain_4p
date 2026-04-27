@@ -62,7 +62,7 @@ export default function App() {
 
       {/* BANDEAU DISCLAIMER AFFILIATION */}
       <div style={{ background: '#12100A', borderBottom: '1px solid #2A2010', padding: '8px 16px', textAlign: 'center', fontSize: 11, color: '#7A6A40', fontFamily: 'Inter, sans-serif' }}>
-        🔗 Ce site contient des liens de parrainage — je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
+        🔗 Ce site contient des liens de parrainage - je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
       </div>
 
       {/* PAGES */}
@@ -70,7 +70,6 @@ export default function App() {
       {onglet === 'avis' && <PageAvis />}
       {onglet === 'calculateur' && <PageProfitMaster />}
       {onglet === 'faq' && <PageFAQ />}
-
 
       {/* BARRE DE NAVIGATION */}
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', height: 70, zIndex: 1000 }}>

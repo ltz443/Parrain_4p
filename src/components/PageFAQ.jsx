@@ -32,7 +32,7 @@ const LEGALS = [
   {
     key: 'mentions',
     label: '📋 Mentions légales',
-    contenu: `Éditeur du site : Léo Tonna\nContact : Instagram @parrain_4p\nHébergeur : Vercel Inc., 340 Pine Street, Suite 1200, San Francisco, CA 94104, États-Unis\n\nCe site est un hub personnel de codes de parrainage.`,
+    contenu: `Éditeur du site : Parrain4P\nContact : Instagram @parrain_4p\nHébergeur : Vercel Inc., 340 Pine Street, Suite 1200, San Francisco, CA 94104, États-Unis\n\nCe site est un hub personnel de codes de parrainage.`,
   },
   {
     key: 'cgu',

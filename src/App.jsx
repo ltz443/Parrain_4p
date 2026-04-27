@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import PageParrainage from './PageParrainage';
 import PageAvis from './components/PageAvis';
 import PageProfitMaster from './components/PageProfitMaster';
-import PageLegal from './components/PageLegal';
 import PageFAQ from './components/PageFAQ';
 
 // ─── TRACKING UMAMI ───────────────────────────────────────────────────────────

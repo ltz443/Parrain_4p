@@ -17,12 +17,21 @@ export default function PageAvis() {
   const [texte, setTexte] = useState('');
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchAvis = async () => {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/avis?order=created_at.desc`, { headers });
-    const data = await res.json();
-    setAvis(data);
-    setLoading(false);
+    try {
+      setError(null);
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/avis?order=created_at.desc`, { headers });
+      if (!res.ok) throw new Error('Erreur lors de la récupération des avis');
+      const data = await res.json();
+      setAvis(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+      setError("Impossible de charger les avis pour le moment.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchAvis(); }, []);
@@ -30,18 +39,26 @@ export default function PageAvis() {
   const soumettre = async () => {
     if (!nom.trim() || !texte.trim()) return;
     setSending(true);
-    await fetch(`${SUPABASE_URL}/rest/v1/avis`, {
-      method: 'POST',
-      headers: { ...headers, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ nom: nom.trim(), note, texte: texte.trim() }),
-    });
-    setNom('');
-    setTexte('');
-    setNote(5);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
-    setSending(false);
-    fetchAvis();
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/avis`, {
+        method: 'POST',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ nom: nom.trim(), note, texte: texte.trim() }),
+      });
+      if (!res.ok) throw new Error('Erreur lors de l\'envoi');
+      
+      setNom('');
+      setTexte('');
+      setNote(5);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+      fetchAvis();
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de l'envoi de l'avis. Veuillez réessayer.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const inputStyle = {
@@ -70,6 +87,8 @@ export default function PageAvis() {
 
       {loading ? (
         <p style={{ textAlign: 'center', color: '#4A5568' }}>Chargement...</p>
+      ) : error ? (
+        <p style={{ textAlign: 'center', color: '#FF5050' }}>{error}</p>
       ) : avis.length === 0 ? (
         <p style={{ textAlign: 'center', color: '#4A5568' }}>Sois le premier à laisser un avis !</p>
       ) : (

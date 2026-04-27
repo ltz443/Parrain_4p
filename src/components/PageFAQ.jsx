@@ -66,7 +66,8 @@ function FlipCard({ num, question, answer }) {
         {/* FACE AVANT */}
         <div style={{
           position: 'absolute', width: '100%', height: '100%',
-          borderRadius: 16, backfaceVisibility: 'hidden',
+          borderRadius: 16,
+          backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
           background: '#111318', border: '1px solid #1A1E2A',
           padding: '18px 20px',
@@ -82,7 +83,8 @@ function FlipCard({ num, question, answer }) {
         {/* FACE ARRIÈRE */}
         <div style={{
           position: 'absolute', width: '100%', height: '100%',
-          borderRadius: 16, backfaceVisibility: 'hidden',
+          borderRadius: 16, 
+          backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
           background: '#0F1A12', border: '1px solid #4FFFA0',
           padding: '18px 20px',

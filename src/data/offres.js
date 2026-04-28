@@ -37,8 +37,9 @@ export const OFFRES = [
     conditions: [
       "S’inscrire via le lien de parrainage",
       "Valider son identité (KYC)",
-      "Déposer 1 €",
-      "Délai : 3 heures",
+      "Déposer 1€",
+      "achete 1€ d'action",
+      disponible: false,
     ],
     type: "lien",
     lien: "https://www.trading212.com/invite/4Dqc53P2G2O",

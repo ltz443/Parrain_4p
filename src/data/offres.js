@@ -22,6 +22,7 @@ export const OFFRES = [
     offresdumoment: true,
     boostLabel: "+80 €",
     dateFin: "2026-04-25T00:00:00",
+    badge: "Sans dépôt",
   },
   {
     id: "trading212",
@@ -105,9 +106,10 @@ export const OFFRES = [
     ],
     type: "code",
     code: "KI6S5F7",
-    shareText: "Rejoins Bankin’ avec mon code KI6S5F7 et reçois 3 € !",
+    shareText: "Rejoins Bankin' avec mon code KI6S5F7 et reçois 3 € !",
     shareUrl: "https://parrain-4p.vercel.app",
     offresdumoment: false,
+    badge: "< 3 min",
   },
   {
     id: "scrambly",
@@ -301,6 +303,7 @@ export const OFFRES = [
     shareText: "Rejoins Joko avec mon code skevdw et gagne 1 € + du cashback automatique !",
     shareUrl: "https://parrain-4p.vercel.app",
     offresdumoment: false,
+    badge: "< 3 min",
   },
   {
     id: "nordvpn",

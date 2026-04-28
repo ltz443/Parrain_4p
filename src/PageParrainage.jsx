@@ -213,7 +213,14 @@ export default function PageParrainage({ favState }) {
               <div style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5' }}>{o.nom}</div>
               <div style={{ fontSize: 13, fontWeight: 900, color: o.couleur }}>{o.bonus}</div>
               {o.dateFin && <Timer dateFin={o.dateFin} />}
-              <div style={{ alignSelf: 'flex-end', background: 'rgba(79, 255, 160, 0.05)', border: '1px solid #4FFFA0', borderRadius: 8, color: '#4FFFA0', fontSize: 11, fontWeight: 800, padding: '6px 12px', marginTop: 10, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.02em' }}>Détail →</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 10 }}>
+                {o.badge && (
+                  <div style={{ display: 'inline-block', background: 'rgba(79, 255, 160, 0.08)', border: '1px solid rgba(79, 255, 160, 0.2)', borderRadius: 4, padding: '2px 6px', fontSize: 9, fontWeight: 700, color: '#4FFFA0', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+                    [{o.badge}]
+                  </div>
+                )}
+                <div style={{ alignSelf: 'flex-end', background: 'rgba(79, 255, 160, 0.05)', border: '1px solid #4FFFA0', borderRadius: 8, color: '#4FFFA0', fontSize: 11, fontWeight: 800, padding: '6px 12px', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.02em' }}>Détail →</div>
+              </div>
             </button>
           </div>
         ))}

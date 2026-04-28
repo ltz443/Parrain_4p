@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import Timer from './components/Timer';
-import { OFFRES } from './data/offres';
+import { supabase } from './supabase';
 
 const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];
 
@@ -94,7 +94,9 @@ function Checklist({ offreId, conditions }) {
   };
 
   const done = Object.values(checked).filter(Boolean).length;
-  const total = conditions.length;
+  const total = conditions ? conditions.length : 0;
+
+  if (total === 0) return null;
 
   return (
     <div style={{ marginBottom: 20 }}>
@@ -129,11 +131,32 @@ function FavButton({ id, isFav, toggle }) {
 // ─── PAGE PRINCIPALE ────────────────────────────────────────────────
 export default function PageParrainage({ favState }) {
   const { isFav, toggle, favOnly } = favState;
+  const [offres, setOffres] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const filtrees = OFFRES.filter(o => {
+  useEffect(() => {
+    async function fetchOffres() {
+      try {
+        const { data, error } = await supabase
+          .from('offres')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        setOffres(data || []);
+      } catch (err) {
+        console.error('Erreur lors du chargement des offres:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchOffres();
+  }, []);
+
+  const filtrees = offres.filter(o => {
     const matchCat = filtre === 'Tout' || o.categorie === filtre;
     const matchFav = !favOnly || isFav(o.id);
     return matchCat && matchFav;
@@ -145,6 +168,14 @@ export default function PageParrainage({ favState }) {
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: '#4FFFA0', fontWeight: 700 }}>
+        Chargement des offres...
+      </div>
+    );
+  }
 
   if (selected) {
     const o = selected;
@@ -195,7 +226,7 @@ export default function PageParrainage({ favState }) {
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-      <CarouselOffresDuMoment offres={OFFRES} onSelect={setSelected} />
+      <CarouselOffresDuMoment offres={offres} onSelect={setSelected} />
       <div style={{ marginBottom: 16, overflowX: 'auto', display: 'flex', gap: 8, paddingBottom: 4 }}>
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: '1px solid ' + (filtre === cat ? '#4FFFA0' : '#1A1E2A'), borderRadius: 20, color: filtre === cat ? '#0A0B0F' : '#8A95AA', fontSize: 12, fontWeight: 700, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap' }}>{cat}</button>

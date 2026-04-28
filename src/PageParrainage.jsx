@@ -171,7 +171,7 @@ export default function PageParrainage({ favState }) {
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
         <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: '#4FFFA0', fontSize: 14, cursor: 'pointer', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>← Retour</button>
         <div style={{ background: '#111318', borderRadius: 20, padding: '24px 20px', border: '1px solid #1A1E2A', position: 'relative', overflow: 'hidden' }}>
-          {o.disponible === false && <RubanIndisponible />}
+          {o.Disponible_actuellement === false && <RubanIndisponible />}
           <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
             <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={56} borderRadius={16} />
@@ -226,9 +226,9 @@ export default function PageParrainage({ favState }) {
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
             <button
               onClick={() => setSelected(o)}
-              style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 12px', cursor: 'pointer', textAlign: 'left', minHeight: 180, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden', justifyContent: 'space-between', opacity: o.disponible === false ? 0.7 : 1 }}
+              style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 12px', cursor: 'pointer', textAlign: 'left', minHeight: 180, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden', justifyContent: 'space-between', opacity: o.Disponible_actuellement === false ? 0.7 : 1 }}
             >
-              {o.disponible === false && <RubanIndisponible />}
+              {o.Disponible_actuellement === false && <RubanIndisponible />}
               <LogoOffre id={o.id} emoji={o.emoji} couleur={o.couleur} size={40} borderRadius={10} />
               <div style={{ fontSize: 10, color: '#4A5568', marginTop: 10 }}>{o.categorie}</div>
               <div style={{ fontSize: 14, fontWeight: 800, color: '#E8EDF5' }}>{o.nom}</div>

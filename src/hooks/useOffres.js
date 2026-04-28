@@ -23,8 +23,8 @@ export function useOffres() {
           const { data, error: supabaseError } = await supabase
             .from('offres')
             .select('*')
-            .eq('is_active', true)
-            .order('priority', { ascending: false })
+            .eq('Afficher_sur_le_site', true)
+            .order('Placement_Offre', { ascending: false })
             .order('created_at', { ascending: false })
           
           if (supabaseError) throw supabaseError

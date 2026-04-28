@@ -17,12 +17,12 @@ async function generateOffres() {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey)
     
-    // Récupérer uniquement les offres actives, triées par priorité (desc) puis par date (desc)
+    // Récupérer uniquement les offres actives, triées par placement (desc) puis par date (desc)
     const { data, error } = await supabase
       .from('offres')
       .select('*')
-      .eq('is_active', true)
-      .order('priority', { ascending: false })
+      .eq('Afficher_sur_le_site', true)
+      .order('Placement_Offre', { ascending: false })
       .order('created_at', { ascending: false })
     
     if (error) {

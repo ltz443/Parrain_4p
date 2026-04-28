@@ -17,11 +17,12 @@ async function generateOffres() {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey)
     
-    // Récupérer uniquement les offres actives
+    // Récupérer uniquement les offres actives, triées par priorité (desc) puis par date (desc)
     const { data, error } = await supabase
       .from('offres')
       .select('*')
       .eq('is_active', true)
+      .order('priority', { ascending: false })
       .order('created_at', { ascending: false })
     
     if (error) {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import Timer from './components/Timer';
-import { supabase } from './supabase';
+import { useOffres } from './hooks/useOffres';
 
 const CATEGORIES = ['Tout', 'Énergie', 'Banque', 'Cashback', 'Crypto', 'Or & Épargne', 'Play to Earn', 'Paris Sportifs'];
 
@@ -131,30 +131,10 @@ function FavButton({ id, isFav, toggle }) {
 // ─── PAGE PRINCIPALE ────────────────────────────────────────────────
 export default function PageParrainage({ favState }) {
   const { isFav, toggle, favOnly } = favState;
-  const [offres, setOffres] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { offres, loading, error } = useOffres();
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    async function fetchOffres() {
-      try {
-        const { data, error } = await supabase
-          .from('offres')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        setOffres(data || []);
-      } catch (err) {
-        console.error('Erreur lors du chargement des offres:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchOffres();
-  }, []);
 
   const filtrees = offres.filter(o => {
     const matchCat = filtre === 'Tout' || o.categorie === filtre;
@@ -173,6 +153,14 @@ export default function PageParrainage({ favState }) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: '#4FFFA0', fontWeight: 700 }}>
         Chargement des offres...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: '#FF4B4B', fontWeight: 700 }}>
+        Erreur: {error}
       </div>
     );
   }
@@ -213,7 +201,7 @@ export default function PageParrainage({ favState }) {
             </div>
           )}
           {o.type === 'lien' && (
-            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', marginBottom: 10 }}>S’inscrire avec mon lien →</a>
+            <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', marginBottom: 10 }}>S'inscrire avec mon lien →</a>
           )}
           {o.id === 'hellobank' && (
             <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>📸 Me contacter sur Instagram</a>

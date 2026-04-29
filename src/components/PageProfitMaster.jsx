@@ -62,6 +62,150 @@ function Section({ title, icon, children }) {
   );
 }
 
+// ─── GÉNÉRATION PDF ───────────────────────────────────────────────────────────
+async function generatePDF(res, fields) {
+  const { default: jsPDF } = await import('jspdf');
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const date = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const couleurVerte = [79, 255, 160];
+  const couleurNoire = [10, 11, 15];
+  const couleurGrise = [138, 149, 170];
+  const couleurTexte = [232, 237, 245];
+  const W = 210;
+
+  // Header
+  doc.setFillColor(...couleurNoire);
+  doc.rect(0, 0, W, 40, 'F');
+  doc.setFillColor(...couleurVerte);
+  doc.rect(0, 0, 4, 40, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(...couleurVerte);
+  doc.text('Parrain 4P', 14, 16);
+
+  doc.setFontSize(11);
+  doc.setTextColor(...couleurGrise);
+  doc.text('ProfitMaster - Bilan financier', 14, 25);
+
+  doc.setFontSize(9);
+  doc.setTextColor(...couleurGrise);
+  doc.text(`Généré le ${date}`, W - 14, 25, { align: 'right' });
+
+  // Statut rentabilité
+  const santeColor = res.sante === 'Rentable' ? [79, 255, 160] : res.sante === 'Risqué' ? [255, 200, 50] : [255, 80, 80];
+  doc.setFillColor(...santeColor);
+  doc.roundedRect(W - 50, 10, 36, 10, 2, 2, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(10, 11, 15);
+  doc.text(res.sante.toUpperCase(), W - 32, 16.5, { align: 'center' });
+
+  // KPIs
+  let y = 50;
+  doc.setFillColor(17, 19, 24);
+  doc.roundedRect(14, y, 85, 24, 3, 3, 'F');
+  doc.setFillColor(17, 19, 24);
+  doc.roundedRect(111, y, 85, 24, 3, 3, 'F');
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...couleurGrise);
+  doc.text('BÉNÉFICE NET', 56.5, y + 7, { align: 'center' });
+  doc.text('MARGE NETTE', 153.5, y + 7, { align: 'center' });
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(...couleurVerte);
+  doc.text(fmt(res.beneficeNet), 56.5, y + 18, { align: 'center' });
+  doc.setTextColor(...couleurTexte);
+  doc.text(pct(res.marge), 153.5, y + 18, { align: 'center' });
+
+  // Tableau détail
+  y = 84;
+  doc.setFillColor(...couleurNoire);
+  doc.rect(14, y, 182, 8, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...couleurVerte);
+  doc.text('POSTE', 18, y + 5.5);
+  doc.text('MONTANT', 175, y + 5.5, { align: 'right' });
+
+  const lignes = [
+    { label: 'Prix de vente', valeur: res.prixVente, highlight: true },
+    { label: '- Matières premières', valeur: -res.matieres },
+    { label: '- Transport / Essence', valeur: -res.transport },
+    { label: '- Outillage', valeur: -res.outillage },
+    { label: '- Autres frais', valeur: -res.autresFrais },
+    { label: `- Main d'œuvre (${fields.heures}h x ${fields.tauxHoraire}€)`, valeur: -res.coutMain },
+    { label: `- Cotisations (${fields.tauxCotisations}%)`, valeur: -res.cotisations },
+    { label: 'TOTAL CHARGES', valeur: -res.totalCharges, bold: true },
+    { label: 'BÉNÉFICE NET', valeur: res.beneficeNet, bold: true, highlight: true },
+  ];
+
+  y = 96;
+  lignes.forEach((ligne, i) => {
+    const bg = i % 2 === 0 ? [17, 19, 24] : [13, 14, 18];
+    doc.setFillColor(...bg);
+    doc.rect(14, y, 182, 9, 'F');
+
+    if (ligne.bold) {
+      doc.setFont('helvetica', 'bold');
+    } else {
+      doc.setFont('helvetica', 'normal');
+    }
+    doc.setFontSize(9);
+
+    if (ligne.highlight) {
+      doc.setTextColor(...couleurVerte);
+    } else if (ligne.valeur < 0) {
+      doc.setTextColor(255, 100, 100);
+    } else {
+      doc.setTextColor(...couleurTexte);
+    }
+
+    doc.text(ligne.label, 18, y + 6);
+    doc.text(fmt(Math.abs(ligne.valeur)), 175, y + 6, { align: 'right' });
+    y += 9;
+  });
+
+  // Section fiscalité
+  y += 10;
+  doc.setFillColor(...couleurNoire);
+  doc.rect(14, y, 182, 8, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...couleurVerte);
+  doc.text('RÉGIME FISCAL', 18, y + 5.5);
+
+  y += 8;
+  doc.setFillColor(17, 19, 24);
+  doc.rect(14, y, 182, 9, 'F');
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...couleurTexte);
+  const tauxLabel = TAUX_OPTIONS.find(o => String(o.value) === fields.tauxOption)?.label || `Taux personnalisé (${fields.tauxCotisations}%)`;
+  doc.text(tauxLabel, 18, y + 6);
+  doc.text(`${fields.tauxCotisations}%`, 175, y + 6, { align: 'right' });
+
+  // Footer
+  y = 272;
+  doc.setFillColor(...couleurNoire);
+  doc.rect(0, y, W, 25, 'F');
+  doc.setFillColor(...couleurVerte);
+  doc.rect(0, y, W, 1, 'F');
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...couleurGrise);
+  doc.text('Généré par ProfitMaster - parrain-4p.vercel.app', W / 2, y + 8, { align: 'center' });
+  doc.text('Document non contractuel - à titre indicatif uniquement', W / 2, y + 14, { align: 'center' });
+  doc.setTextColor(...couleurVerte);
+  doc.text('@parrain_4p', W / 2, y + 20, { align: 'center' });
+
+  doc.save(`bilan-profitmaster-${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
+// ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
 export default function PageProfitMaster() {
   const [fields, setFields] = useState({
     prixVente: '', matieres: '', transport: '', outillage: '', autresFrais: '',
@@ -69,6 +213,8 @@ export default function PageProfitMaster() {
   });
   const [showPaywall, setShowPaywall] = useState(false);
   const [pdfPaid, setPdfPaid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
   const setField = (key) => (val) => setFields((prev) => ({ ...prev, [key]: val }));
   const res = calcul(fields);
 
@@ -77,10 +223,21 @@ export default function PageProfitMaster() {
     if (params.get('paid') === 'true') setPdfPaid(true);
   }, []);
 
-  const handlePDFClick = useCallback(() => {
-    if (pdfPaid) alert("Fonctionnalité PDF bientôt disponible");
-    else setShowPaywall(true);
-  }, [pdfPaid]);
+  const handlePDFClick = useCallback(async () => {
+    if (pdfPaid) {
+      setLoading(true);
+      try {
+        await generatePDF(res, fields);
+      } catch (err) {
+        console.error('Erreur PDF :', err);
+        alert('Erreur lors de la génération du PDF. Réessaie.');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setShowPaywall(true);
+    }
+  }, [pdfPaid, res, fields]);
 
   const handlePay = () => {
     window.open(STRIPE_LINK, '_blank');
@@ -120,6 +277,7 @@ export default function PageProfitMaster() {
         </div>
         {fields.tauxOption === 'custom' && <InputField label="Taux (%)" prefix="%" value={fields.tauxPersonnalise} onChange={setField('tauxPersonnalise')} />}
       </Section>
+
       {res.prixVente > 0 && (
         <div style={{ marginTop: 4 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
@@ -132,15 +290,36 @@ export default function PageProfitMaster() {
               <div style={{ fontSize: 17, fontWeight: 800, color: '#E8EDF5', fontFamily: 'monospace' }}>{pct(res.marge)}</div>
             </div>
           </div>
-          <button onClick={handlePDFClick} style={{ width: '100%', background: pdfPaid ? 'linear-gradient(135deg, #4FFFA0, #2ECC71)' : '#111318', border: '2px solid #4FFFA0', borderRadius: 12, color: pdfPaid ? '#0A0B0F' : '#4FFFA0', fontSize: 14, fontWeight: 800, padding: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit' }}>
-            {pdfPaid ? "Télécharger mon Bilan PDF" : "Télécharger le Bilan PDF - 2,00 €"}
+          <button
+            onClick={handlePDFClick}
+            disabled={loading}
+            style={{
+              width: '100%',
+              background: pdfPaid ? 'linear-gradient(135deg, #4FFFA0, #2ECC71)' : '#111318',
+              border: '2px solid #4FFFA0',
+              borderRadius: 12,
+              color: pdfPaid ? '#0A0B0F' : '#4FFFA0',
+              fontSize: 14,
+              fontWeight: 800,
+              padding: '14px',
+              cursor: loading ? 'wait' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              fontFamily: 'inherit',
+              opacity: loading ? 0.7 : 1,
+            }}
+          >
+            {loading ? '⏳ Génération en cours...' : pdfPaid ? '📄 Télécharger mon Bilan PDF' : '🔒 Télécharger le Bilan PDF - 2,00 €'}
           </button>
         </div>
       )}
+
       {showPaywall && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'rgba(5,6,10,0.88)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, backdropFilter: 'blur(8px)' }}>
           <div style={{ background: '#111318', border: '1.5px solid #4FFFA0', borderRadius: 20, maxWidth: 400, width: '100%', padding: '32px 28px', position: 'relative' }}>
-            <button onClick={() => setShowPaywall(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: '#4A5568', fontSize: 22, cursor: 'pointer' }}>X</button>
+            <button onClick={() => setShowPaywall(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: '#4A5568', fontSize: 22, cursor: 'pointer' }}>✕</button>
             <h2 style={{ color: '#E8EDF5', fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Sécurisez votre projet</h2>
             <button onClick={handlePay} style={{ width: '100%', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', border: 'none', borderRadius: 12, color: '#0A0B0F', fontSize: 16, fontWeight: 800, padding: '15px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Payer et Télécharger

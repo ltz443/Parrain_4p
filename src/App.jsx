@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import PageParrainage from './PageParrainage';
 import PageAvis from './components/PageAvis';
 import PageProfitMaster from './components/PageProfitMaster';
+import PageLegal from './components/PageLegal';
 import PageFAQ from './components/PageFAQ';
 
 // ─── TRACKING UMAMI ───────────────────────────────────────────────────────────
@@ -20,7 +22,7 @@ const FavStore = {
     } catch { return []; }
   },
   set: (ids) => {
-    try { localStorage.setItem(FavStore.KEY, JSON.stringify(ids)); } catch { }
+    try { localStorage.setItem(FavStore.KEY, JSON.stringify(ids)); } catch {}
   },
 };
 
@@ -38,10 +40,19 @@ function useFavorites() {
   return { favs, isFav, toggle, favOnly, setFavOnly, count: favs.length };
 }
 
-// ─── APP PRINCIPALE ───────────────────────────────────────────────────────────
-export default function App() {
-  const [onglet, setOnglet] = useState('parrainage');
+// ─── NAV ITEMS ────────────────────────────────────────────────────────────────
+const NAV_ITEMS = [
+  { path: '/',            label: 'Offres', icon: '🎁' },
+  { path: '/avis',        label: 'Avis',   icon: '⭐' },
+  { path: '/calculateur', label: 'Calcul', icon: '📊' },
+  { path: '/faq',         label: 'FAQ',    icon: '❓' },
+];
+
+// ─── LAYOUT PRINCIPAL ─────────────────────────────────────────────────────────
+function AppLayout() {
+  const location = useLocation();
   const favState = useFavorites();
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
     document.body.style.cssText = `margin:0; padding:0; background:#0A0B0F; color:#E8EDF5; font-family:'Inter',sans-serif;`;
@@ -51,34 +62,108 @@ export default function App() {
     <div style={{ minHeight: '100vh', background: '#0A0B0F', paddingBottom: 80 }}>
 
       {/* HEADER */}
-      <div style={{ background: '#111318', borderBottom: '1px solid #1A1E2A', padding: '18px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0', fontFamily: 'Inter, sans-serif' }}>Parrain 4P</h1>
-        {onglet === 'parrainage' && (
-          <button onClick={() => favState.setFavOnly(!favState.favOnly)} style={{ background: favState.favOnly ? '#4FFFA0' : '#0A0B0F', border: 'none', borderRadius: 8, padding: '6px 10px', cursor: 'pointer', color: favState.favOnly ? '#0A0B0F' : '#FFF', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{
+        background: '#111318',
+        borderBottom: '1px solid #1A1E2A',
+        padding: '18px 20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0', fontFamily: 'Inter, sans-serif', margin: 0 }}>
+            Parrain 4P
+          </h1>
+        </Link>
+        {isHome && (
+          <button
+            onClick={() => favState.setFavOnly(!favState.favOnly)}
+            style={{
+              background: favState.favOnly ? '#4FFFA0' : '#0A0B0F',
+              border: 'none',
+              borderRadius: 8,
+              padding: '6px 10px',
+              cursor: 'pointer',
+              color: favState.favOnly ? '#0A0B0F' : '#FFF',
+              fontFamily: 'Inter, sans-serif'
+            }}
+          >
             ❤️ {favState.count}
           </button>
         )}
       </div>
 
       {/* BANDEAU DISCLAIMER AFFILIATION */}
-      <div style={{ background: '#12100A', borderBottom: '1px solid #2A2010', padding: '8px 16px', textAlign: 'center', fontSize: 11, color: '#7A6A40', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{
+        background: '#12100A',
+        borderBottom: '1px solid #2A2010',
+        padding: '8px 16px',
+        textAlign: 'center',
+        fontSize: 11,
+        color: '#7A6A40',
+        fontFamily: 'Inter, sans-serif'
+      }}>
         🔗 Ce site contient des liens de parrainage - je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
       </div>
 
       {/* PAGES */}
-      {onglet === 'parrainage' && <PageParrainage favState={favState} />}
-      {onglet === 'avis' && <PageAvis />}
-      {onglet === 'calculateur' && <PageProfitMaster />}
-      {onglet === 'faq' && <PageFAQ />}
+      <Routes>
+        <Route path="/"            element={<PageParrainage favState={favState} />} />
+        <Route path="/avis"        element={<PageAvis />} />
+        <Route path="/calculateur" element={<PageProfitMaster />} />
+        <Route path="/faq"         element={<PageFAQ />} />
+        <Route path="/legal"       element={<PageLegal />} />
+      </Routes>
 
       {/* BARRE DE NAVIGATION */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#111318', borderTop: '1px solid #1A1E2A', display: 'flex', height: 70, zIndex: 1000 }}>
-        <button onClick={() => setOnglet('parrainage')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'parrainage' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>🎁<br/>Offres</button>
-        <button onClick={() => setOnglet('avis')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'avis' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>⭐<br/>Avis</button>
-        <button onClick={() => setOnglet('calculateur')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'calculateur' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>📊<br/>Calcul</button>
-        <button onClick={() => setOnglet('faq')} style={{ flex: 1, background: 'none', border: 'none', color: onglet === 'faq' ? '#4FFFA0' : '#4A5568', cursor: 'pointer', fontSize: 11, fontFamily: 'Inter, sans-serif' }}>❓<br/>FAQ</button>
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: '#111318',
+        borderTop: '1px solid #1A1E2A',
+        display: 'flex',
+        height: 70,
+        zIndex: 1000
+      }}>
+        {NAV_ITEMS.map(({ path, label, icon }) => {
+          const isActive = location.pathname === path;
+          return (
+            <Link
+              key={path}
+              to={path}
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textDecoration: 'none',
+                color: isActive ? '#4FFFA0' : '#4A5568',
+                fontSize: 10,
+                fontFamily: 'Inter, sans-serif',
+                gap: 3,
+                transition: 'color 0.15s',
+              }}
+            >
+              <span style={{ fontSize: 17 }}>{icon}</span>
+              <span style={{ fontWeight: isActive ? 700 : 500 }}>{label}</span>
+            </Link>
+          );
+        })}
       </div>
+
     </div>
+  );
+}
+
+// ─── APP AVEC ROUTER ──────────────────────────────────────────────────────────
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
   );
 }
 

@@ -7,8 +7,8 @@ import { createClient } from '@supabase/supabase-js'
 import fs from 'fs'
 import path from 'path'
 
-const supabaseUrl = 'https://lhvdvfmtjpeyumbybavo.supabase.co'
-const supabaseKey = 'sb_publishable_Nc-2z8SR84QV-_lPUqph3g_OTp9AiUh'
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
 async function generateOffres() {
   console.log('🔄 Génération des offres statiques depuis la table "offre"...')

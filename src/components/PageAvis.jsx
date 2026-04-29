@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const SUPABASE_URL = 'https://lhvdvfmtjpeyumbybavo.supabase.co';
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const headers = {
   'Content-Type': 'application/json',

@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import PageParrainage from './PageParrainage';
 import PageAvis from './components/PageAvis';
 import PageProfitMaster from './components/PageProfitMaster';
-import PageLegal from './components/PageLegal';
 import PageFAQ from './components/PageFAQ';
 
 // ─── TRACKING UMAMI ───────────────────────────────────────────────────────────
@@ -103,7 +102,7 @@ function AppLayout() {
         color: '#7A6A40',
         fontFamily: 'Inter, sans-serif'
       }}>
-        🔗 Ce site contient des liens de parrainage - je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
+        🔗 Ce site contient des liens de parrainage — je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
       </div>
 
       {/* PAGES */}
@@ -112,7 +111,6 @@ function AppLayout() {
         <Route path="/avis"        element={<PageAvis />} />
         <Route path="/calculateur" element={<PageProfitMaster />} />
         <Route path="/faq"         element={<PageFAQ />} />
-        <Route path="/legal"       element={<PageLegal />} />
       </Routes>
 
       {/* BARRE DE NAVIGATION */}
@@ -153,7 +151,6 @@ function AppLayout() {
           );
         })}
       </div>
-
     </div>
   );
 }

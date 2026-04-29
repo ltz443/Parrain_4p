@@ -16,7 +16,8 @@ async function generateOffres() {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey)
     
-    // Récupérer uniquement les offres actives, triées par placement (desc) puis par date (desc)
+    // Récupérer uniquement les offres actives
+    // On trie par Placement_Offre DESC (le plus grand en premier)
     const { data, error } = await supabase
       .from('offre')
       .select('*')
@@ -36,8 +37,8 @@ async function generateOffres() {
       emoji: o.Emoji,
       couleur: o.Couleur_Design,
       bonus: o.Prime_Totale,
-      bonusFilleul: o.Prime_Filleul, // Important: garde le nom camelCase pour le code
-      bonusParrain: o.Prime_Parrain, // Important: garde le nom camelCase pour le code
+      bonusFilleul: o.Prime_Filleul,
+      bonusParrain: o.Prime_Parrain,
       description: o.Description,
       conditions: o.Conditions_Detaillees,
       type: o.Type_Lien_ou_Code,
@@ -50,7 +51,8 @@ async function generateOffres() {
       offresdumoment: o.Offre_du_moment,
       boostLabel: o.Label_Boost,
       dateFin: o.Date_Expiration,
-      Disponible_actuellement: o.Disponible_actuellement // Pour compatibilité avec PageParrainage.jsx
+      Disponible_actuellement: o.Disponible_actuellement,
+      placement: o.Placement_Offre // On garde l'info pour debug si besoin
     }))
     
     // Créer le dossier public/data s'il n'existe pas
@@ -64,6 +66,7 @@ async function generateOffres() {
     fs.writeFileSync(outputPath, JSON.stringify(mappedData, null, 2), 'utf-8')
     
     console.log(`✅ ${mappedData.length} offres générées avec succès dans ${outputPath}`)
+    console.log('Ordre des IDs générés:', mappedData.map(o => `${o.id}(${o.placement})`).join(' -> '))
     
     return mappedData
   } catch (err) {

@@ -27,7 +27,7 @@ export function useOffres() {
           
           if (supabaseError) throw supabaseError
           
-          // Mapper les colonnes français vers les noms attendus par le code React
+          // Mapper les colonnes français vers les noms exacts attendus par le code React
           const mappedData = (data || []).map(o => ({
             id: o.ID_Technique,
             nom: o.Nom_Offre,
@@ -49,7 +49,7 @@ export function useOffres() {
             offresdumoment: o.Offre_du_moment,
             boostLabel: o.Label_Boost,
             dateFin: o.Date_Expiration,
-            disponible: o.Disponible_actuellement
+            Disponible_actuellement: o.Disponible_actuellement
           }))
           
           setOffres(mappedData)

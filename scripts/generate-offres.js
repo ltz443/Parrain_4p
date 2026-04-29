@@ -28,7 +28,7 @@ async function generateOffres() {
       throw new Error(`Erreur Supabase: ${error.message}`)
     }
     
-    // Mapper les noms de colonnes français vers les noms attendus par le code React pour éviter de tout casser
+    // Mapper les noms de colonnes français vers les noms exacts attendus par le code React
     const mappedData = data.map(o => ({
       id: o.ID_Technique,
       nom: o.Nom_Offre,
@@ -36,8 +36,8 @@ async function generateOffres() {
       emoji: o.Emoji,
       couleur: o.Couleur_Design,
       bonus: o.Prime_Totale,
-      bonusFilleul: o.Prime_Filleul,
-      bonusParrain: o.Prime_Parrain,
+      bonusFilleul: o.Prime_Filleul, // Important: garde le nom camelCase pour le code
+      bonusParrain: o.Prime_Parrain, // Important: garde le nom camelCase pour le code
       description: o.Description,
       conditions: o.Conditions_Detaillees,
       type: o.Type_Lien_ou_Code,
@@ -50,7 +50,7 @@ async function generateOffres() {
       offresdumoment: o.Offre_du_moment,
       boostLabel: o.Label_Boost,
       dateFin: o.Date_Expiration,
-      disponible: o.Disponible_actuellement
+      Disponible_actuellement: o.Disponible_actuellement // Pour compatibilité avec PageParrainage.jsx
     }))
     
     // Créer le dossier public/data s'il n'existe pas

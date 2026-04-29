@@ -5,19 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node --env-file=.env.local scripts/generate-offres.js",
+    "prebuild": "node scripts/generate-offres.js",
     "build": "npm run prebuild && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.1",
+    "@supabase/supabase-js": "^2.39.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react": "^4.0.0",
     "vite": "^4.3.0",
     "vite-plugin-static-copy": "^0.17.0"
   }

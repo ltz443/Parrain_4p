@@ -1,7 +1,10 @@
-const CACHE_NAME = 'v1_cache';
+const CACHE_NAME = 'v2_cache';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
+  '/avis',
+  '/calculateur',
+  '/faq',
   '/favicon.ico',
   '/apple-touch-icon.png',
   '/icon-192.png',
@@ -34,10 +37,9 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Stratégie Network-First avec Fallback Cache pour les requêtes de navigation
-// Et Cache-First pour les assets statiques
+// Stratégie Network-First avec Fallback Cache
 self.addEventListener('fetch', (event) => {
-  // Ne pas intercepter les requêtes vers les APIs externes (Supabase, Umami, etc.)
+  // Ne pas intercepter les requêtes vers les APIs externes
   if (event.request.url.includes('supabase.co') || event.request.url.includes('umami.is')) {
     return;
   }
@@ -45,7 +47,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Si la réponse est valide, on la met en cache (optionnel pour les assets)
+        // Si la réponse est valide, on la met en cache
         if (response && response.status === 200 && response.type === 'basic') {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -56,7 +58,13 @@ self.addEventListener('fetch', (event) => {
       })
       .catch(() => {
         // En cas d'échec réseau, on cherche dans le cache
-        return caches.match(event.request);
+        return caches.match(event.request).then((cached) => {
+          // Fallback pour les routes React Router : on renvoie index.html
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          return cached;
+        });
       })
   );
 });

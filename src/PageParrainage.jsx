@@ -192,7 +192,7 @@ export default function PageParrainage({ favState }) {
             </div>
           </div>
           <Checklist offreId={o.id} conditions={o.conditions} />
-          {o.type === 'code' && (
+          {(o.type === 'code' || (!o.type && o.code)) && (
             <div style={{ background: '#0A0B0F', borderRadius: 12, padding: '16px', border: '1px dashed #4FFFA0', textAlign: 'center', marginBottom: 12 }}>
               <div style={{ fontSize: 24, fontWeight: 900, color: '#4FFFA0', fontFamily: 'monospace' }}>{o.code}</div>
               <button onClick={() => copier(o.code)} style={{ marginTop: 10, background: '#4FFFA0', border: 'none', borderRadius: 8, color: '#0A0B0F', fontSize: 13, fontWeight: 700, padding: '8px 20px', cursor: 'pointer' }}>
@@ -200,11 +200,11 @@ export default function PageParrainage({ favState }) {
               </button>
             </div>
           )}
-          {o.type === 'lien' && (
+          {(o.type === 'lien' || (!o.type && o.lien)) && (
             <a href={o.lien} target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', background: 'linear-gradient(135deg, #4FFFA0, #2ECC71)', borderRadius: 12, color: '#0A0B0F', fontSize: 15, fontWeight: 800, padding: '14px', textDecoration: 'none', marginBottom: 10 }}>S'inscrire avec mon lien →</a>
           )}
-          {o.id === 'hellobank' && (
-            <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>📸 Me contacter sur Instagram</a>
+          {(o.type === 'contact' || o.contact) && (
+            <a href={o.contact || 'https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3'} target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>📸 Me contacter sur Instagram</a>
           )}
           <BoutonPartage offre={o} />
         </div>

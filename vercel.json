@@ -4,11 +4,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     { 
-      "source": "/offre/:id", 
-      "destination": "/offre/:id.html" 
-    },
-    { 
-      "source": "/((?!sitemap\\.xml|robots\\.txt|data/.*|offre/.*).*)", 
+      "source": "/((?!sitemap\\.xml|robots\\.txt|data/.*|.*\\..*).*)", 
       "destination": "/index.html" 
     }
   ],

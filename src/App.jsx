@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import PageParrainage from './PageParrainage';
-import PageAvis from './components/PageAvis';
-import PageProfitMaster from './components/PageProfitMaster';
-import PageFAQ from './components/PageFAQ';
+
+// ─── CHARGEMENT DIFFÉRÉ — Optimisation du bundle ─────────────────────────────
+const PageParrainage   = lazy(() => import('./PageParrainage'));
+const PageAvis         = lazy(() => import('./components/PageAvis'));
+const PageProfitMaster = lazy(() => import('./components/PageProfitMaster'));
+const PageFAQ          = lazy(() => import('./components/PageFAQ'));
 
 // ─── TRACKING UMAMI ───────────────────────────────────────────────────────────
 export function trackClick(partenaire) {
@@ -46,6 +48,24 @@ const NAV_ITEMS = [
   { path: '/calculateur', label: 'Calcul', icon: '📊' },
   { path: '/faq',         label: 'FAQ',    icon: '❓' },
 ];
+
+// ─── FALLBACK CHARGEMENT ──────────────────────────────────────────────────────
+function PageLoader() {
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '60vh',
+      color: '#4FFFA0',
+      fontSize: 13,
+      fontWeight: 700,
+      fontFamily: 'Inter, sans-serif',
+    }}>
+      Chargement...
+    </div>
+  );
+}
 
 // ─── LAYOUT PRINCIPAL ─────────────────────────────────────────────────────────
 function AppLayout() {
@@ -102,16 +122,18 @@ function AppLayout() {
         color: '#7A6A40',
         fontFamily: 'Inter, sans-serif'
       }}>
-        🔗 Ce site contient des liens de parrainage — je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
+        🔗 Ce site contient des liens de parrainage - je perçois une récompense si tu t'inscris, sans coût supplémentaire pour toi.
       </div>
 
-      {/* PAGES */}
-      <Routes>
-        <Route path="/"            element={<PageParrainage favState={favState} />} />
-        <Route path="/avis"        element={<PageAvis />} />
-        <Route path="/calculateur" element={<PageProfitMaster />} />
-        <Route path="/faq"         element={<PageFAQ />} />
-      </Routes>
+      {/* PAGES - chargement différé avec Suspense */}
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/"            element={<PageParrainage favState={favState} />} />
+          <Route path="/avis"        element={<PageAvis />} />
+          <Route path="/calculateur" element={<PageProfitMaster />} />
+          <Route path="/faq"         element={<PageFAQ />} />
+        </Routes>
+      </Suspense>
 
       {/* BARRE DE NAVIGATION */}
       <div style={{

@@ -10,7 +10,7 @@ const LOGO_DOMAINS = {
   betsson: 'betsson.fr',
   engie: 'engie.fr',
   nordvpn: 'nordvpn.com',
-  myfin: 'myfin.eu',
+  myfin: 'myfin.fr',
   scrambly: 'scrambly.io',
   kraken: 'kraken.com',
   fortuneo: 'fortuneo.fr',

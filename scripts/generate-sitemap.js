@@ -43,13 +43,12 @@ async function generateSitemap() {
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allRoutes.map(r => `
-  <url>
+${allRoutes.map(r => `  <url>
     <loc>${base}${r.loc}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority}</priority>
-  </url>`).join('')}
+  </url>`).join('\n')}
 </urlset>`;
 
     writeFileSync('public/sitemap.xml', xml);

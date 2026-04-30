@@ -157,8 +157,8 @@ export default function PageOffre() {
             S'inscrire avec mon lien →
           </a>
         )}
-        {(o.type === 'contact' || o.contact) && (
-          <a href={o.contact || 'https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3'} target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>
+        {o.id === 'hellobank' && (
+          <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>
             📸 Me contacter sur Instagram
           </a>
         )}

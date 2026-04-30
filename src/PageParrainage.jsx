@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LogoOffre from './components/LogoOffre';
 import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import Timer from './components/Timer';
@@ -134,6 +135,7 @@ export default function PageParrainage({ favState }) {
   const { offres, loading, error } = useOffres();
   const [filtre, setFiltre] = useState('Tout');
   const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
   const filtrees = offres.filter(o => {
@@ -214,7 +216,7 @@ export default function PageParrainage({ favState }) {
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '16px' }}>
-      <CarouselOffresDuMoment offres={offres} onSelect={setSelected} />
+      <CarouselOffresDuMoment offres={offres} onSelect={(o) => navigate('/offres/' + o.id)} />
       <div style={{ marginBottom: 16, overflowX: 'auto', display: 'flex', gap: 8, paddingBottom: 4 }}>
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setFiltre(cat)} style={{ background: filtre === cat ? '#4FFFA0' : '#111318', border: '1px solid ' + (filtre === cat ? '#4FFFA0' : '#1A1E2A'), borderRadius: 20, color: filtre === cat ? '#0A0B0F' : '#8A95AA', fontSize: 12, fontWeight: 700, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap' }}>{cat}</button>
@@ -225,7 +227,7 @@ export default function PageParrainage({ favState }) {
           <div key={o.id} style={{ position: 'relative' }}>
             <FavButton id={o.id} isFav={isFav(o.id)} toggle={toggle} />
             <button
-              onClick={() => setSelected(o)}
+              onClick={() => navigate('/offres/' + o.id)}
               style={{ width: '100%', background: '#111318', border: '1px solid #1A1E2A', borderRadius: 16, padding: '16px 12px 12px', cursor: 'pointer', textAlign: 'left', minHeight: 180, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: 'inherit', overflow: 'hidden', justifyContent: 'space-between', opacity: o.Disponible_actuellement === false ? 0.7 : 1 }}
             >
               {o.Disponible_actuellement === false && <RubanIndisponible />}

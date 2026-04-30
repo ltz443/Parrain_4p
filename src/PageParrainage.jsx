@@ -61,7 +61,7 @@ function FormulaireChallenge() {
 
   return (
     <div style={{ background: '#111318', border: '1px solid #4FFFA0', borderRadius: 16, padding: '20px', marginTop: 24 }}>
-      <h3 style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0', textAlign: 'center', marginBottom: 8 }}>🏆 Challenge 3-en-1</h3>
+      <h2 style={{ fontSize: 18, fontWeight: 900, color: '#4FFFA0', textAlign: 'center', marginBottom: 8 }}>🏆 Challenge 3-en-1</h2>
       <p style={{ fontSize: 12, color: '#8A95AA', textAlign: 'center', marginBottom: 20 }}>Reçois <strong style={{ color: '#4FFFA0' }}>10€ de bonus</strong> après 3 offres !</p>
       <form action="https://formspree.io/f/mreojpvq" method="POST">
         <input type="text" name="pseudo" placeholder="@Pseudo Instagram" required style={inputStyle} />

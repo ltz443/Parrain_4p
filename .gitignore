@@ -1,1 +1,21 @@
 node_modules
+
+# Dossier de build (très important pour Vercel/Vite)
+dist/
+dist-ssr/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environnement / Secrets (CRUCIAL pour la sécurité)
+.env
+.env.local
+.env.*.local
+
+# IDE (VS Code, WebStorm)
+.vscode/
+.idea/
+.DS_Store

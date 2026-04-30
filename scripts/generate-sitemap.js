@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { createClient } from '@supabase/supabase-js';
 
-const today = new Date().toISOString().split('T')[0]; // "2026-04-30"
+const today = new Date().toISOString().split('T')[0];
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -41,17 +41,22 @@ async function generateSitemap() {
 
     const allRoutes = [...staticRoutes, ...dynamicRoutes];
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allRoutes.map(r => `  <url>
-    <loc>${base}${r.loc}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${r.changefreq}</changefreq>
-    <priority>${r.priority}</priority>
-  </url>`).join('\n')}
-</urlset>`;
+    // Construction du XML sans aucun espace ni saut de ligne au début
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    
+    allRoutes.forEach(r => {
+      xml += '  <url>\n';
+      xml += `    <loc>${base}${r.loc}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <changefreq>${r.changefreq}</changefreq>\n`;
+      xml += `    <priority>${r.priority}</priority>\n`;
+      xml += '  </url>\n';
+    });
+    
+    xml += '</urlset>';
 
-    writeFileSync('public/sitemap.xml', xml);
+    writeFileSync('public/sitemap.xml', xml.trim());
     console.log(`✅ sitemap.xml généré avec ${allRoutes.length} URLs pour le ${today}`);
   } catch (err) {
     console.error('❌ Erreur lors de la génération du sitemap:', err.message);

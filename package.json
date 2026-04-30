@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-offres.js",
+    "prebuild": "node scripts/generate-offres.js && node scripts/generate-sitemap.js",
     "build": "npm run prebuild && vite build",
     "preview": "vite preview"
   },

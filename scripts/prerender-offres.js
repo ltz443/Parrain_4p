@@ -39,34 +39,46 @@ async function prerenderOffres() {
     const pagePath = path.join(outputDir, `${offreId}.html`);
 
     const mappedOffre = {
-      nom: offre.Nom_Offre,
-      emoji: offre.Emoji,
-      description: offre.Description,
-      conditions: offre.Conditions_Detaillees,
-      bonus: offre.Prime_Totale,
-      code: offre.Code_Parrainage,
-      lien: offre.Lien_Parrainage
+      nom: offre.Nom_Offre || '',
+      emoji: offre.Emoji || '',
+      description: offre.Description || '',
+      conditions: offre.Conditions_Detaillees || '',
+      bonus: offre.Prime_Totale || '',
+      code: offre.Code_Parrainage || '',
+      lien: offre.Lien_Parrainage || ''
     };
 
-    const injectedContent = `
-      <div id="root">
+    const conditionsHtml = mappedOffre.conditions
+      ? `<p><strong>Conditions:</strong> ${mappedOffre.conditions}</p>`
+      : '';
+    const bonusHtml = mappedOffre.bonus
+      ? `<p><strong>Bonus:</strong> ${mappedOffre.bonus}</p>`
+      : '';
+    const lienHtml = mappedOffre.lien
+      ? `<p><a href="${mappedOffre.lien}" target="_blank" style="color: #4FFFA0;">Profiter de l'offre</a></p>`
+      : '';
+
+    const injectedContent = `<div id="root">
         <div style="padding: 20px; max-width: 800px; margin: 0 auto; background-color: #0A0B0F; color: #E8EDF5;">
-          <h1><LaTex>${mappedOffre.emoji} $</LaTex>{mappedOffre.nom}</h1>
-          <p><LaTex>${mappedOffre.description}</p>
-          $</LaTex>{mappedOffre.conditions ? `<p><strong>Conditions:</strong> <LaTex>${mappedOffre.conditions}</p>` : ''}
-          $</LaTex>{mappedOffre.bonus ? `<p><strong>Bonus:</strong> <LaTex>${mappedOffre.bonus}</p>` : ''}
-          $</LaTex>{mappedOffre.lien ? `<p><a href="<LaTex>${mappedOffre.lien}" target="_blank" style="color: #4FFFA0;">Profiter de l'offre</a></p>` : ''}
+          <h1>${mappedOffre.emoji} ${mappedOffre.nom}</h1>
+          <p>${mappedOffre.description}</p>
+          ${conditionsHtml}
+          ${bonusHtml}
+          ${lienHtml}
           <p><a href="/" style="color: #4FFFA0;">Retour à l'accueil</a></p>
         </div>
       </div>`;
 
-    let pageContent = template
-      .replace(/<title>.*<\/title>/, `<title>Parrain 4P - $</LaTex>{mappedOffre.nom}</title>`)
-      .replace(/<meta name="description" content=".*?"\/>/, `<meta name="description" content="<LaTex>${mappedOffre.description}"/>`)
+    const pageContent = template
+      .replace(/<title>.*<\/title>/, `<title>Parrain 4P - ${mappedOffre.nom}</title>`)
+      .replace(/<meta name="description" content=".*?"(\s*\/)?>/, `<meta name="description" content="${mappedOffre.description}"/>`)
       .replace(/<div id="root"><\/div>/, injectedContent);
 
     writeFileSync(pagePath, pageContent);
-    console.log(`✅ Page pré-rendue pour /offre/$</LaTex>{offreId}`);
+    console.log(`✅ Page pré-rendue pour /offre/${offreId}`);
   }
+
+  console.log(`✅ ${offres.length} pages d'offres pré-rendues avec succès.`);
 }
+
 prerenderOffres();

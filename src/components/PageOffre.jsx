@@ -92,6 +92,28 @@ export default function PageOffre() {
     fetchOffre();
   }, [id]);
 
+  // SEO : titre et meta description uniques par offre
+  useEffect(() => {
+    if (offre) {
+      document.title = `${offre.nom} - Parrainage ${offre.bonusFilleul} | Parrain 4P`;
+
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'description');
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute(
+        'content',
+        `${offre.description} Prime parrain : ${offre.bonusParrain}. Filleul reçoit : ${offre.bonusFilleul}.`
+      );
+    }
+
+    return () => {
+      document.title = 'Parrain 4P - Hub Financier & ProfitMaster';
+    };
+  }, [offre]);
+
   const copier = (texte) => {
     navigator.clipboard.writeText(texte).then(() => {
       setCopied(true);
@@ -161,7 +183,7 @@ export default function PageOffre() {
           <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>
             📸 Me contacter sur Instagram
           </a>
-        )}
+         )}
       </div>
     </div>
   );

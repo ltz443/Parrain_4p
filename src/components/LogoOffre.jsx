@@ -18,6 +18,7 @@ const LOGO_DOMAINS = {
   unibet: 'unibet.fr',
   boursorama: 'boursorama.com',
   bankin: 'bankin.com',
+  poulpeo: 'poulpeo.com',
 };
 
 const LogoOffre = ({ id, emoji, couleur, size = 44, borderRadius = 12 }) => {

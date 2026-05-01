@@ -12,6 +12,21 @@ const FAQS = [
     answer: "Oui, à 100%. Le parrainage est un programme officiel proposé par les plateformes elles-mêmes. Ce n'est ni du MLM, ni une arnaque. Les primes sont garanties.",
   },
   {
+  num: '06',
+  question: "Qui suis-je ?",
+  answer: `Parrain4p,France De jour je bosse dans la logistique, et en parallèle j'ai créé Parrain 4P. Depuis 2024, le parrainage est devenu mon activité principale en dehors de mon travail.
+
++60 000 € générés en moins de 2 ans — dont +22 000 € avec Green Nation et +40 000 € via diverses banques en ligne.
+
+Parrain 4P, c'est la centralisation de tout ce qui fonctionne vraiment. Chaque offre ici est une offre que j'utilise ou que j'ai utilisée moi-même.
+
+Je ne suis ni influenceur, ni "guru de la finance". Je suis quelqu'un qui a testé, optimisé, et documenté — pendant deux ans — ce qui rapporte réellement dans le parrainage en France. Pas de théorie. Que du concret.
+
+Au départ c'était pour moi : maximiser les bonus, éviter les pièges, trouver les offres qui valent vraiment le coup. Rapidement, des proches m'ont demandé les mêmes tuyaux. Parrain 4P est né de là.
+
+Aujourd'hui je mets à jour le site régulièrement pour que tu aies toujours les meilleures conditions disponibles — sans avoir à chercher pendant des heures.`,
+},
+  {
     num: '03',
     question: "Est-ce que je peux retirer l'argent déposé ?",
     answer: "Oui. L'argent que tu déposes reste le tien. Pour les offres avec dépôt, tu peux généralement retirer après avoir obtenu la prime selon les conditions de chaque plateforme.",

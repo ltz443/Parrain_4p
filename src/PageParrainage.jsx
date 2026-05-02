@@ -210,33 +210,22 @@ function Challenge3en1() {
         .c3step-line { flex: 1; height: 1px; background: #1e1e1e; margin: 0 8px; transition: background 0.3s; }
         .c3step-line.done { background: rgba(74,222,128,0.25); }
 
-        .c3step-hint {
-          font-size: 10.5px; color: #2e2e2e; text-align: center;
-          margin-top: -16px; margin-bottom: 18px;
-          transition: color 0.2s;
-          min-height: 14px;
-        }
-        .c3step-hint.visible { color: rgba(74,222,128,0.55); }
+        .c3step-hint { display: none; }
 
         .c3field-wrap { margin-bottom: 12px; }
         .c3field-label {
-          font-size: 11px; font-weight: 600;
+          font-size: 11.5px; font-weight: 700;
           letter-spacing: 0.08em; text-transform: uppercase;
-          color: #3a3a3a; margin-bottom: 7px; display: block;
-        }
-        .c3field-sublabel {
-          font-size: 10px; color: #2a2a2a;
-          margin-bottom: 7px; margin-top: -4px;
-          display: block; letter-spacing: 0.02em;
+          color: #666; margin-bottom: 6px; display: block;
         }
 
         .c3field-input {
           width: 100%;
           background: #1a1a1a;
           border: 1.5px solid #252525;
-          border-radius: 12px;
-          padding: 13px 16px;
-          font-size: 14.5px;
+          border-radius: 10px;
+          padding: 9px 14px;
+          font-size: 13.5px;
           font-family: 'Outfit', sans-serif;
           font-weight: 500;
           color: #e8e8e8;
@@ -255,7 +244,7 @@ function Challenge3en1() {
         .c3method-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .c3method-card {
           display: flex; align-items: center; justify-content: center; gap: 8px;
-          padding: 12px; border-radius: 12px;
+          padding: 9px 12px; border-radius: 10px;
           border: 1.5px solid #252525; background: #1a1a1a;
           cursor: pointer; transition: all 0.2s ease;
           -webkit-tap-highlight-color: transparent;
@@ -279,9 +268,9 @@ function Challenge3en1() {
         .c3sep { height: 1px; background: linear-gradient(90deg, transparent, #1e1e1e, transparent); margin: 16px 0; }
 
         .c3cta-btn {
-          width: 100%; padding: 15px;
-          background: #4ade80; border: none; border-radius: 13px;
-          font-family: 'Outfit', sans-serif; font-size: 14.5px;
+          width: 100%; padding: 12px;
+          background: #4ade80; border: none; border-radius: 11px;
+          font-family: 'Outfit', sans-serif; font-size: 14px;
           font-weight: 700; letter-spacing: 0.02em; color: #030f06;
           cursor: pointer; transition: all 0.22s ease; margin-top: 4px;
         }
@@ -344,12 +333,12 @@ function Challenge3en1() {
 
         .c3insta-link {
           display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-          margin-top: 12px;
+          margin-top: 10px;
           background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2);
-          border-radius: 10px; padding: 10px 14px;
-          font-size: 13px; font-weight: 700; color: #4ade80;
+          border-radius: 9px; padding: 8px 12px;
+          font-size: 12px; font-weight: 700; color: #4ade80;
           text-decoration: none; transition: all 0.2s;
-          width: 100%;
+          width: auto;
         }
         .c3insta-link:hover { background: rgba(74,222,128,0.12); box-shadow: 0 4px 16px rgba(74,222,128,0.1); }
 
@@ -451,17 +440,12 @@ function Challenge3en1() {
               })}
             </div>
 
-            <div className={`c3step-hint${activeStep > 0 ? " visible" : ""}`}>
-              {activeStep === 1 && "Tu commences — complète ta première offre 💪"}
-              {activeStep === 2 && "Bien joué ! Plus qu'une offre après celle-ci 🔥"}
-              {activeStep === 3 && "Dernière ligne droite — tu y es presque ! 🏁"}
-            </div>
+
 
             <form onSubmit={handleSubmit}>
 
               <div className="c3field-wrap">
                 <span className="c3field-label">Pseudo Instagram</span>
-                <span className="c3field-sublabel">Ton compte Instagram pour te retrouver</span>
                 <input
                   className={`c3field-input${focused === "pseudo" ? " focused" : ""}`}
                   placeholder="@ton_pseudo"
@@ -472,12 +456,8 @@ function Challenge3en1() {
                   onBlur={() => setFocused(null)}
                   required
                 />
-              </div>
-
-              <div className="c3field-wrap">
-                <span className="c3field-label">Les 3 offres choisies</span>
-                <span className="c3field-sublabel">Indique les offres que tu as complétées</span>
-                <input
+              </div              <div className="c3field-wrap">
+                <span className="c3field-label">Les 3 offres choisies</span>          <input
                   className={`c3field-input${focused === "offres" ? " focused" : ""}`}
                   placeholder="Ex : Boursorama, Lydia, Trade Republic"
                   name="offres"

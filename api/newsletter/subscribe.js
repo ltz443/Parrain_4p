@@ -39,14 +39,14 @@ export default async function handler(req, res) {
     // 3. Envoyer email via Resend (si clé présente)
     if (resendApiKey) {
       try {
-        await fetch('https://api.resend.com/emails', {
+        const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${resendApiKey}`
           },
           body: JSON.stringify({
-            from: 'Parrain 4P <newsletter@parrain-4p.vercel.app>',
+            from: 'onboarding@resend.dev', // Utilisation du domaine de test par défaut si le domaine n'est pas vérifié
             to: [email],
             subject: 'Bienvenue dans la communauté Parrain 4P !',
             html: `
@@ -60,10 +60,13 @@ export default async function handler(req, res) {
             `
           })
         });
+        const resendData = await resendRes.json();
+        console.log('Réponse Resend:', resendData);
       } catch (emailError) {
         console.error('Erreur Resend:', emailError);
-        // On ne bloque pas le succès de l'inscription si l'email échoue
       }
+    } else {
+      console.warn('RESEND_API_KEY manquante');
     }
 
     return res.status(200).json({ status: 'success', message: 'Inscription réussie !' });

@@ -456,8 +456,11 @@ function Challenge3en1() {
                   onBlur={() => setFocused(null)}
                   required
                 />
-              </div              <div className="c3field-wrap">
-                <span className="c3field-label">Les 3 offres choisies</span>          <input
+              </div>
+
+              <div className="c3field-wrap">
+                <span className="c3field-label">Les 3 offres choisies</span>
+                <input
                   className={`c3field-input${focused === "offres" ? " focused" : ""}`}
                   placeholder="Ex : Boursorama, Lydia, Trade Republic"
                   name="offres"

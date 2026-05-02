@@ -224,7 +224,7 @@ function Challenge3en1() {
           background: #1a1a1a;
           border: 1.5px solid #252525;
           border-radius: 10px;
-          padding: 7px 14px;
+          padding: 7px 8px;
           font-size: 13px;
           font-family: 'Outfit', sans-serif;
           font-weight: 500;

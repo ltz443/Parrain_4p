@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Newsletter from "./Newsletter";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
@@ -186,6 +187,9 @@ return (
       )}
     </div>
   </div>
+
+  {/* Newsletter */}
+  <Newsletter />
 
   {/* Reviews */}
   <div style={{ padding: "16px 20px 0", display: "flex", flexDirection: "column", gap: 10 }}>

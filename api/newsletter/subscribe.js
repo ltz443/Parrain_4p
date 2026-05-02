@@ -61,7 +61,7 @@ export default async function handler(req, res) {
           })
         });
         const resendData = await resendRes.json();
-        console.log('Réponse Resend:', resendData);
+        console.log('DEBUG_RESEND:', JSON.stringify(resendData));
       } catch (emailError) {
         console.error('Erreur Resend:', emailError);
       }

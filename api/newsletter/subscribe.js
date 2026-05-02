@@ -39,29 +39,27 @@ export default async function handler(req, res) {
     // 3. Envoyer email via Resend (si clé présente)
     if (resendApiKey) {
       try {
-        const resendRes = await fetch('https://api.resend.com/emails', {
+        await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${resendApiKey}`
           },
           body: JSON.stringify({
-            from: 'onboarding@resend.dev', // Utilisation du domaine de test par défaut si le domaine n'est pas vérifié
+            from: 'onboarding@resend.dev',
             to: [email],
-            subject: 'Bienvenue dans la communauté Parrain 4P !',
+            subject: 'Bienvenue chez Parrain 4P !',
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
                 <h1 style="color: #00c37a;">Bienvenue !</h1>
-                <p>Merci de vous être inscrit à la newsletter <strong>Avis de la communauté</strong> de Parrain 4P.</p>
-                <p>Vous recevrez désormais nos meilleures offres de parrainage et les avis les plus récents.</p>
+                <p>Merci de vous être inscrit à la newsletter de <strong>Parrain 4P</strong>.</p>
+                <p>Vous recevrez désormais nos meilleures offres de parrainage et les actualités de la communauté.</p>
                 <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
                 <p style="font-size: 12px; color: #888;">&copy; 2026 Parrain 4P. Tous droits réservés.</p>
               </div>
             `
           })
         });
-        const resendData = await resendRes.json();
-        console.log('DEBUG_RESEND:', JSON.stringify(resendData));
       } catch (emailError) {
         console.error('Erreur Resend:', emailError);
       }

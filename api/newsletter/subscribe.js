@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     if (insertError) throw insertError;
 
     // 3. Envoyer email via Resend (si clé présente)
-    if (resendApiKey) {
+    console.log("RESEND_KEY_EXISTS:", !!resendApiKey); if (resendApiKey) {
       try {
         await fetch('https://api.resend.com/emails', {
           method: 'POST',

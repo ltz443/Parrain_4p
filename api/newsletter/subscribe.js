@@ -39,7 +39,10 @@ export default async function handler(req, res) {
     // 3. Envoyer email via Resend (si clé présente)
     console.log("RESEND_KEY_EXISTS:", !!resendApiKey); if (resendApiKey) {
       try {
-        await fetch('https://api.resend.com/emails', {
+        const response = await fetch('https://api.resend.com/emails', {
+        const result = await response.json();
+        console.log("RESEND_RESPONSE_STATUS:", response.status);
+        console.log("RESEND_RESPONSE_BODY:", JSON.stringify(result));
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

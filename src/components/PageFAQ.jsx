@@ -150,6 +150,87 @@ export default function PageFAQ() {
         ))}
       </div>
 
+      {/* SECTION CONTACT */}
+      <div style={{ marginTop: 32 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: '#4FFFA0', letterSpacing: 3, textTransform: 'uppercase', marginBottom: 16 }}>Me contacter</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+          {/* Gmail (prochainement) */}
+          <div style={{
+            background: '#111318',
+            border: '1px solid #1A1E2A',
+            borderRadius: 16,
+            padding: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+            opacity: 0.5,
+            cursor: 'not-allowed'
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              background: 'rgba(255,255,255,0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              filter: 'grayscale(0.4)'
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 6.5C2 5.67 2.67 5 3.5 5h17C21.33 5 22 5.67 22 6.5v11c0 .83-.67 1.5-1.5 1.5h-17C2.67 19 2 18.33 2 17.5v-11z" fill="white" opacity="0.15"/>
+                <path d="M2 7l10 7 10-7" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                <path d="M2 6.5L12 13l10-6.5" fill="white" opacity="0.9"/>
+              </svg>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Envoyer un mail</div>
+              <div style={{ fontSize: 12, color: '#3aff6e', fontWeight: 600 }}>🕐 Prochainement</div>
+            </div>
+          </div>
+
+          {/* Instagram */}
+          <a 
+            href="https://www.instagram.com/parrain_4p?igsh=MXBnN2Z2bzdvM3Z6cg%3D%3D&utm_source=qr" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'none',
+              background: '#111318',
+              border: '1px solid #1A1E2A',
+              borderRadius: 16,
+              padding: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="5.5" stroke="white" stroke-width="1.8" fill="none"/>
+                <circle cx="12" cy="12" r="4.2" stroke="white" stroke-width="1.8" fill="none"/>
+                <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
+              </svg>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Instagram</div>
+              <div style={{ fontSize: 12, color: '#9AA3B0' }}>Message direct</div>
+            </div>
+            <div style={{ color: '#4A5568', fontSize: 20 }}>›</div>
+          </a>
+
+        </div>
+      </div>
+
       <div style={{ marginTop: 32, borderTop: '1px solid #1A1E2A', paddingTop: 24 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: '#4A5568', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 12 }}>
           Informations légales

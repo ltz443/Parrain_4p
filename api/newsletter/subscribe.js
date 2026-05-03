@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 const resendApiKey = process.env.RESEND_API_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -62,8 +62,7 @@ export default async function handler(req, res) {
         });
         
         const resendData = await resendRes.json();
-        console.log('RESEND_STATUS:', resendRes.status);
-        console.log('RESEND_DATA:', JSON.stringify(resendData));
+        console.log('RESEND_DEBUG:', { status: resendRes.status, data: resendData });
       } catch (emailError) {
         console.error('Erreur Resend:', emailError);
       }

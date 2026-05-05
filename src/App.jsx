@@ -76,7 +76,17 @@ function AppLayout() {
 
   useEffect(() => {
     document.body.style.cssText = `margin:0; padding:0; background:#0A0B0F; color:#E8EDF5; font-family:'Inter',sans-serif;`;
-  }, []);
+    
+    // Mise à jour dynamique de la balise canonique
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    const url = window.location.origin + location.pathname;
+    canonical.setAttribute('href', url);
+  }, [location]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#0A0B0F', paddingBottom: 80 }}>

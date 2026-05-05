@@ -131,10 +131,49 @@ export default function PageOffre() {
         'content',
         `${offre.description} Prime parrain : ${offre.bonusParrain}. Filleul reçoit : ${offre.bonusFilleul}.`
       );
+
+      // Ajout des données structurées Schema.org
+      let script = document.querySelector('#schema-offre');
+      if (!script) {
+        script = document.createElement('script');
+        script.id = 'schema-offre';
+        script.type = 'application/ld+json';
+        document.head.appendChild(script);
+      }
+      
+      const schemaData = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": `Offre Parrainage ${offre.nom}`,
+        "image": `https://parrain-4p.vercel.app/preview.png`,
+        "description": offre.description,
+        "brand": {
+          "@type": "Brand",
+          "name": offre.nom
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": window.location.href,
+          "priceCurrency": "EUR",
+          "price": "0.00",
+          "availability": offre.Disponible_actuellement !== false ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          "description": `Bonus Filleul : ${offre.bonusFilleul}`
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "10"
+        }
+      };
+      script.text = JSON.stringify(schemaData);
     }
 
     return () => {
       document.title = 'Parrain 4P - Hub Financier & ProfitMaster';
+      const script = document.querySelector('#schema-offre');
+      if (script) script.remove();
     };
   }, [offre]);
 

@@ -50,22 +50,11 @@ const NAV_ITEMS = [
   { path: '/faq',         label: 'FAQ',    icon: '❓' },
 ];
 
+import { OffreSkeleton } from './components/Skeleton';
+
 // ─── FALLBACK CHARGEMENT ──────────────────────────────────────────────────────
 function PageLoader() {
-  return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '60vh',
-      color: '#4FFFA0',
-      fontSize: 13,
-      fontWeight: 700,
-      fontFamily: 'Inter, sans-serif',
-    }}>
-      Chargement...
-    </div>
-  );
+  return <OffreSkeleton />;
 }
 
 // ─── LAYOUT PRINCIPAL ─────────────────────────────────────────────────────────

@@ -31,7 +31,7 @@ async function prerenderOffres() {
 
   const templatePath = path.resolve(__dirname, '../index.html');
   let template = readFileSync(templatePath, 'utf-8');
-  const outputDir = path.resolve(__dirname, '../dist/offre');
+  const outputDir = path.resolve(__dirname, '../dist/offres');
   mkdirSync(outputDir, { recursive: true });
 
   for (const offre of offres) {
@@ -75,7 +75,7 @@ async function prerenderOffres() {
       .replace(/<div id="root"><\/div>/, injectedContent);
 
     writeFileSync(pagePath, pageContent);
-    console.log(`✅ Page pré-rendue pour /offre/${offreId}`);
+    console.log(`✅ Page pré-rendue pour /offres/${offreId}`);
   }
 
   console.log(`✅ ${offres.length} pages d'offres pré-rendues avec succès.`);

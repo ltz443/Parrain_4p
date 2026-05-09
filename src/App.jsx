@@ -9,6 +9,7 @@ const PageProfitMaster = lazy(() => import('./components/PageProfitMaster'));
 const PageFAQ          = lazy(() => import('./components/PageFAQ'));
 const PageOffre        = lazy(() => import('./components/PageOffre'));
 const PageGuideScrambly = lazy(() => import('./components/PageGuideScrambly'));
+const PageGuideOKX = lazy(() => import('./components/PageGuideOKX'));
 
 // ─── TRACKING UMAMI ───────────────────────────────────────────────────────────
 export function trackClick(partenaire) {
@@ -146,6 +147,7 @@ function AppLayout() {
           <Route path="/faq"         element={<PageFAQ />} />
           <Route path="/offres/:id"  element={<PageOffre />} />
           <Route path="/guides/scrambly" element={<PageGuideScrambly />} />
+          <Route path="/guides/okx" element={<PageGuideOKX />} />
         </Routes>
       </Suspense>
 

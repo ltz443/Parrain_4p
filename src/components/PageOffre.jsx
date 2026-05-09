@@ -161,10 +161,9 @@ export default function PageOffre() {
     fetchOffre();
   }, [id]);
 
-  // SEO : titre et meta description uniques par offre
   useEffect(() => {
     if (offre) {
-      document.title = `Code parrainage ${offre.nom} – ${offre.bonusFilleul}`;
+      document.title = `${offre.nom} | Parrainage – ${offre.bonusFilleul}`;
 
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) {

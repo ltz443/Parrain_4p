@@ -104,7 +104,7 @@ function AppLayout() {
       }}>
         <Link to="/" style={{ textDecoration: 'none' }}>
           <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0', fontFamily: 'Inter, sans-serif', margin: 0 }}>
-            Parrain 4P
+            Parrain 4P – Codes de parrainage
           </h1>
         </Link>
         {isHome && (

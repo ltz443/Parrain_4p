@@ -208,6 +208,28 @@ export default function PageOffre() {
             📸 Me contacter sur Instagram
           </a>
          )}
+        {o.id === 'scrambly' && (
+          <a 
+            href="https://parrain-4p.vercel.app/guides/scrambly" 
+            target="_blank" 
+            rel="noreferrer" 
+            style={{ 
+              display: 'block', 
+              textAlign: 'center', 
+              background: '#4FFFA0', 
+              borderRadius: 12, 
+              color: '#0A0B0F', 
+              fontSize: 15, 
+              fontWeight: 800, 
+              padding: '14px', 
+              textDecoration: 'none', 
+              marginBottom: 10,
+              boxShadow: '0 4px 15px rgba(79, 255, 160, 0.2)'
+            }}
+          >
+            📋 Guide pas à pas →
+          </a>
+        )}
         <BoutonPartage offre={o} />
       </div>
     </div>

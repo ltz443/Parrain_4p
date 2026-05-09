@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LogoOffre from './LogoOffre';
 
 function Timer({ dateFin }) {
@@ -46,7 +46,6 @@ function Timer({ dateFin }) {
 
 function CarouselCard({ offre, onSelect }) {
   const [pressed, setPressed] = useState(false);
-
   return (
     <div 
       onClick={() => onSelect(offre)} 
@@ -58,7 +57,6 @@ function CarouselCard({ offre, onSelect }) {
       style={{ 
         minWidth: 160, 
         maxWidth: 160, 
-        scrollSnapAlign: 'start', 
         background: '#111318', 
         border: '1px solid #1A1E2A', 
         borderRadius: 16, 
@@ -123,8 +121,35 @@ function CarouselCard({ offre, onSelect }) {
 }
 
 export default function CarouselOffresDuMoment({ offres, onSelect }) {
+  const scrollRef = useRef(null);
   const offresBoostees = offres.filter(o => o.offresdumoment);
+  
+  useEffect(() => {
+    if (offresBoostees.length === 0) return;
+    
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    let animationId;
+    let scrollPos = 0;
+
+    const step = () => {
+      scrollPos += 0.5; // Vitesse de défilement
+      if (scrollPos >= scrollContainer.scrollWidth / 2) {
+        scrollPos = 0;
+      }
+      scrollContainer.scrollLeft = scrollPos;
+      animationId = requestAnimationFrame(step);
+    };
+
+    animationId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationId);
+  }, [offresBoostees.length]);
+
   if (offresBoostees.length === 0) return null;
+
+  // Doubler les offres pour créer l'effet de boucle infinie
+  const displayOffres = [...offresBoostees, ...offresBoostees];
 
   return (
     <div style={{ marginBottom: 20 }}>
@@ -142,16 +167,20 @@ export default function CarouselOffresDuMoment({ offres, onSelect }) {
         <div style={{ flex: 1, height: 1, background: '#1A1E2A', marginLeft: 4 }} />
         <span style={{ fontSize: 10, color: '#4A5568', fontWeight: 600 }}>⚡ Limité</span>
       </div>
-      <div style={{ 
-        display: 'flex', 
-        gap: 10, 
-        overflowX: 'auto', 
-        paddingBottom: 2, 
-        scrollSnapType: 'x mandatory', 
-        WebkitOverflowScrolling: 'touch', 
-        scrollbarWidth: 'none' 
-      }}>
-        {offresBoostees.map(o => <CarouselCard key={o.id} offre={o} onSelect={onSelect} />)}
+      <div 
+        ref={scrollRef}
+        style={{ 
+          display: 'flex', 
+          gap: 10, 
+          overflowX: 'hidden', 
+          paddingBottom: 2, 
+          whiteSpace: 'nowrap',
+          cursor: 'pointer'
+        }}
+      >
+        {displayOffres.map((o, index) => (
+          <CarouselCard key={`${o.id}-${index}`} offre={o} onSelect={onSelect} />
+        ))}
       </div>
     </div>
   );

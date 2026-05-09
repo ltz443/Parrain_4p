@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoOffre from './components/LogoOffre';
+import AvisMarquee from './components/AvisMarquee';
 import CarouselOffresDuMoment from './components/CarrouselOffresDuMoment';
 import Timer from './components/Timer';
 import { useOffres } from './hooks/useOffres';
@@ -762,6 +763,7 @@ export default function PageParrainage({ favState }) {
           </div>
         ))}
       </div>
+      <AvisMarquee />
       <Challenge3en1 />
     </div>
   );

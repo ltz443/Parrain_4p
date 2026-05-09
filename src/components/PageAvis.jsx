@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Newsletter from "./Newsletter";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const SEED = [
 { id: "d27ef9db-d431-4168-b3b0-14d80690c162", nom: "Noa",     note: 5, texte: "Merci pour myfin",                                                                                          created_at: "2026-05-02 11:43:06.885476" },

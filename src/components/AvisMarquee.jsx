@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const DEFAULT_AVIS = [
   { nom: "Noa", texte: "Merci pour myfin", note: 5 },

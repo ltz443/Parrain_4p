@@ -98,13 +98,14 @@ function AppLayout() {
         background: '#111318',
         borderBottom: '1px solid #1A1E2A',
         padding: '18px 20px',
+        paddingTop: 'max(18px, env(safe-area-inset-top))',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
         <Link to="/" style={{ textDecoration: 'none' }}>
           <h1 style={{ fontSize: 22, fontWeight: 900, color: '#4FFFA0', fontFamily: 'Inter, sans-serif', margin: 0 }}>
-            Parrain 4P 
+            Parrain 4P
           </h1>
         </Link>
         {isHome && (
@@ -161,6 +162,7 @@ function AppLayout() {
         borderTop: '1px solid #1A1E2A',
         display: 'flex',
         height: 70,
+        paddingBottom: 'env(safe-area-inset-bottom)',
         zIndex: 1000
       }}>
         {NAV_ITEMS.map(({ path, label, icon }) => {

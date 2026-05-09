@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 
 // ─── CHARGEMENT DIFFÉRÉ — Optimisation du bundle ─────────────────────────────
-const PageParrainage   = lazy(() => import('./PageParrainage.jsx'));
-const PageAvis         = lazy(() => import('./components/PageAvis.jsx'));
-const PageProfitMaster = lazy(() => import('./components/PageProfitMaster.jsx'));
-const PageFAQ          = lazy(() => import('./components/PageFAQ.jsx'));
-const PageOffre        = lazy(() => import('./components/PageOffre.jsx'));
+const PageParrainage   = lazy(() => import('./PageParrainage'));
+const PageAvis         = lazy(() => import('./components/PageAvis'));
+const PageProfitMaster = lazy(() => import('./components/PageProfitMaster'));
+const PageFAQ          = lazy(() => import('./components/PageFAQ'));
+const PageOffre        = lazy(() => import('./components/PageOffre'));
 
 // ─── TRACKING UMAMI ───────────────────────────────────────────────────────────
 export function trackClick(partenaire) {
@@ -198,12 +198,8 @@ export default function App() {
   );
 }
 
-console.log('App: Initialisation...');
 const container = document.getElementById('root');
 if (container) {
-  console.log('App: Root trouvé, rendu en cours...');
   const root = createRoot(container);
   root.render(<App />);
-} else {
-  console.error('App: Erreur - Élément #root non trouvé dans le DOM');
 }

@@ -209,10 +209,8 @@ export default function PageOffre() {
           </a>
          )}
         {o.id === 'scrambly' && (
-          <a 
-            href="https://parrain-4p.vercel.app/guides/scrambly" 
-            target="_blank" 
-            rel="noreferrer" 
+          <Link 
+            to="/guides/scrambly" 
             style={{ 
               display: 'block', 
               textAlign: 'center', 
@@ -228,7 +226,7 @@ export default function PageOffre() {
             }}
           >
             📋 Guide pas à pas →
-          </a>
+          </Link>
         )}
         <BoutonPartage offre={o} />
       </div>

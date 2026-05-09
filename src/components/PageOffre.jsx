@@ -67,6 +67,51 @@ function Checklist({ offreId, conditions }) {
   );
 }
 
+function Astuce({ titre, texte }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <button 
+        onClick={() => setOpen(!open)}
+        style={{ 
+          width: '100%', 
+          background: '#0A0B0F', 
+          border: '1px solid #1E2230', 
+          borderRadius: 12, 
+          padding: '12px 16px', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          cursor: 'pointer',
+          fontFamily: 'inherit'
+        }}
+      >
+        <span style={{ fontSize: 14, fontWeight: 700, color: '#E8EDF5', display: 'flex', alignItems: 'center', gap: 8 }}>
+          💡 {titre}
+        </span>
+        <span style={{ color: '#4A5568', fontSize: 12, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }}>
+          ▼
+        </span>
+      </button>
+      {open && (
+        <div style={{ 
+          background: 'rgba(79, 255, 160, 0.05)', 
+          border: '1px solid rgba(79, 255, 160, 0.2)', 
+          borderTop: 'none',
+          borderRadius: '0 0 12px 12px',
+          marginTop: -4,
+          padding: '16px',
+          fontSize: 13,
+          color: '#8A95AA',
+          lineHeight: 1.5
+        }}>
+          {texte}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function BoutonPartage({ offre }) {
   const partager = async () => {
     const url = `https://parrain-4p.vercel.app/offres/${offre.id}`;
@@ -204,9 +249,15 @@ export default function PageOffre() {
           </a>
         )}
         {o.id === 'hellobank' && (
-          <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>
-            📸 Me contacter sur Instagram
-          </a>
+          <>
+            <Astuce 
+              titre="Astuce des 10 achats" 
+              texte="Tout achat, même d’un montant de 0,10 €, permet de bénéficier de la deuxième prime" 
+            />
+            <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>
+              📸 Me contacter sur Instagram
+            </a>
+          </>
          )}
         {o.id === 'scrambly' && (
           <Link 

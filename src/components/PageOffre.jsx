@@ -164,7 +164,7 @@ export default function PageOffre() {
   // SEO : titre et meta description uniques par offre
   useEffect(() => {
     if (offre) {
-      document.title = `${offre.nom} - Parrainage ${offre.bonusFilleul} | Parrain 4P`;
+      document.title = `Code parrainage ${offre.nom} – ${offre.bonusFilleul}`;
 
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) {
@@ -179,7 +179,7 @@ export default function PageOffre() {
     }
 
     return () => {
-      document.title = 'Parrain 4P - Hub Financier & ProfitMaster';
+      document.title = 'Parrain 4P – Codes de parrainage';
     };
   }, [offre]);
 
@@ -252,13 +252,13 @@ export default function PageOffre() {
           <>
             <Astuce 
               titre="Astuce des 10 achats" 
-              texte="Tout achat, même d’un montant de 0,10 €, permet de bénéficier de la deuxième prime" 
+              texte="Tout achat, même d'un montant de 0,10 €, permet de bénéficier de la deuxième prime" 
             />
             <a href="https://www.instagram.com/parrain_4p?igsh=bjFpNHJtNjM4MGs3" target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', background: '#0A0B0F', border: '1.5px solid #1E2230', borderRadius: 12, color: '#8A95AA', fontSize: 14, fontWeight: 700, padding: '12px', cursor: 'pointer', textDecoration: 'none', textAlign: 'center', marginBottom: 10, fontFamily: 'inherit' }}>
               📸 Me contacter sur Instagram
             </a>
           </>
-         )}
+        )}
         {o.id === 'scrambly' && (
           <Link 
             to="/guides/scrambly" 
